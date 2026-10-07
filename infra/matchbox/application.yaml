@@ -1,0 +1,26 @@
+# Matchbox configuration for IPS validation (dev).
+# Mounted at /config/application.yaml; the image adds it via spring.config.additional-location.
+# Based on ahdis/matchbox matchbox-server/with-ips, with the IPS IG pinned to an exact version.
+server:
+  port: 8080
+  servlet:
+    context-path: /matchboxv3
+hapi:
+  fhir:
+    server_address: http://localhost:8080/matchboxv3/fhir
+    implementationguides:
+      fhir_r4_core:
+        name: hl7.fhir.r4.core
+        version: 4.0.1
+        url: classpath:/hl7.fhir.r4.core.tgz
+      ips:
+        # Current published release (trial use, 2026-06-19). Bump deliberately; never use "current".
+        name: hl7.fhir.uv.ips
+        version: 2.0.1
+        url: https://packages.fhir.org/hl7.fhir.uv.ips/2.0.1
+matchbox:
+  fhir:
+    context:
+      # tx.fhir.org is for development only (PLAN §4); replace with own terminology server for prod.
+      txServer: http://tx.fhir.org
+      httpReadOnly: true
