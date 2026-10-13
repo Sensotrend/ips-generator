@@ -312,7 +312,9 @@ The user steers each piece of work with three words. Claude acts on them as foll
 - **"push branch"**: commit if needed, then `git push -u origin HEAD` (`--force-with-lease` after a
   rebase, own branch only). Do not touch `main`.
 - **"approved"**: land the branch: fetch, rebase onto `origin/main`, run the tests, `git push origin
-  HEAD:main` (fast-forward, no merge commit), then stop the processes started for this worktree, remove
+  HEAD:main` (fast-forward, no merge commit), bring the local main checkout up to date with
+  `git -C <main checkout> merge --ff-only origin/main` (skipped, with a note to the user, if that checkout
+  has uncommitted changes to tracked files), then stop the processes started for this worktree, remove
   the remote branch if one was pushed, and remove the local worktree and branch (`git worktree remove`,
   `git branch -d`). If the rebase conflicts or the tests fail, stop and report instead of landing.
 - **After finishing a piece of work**, ask whether the user wants to test, push branch, or approve.

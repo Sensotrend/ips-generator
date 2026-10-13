@@ -43,7 +43,8 @@ and phased task list. Work on the current phase, tick completed tasks, and note 
 Full conventions are in the README, "Git workflow". Rules for Claude:
 - One chat = one worktree = one branch (`<initials>/<topic>`), created from a fresh `origin/main`. Use
   `claude --worktree`; subagents that write code use `isolation: "worktree"`. Never work on `main` in a
-  checkout another chat may be using.
+  checkout another chat may be using. This applies to every change, including docs (CLAUDE.md, README,
+  PLAN.md) and config: no edits directly in the main checkout.
 - At the start of a task: `git fetch --prune origin`, check whether `main` moved, and look at
   `git branch -r --no-merged origin/main` to see what the other developer is doing. Base work on
   `origin/main` only.
@@ -57,6 +58,7 @@ Full conventions are in the README, "Git workflow". Rules for Claude:
 - Review commands from the user (details in README, "Git workflow"): **"test branch"** = run API, worker
   and PWA from this worktree (reuse unaffected Compose services) and give the localhost link; **"push
   branch"** = push this branch to `origin`; **"approved"** = rebase on `origin/main`, test, fast-forward
-  push to `main`, then delete the remote branch, local branch and worktree (stop on conflict or test
+  push to `main`, fast-forward the main checkout (`git -C <main checkout> merge --ff-only origin/main`;
+  skip and tell the user if it has uncommitted tracked changes), then delete the remote branch, local branch and worktree (stop on conflict or test
   failure). When a piece of work is finished, ask which of the three the user wants.
 - Subagents leave their work on their own branch and report back; they do not push to `main`.
