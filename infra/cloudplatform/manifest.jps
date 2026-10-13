@@ -59,7 +59,7 @@ nodes:
       - /data
   - nodeGroup: matchbox
     nodeType: docker
-    image: ghcr.io/${settings.ghcrOwnerRepo}-matchbox:${settings.tag}
+    image: ${settings.ghcrOwnerRepo}-matchbox:${settings.tag}
     registry:
       url: ghcr.io
       user: ${settings.ghcrUser}
@@ -71,7 +71,7 @@ nodes:
   # api, worker and web are configured below, once the other nodes' IPs are known.
   - nodeGroup: api
     nodeType: docker
-    image: ghcr.io/${settings.ghcrOwnerRepo}-backend:${settings.tag}
+    image: ${settings.ghcrOwnerRepo}-backend:${settings.tag}
     registry:
       url: ghcr.io
       user: ${settings.ghcrUser}
@@ -81,7 +81,7 @@ nodes:
     startServiceOnCreation: false
   - nodeGroup: worker
     nodeType: docker
-    image: ghcr.io/${settings.ghcrOwnerRepo}-backend:${settings.tag}
+    image: ${settings.ghcrOwnerRepo}-backend:${settings.tag}
     registry:
       url: ghcr.io
       user: ${settings.ghcrUser}
@@ -92,7 +92,7 @@ nodes:
     startServiceOnCreation: false
   - nodeGroup: web
     nodeType: docker
-    image: ghcr.io/${settings.ghcrOwnerRepo}-web:${settings.tag}
+    image: ${settings.ghcrOwnerRepo}-web:${settings.tag}
     registry:
       url: ghcr.io
       user: ${settings.ghcrUser}
