@@ -299,6 +299,24 @@ rules are light, but they keep parallel work from colliding.
 - Commit small, one logical change per commit; the message says why, imperative mood.
 - Never commit `.env`, secrets or real patient data (see [CLAUDE.md](CLAUDE.md)).
 
+### Review commands (user shorthand)
+The user steers each piece of work with three words. Claude acts on them as follows.
+- **"test branch"**: run API, worker and PWA from the current worktree so the user can try the change in
+  the browser, then reply with the `http://localhost:<port>` link of the PWA. Reuse Compose services
+  (postgres, redis, minio, matchbox) that are already running unless the change affects them (new
+  migration, changed compose file, different ports); then restart only what is affected. Use the
+  [Option B](#option-b-api-and-worker-as-local-processes) commands, start long-running processes in the
+  background, check that the API answers and the PWA loads before reporting, and say what was reused and
+  what was started. Use `EXTRACTOR=replay` unless the user asks for `claude`. If another chat's
+  worktree already holds the API or Vite port, pick free ports rather than killing its processes.
+- **"push branch"**: commit if needed, then `git push -u origin HEAD` (`--force-with-lease` after a
+  rebase, own branch only). Do not touch `main`.
+- **"approved"**: land the branch: fetch, rebase onto `origin/main`, run the tests, `git push origin
+  HEAD:main` (fast-forward, no merge commit), then stop the processes started for this worktree, remove
+  the remote branch if one was pushed, and remove the local worktree and branch (`git worktree remove`,
+  `git branch -d`). If the rebase conflicts or the tests fail, stop and report instead of landing.
+- **After finishing a piece of work**, ask whether the user wants to test, push branch, or approve.
+
 ### Files that conflict often
 - `PLAN.md`: tick your task in the same change that completes it and touch only that task's lines.
   Restructure it in a separate small commit and land it quickly.

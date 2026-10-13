@@ -46,4 +46,9 @@ Full conventions are in the README, "Git workflow". Rules for Claude:
 - Never run `git stash`, `reset --hard`, `clean` or `checkout .` on a tree you did not create, and never
   delete branches or worktrees you did not create. If you find uncommitted changes you did not make, stop
   and ask.
+- Review commands from the user (details in README, "Git workflow"): **"test branch"** = run API, worker
+  and PWA from this worktree (reuse unaffected Compose services) and give the localhost link; **"push
+  branch"** = push this branch to `origin`; **"approved"** = rebase on `origin/main`, test, fast-forward
+  push to `main`, then delete the remote branch, local branch and worktree (stop on conflict or test
+  failure). When a piece of work is finished, ask which of the three the user wants.
 - Subagents leave their work on their own branch and report back; they do not push to `main`.
