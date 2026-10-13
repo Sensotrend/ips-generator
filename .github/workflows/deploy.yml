@@ -1,0 +1,85 @@
+name: Deploy
+
+# Builds the images, pushes them to GHCR tagged with the commit SHA and redeploys the
+# cloudplatform.fi (Virtuozzo) dev environment. Dev environment only: synthetic data, replay extractor.
+#   gh workflow run deploy.yml -f ref=<branch>        (default ref: main)
+# Pushes to main deploy automatically.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: Branch, tag or SHA to deploy
+        default: main
+
+permissions:
+  contents: read
+  packages: write
+
+# One shared environment: never run two deploys at once, and never cancel one half-way.
+concurrency:
+  group: deploy-dev
+  cancel-in-progress: false
+
+env:
+  REGISTRY: ghcr.io
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.meta.outputs.tag }}
+    strategy:
+      matrix:
+        include:
+          - image: backend
+            context: .
+            file: backend/Dockerfile
+          - image: web
+            context: frontend
+            file: frontend/Dockerfile
+          - image: matchbox
+            context: infra/matchbox
+            file: infra/matchbox/Dockerfile
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.ref || github.sha }}
+      - id: meta
+        run: |
+          echo "tag=$(git rev-parse --short=12 HEAD)" >> "$GITHUB_OUTPUT"
+          echo "repo=${GITHUB_REPOSITORY,,}" >> "$GITHUB_OUTPUT"
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v6
+        with:
+          context: ${{ matrix.context }}
+          file: ${{ matrix.file }}
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ steps.meta.outputs.repo }}-${{ matrix.image }}:${{ steps.meta.outputs.tag }}
+            ${{ env.REGISTRY }}/${{ steps.meta.outputs.repo }}-${{ matrix.image }}:dev
+          cache-from: type=gha,scope=${{ matrix.image }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.image }}
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: dev
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.ref || github.sha }}
+      - name: Redeploy api, worker and web
+        env:
+          TAG: ${{ needs.build.outputs.tag }}
+          JELASTIC_API_URL: ${{ secrets.JELASTIC_API_URL }}
+          JELASTIC_TOKEN: ${{ secrets.JELASTIC_TOKEN }}
+          JELASTIC_ENV_NAME: ${{ vars.JELASTIC_ENV_NAME }}
+        run: infra/cloudplatform/redeploy.sh "$TAG"
