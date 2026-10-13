@@ -20,5 +20,9 @@
     "birth_date_stated",
     "allergy_reactions"
   ],
-  "notes": "Internal medicine discharge summary. Furesis and bisoprolol appear in the narrative and in the discharge list; the pneumonia and DM2 appear in background and diagnosis list (each reported once, from the more informative occurrence). Family history excluded."
+  "notes": "Internal medicine discharge summary. Furesis and bisoprolol appear in the narrative and in the discharge list; the pneumonia and DM2 appear in background and diagnosis list (each reported once, from the more informative occurrence). Family history excluded.",
+  "expected_patient": {
+    "birth_date": "1951-05-03",
+    "gender": "female"
+  }
 }

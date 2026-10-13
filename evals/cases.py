@@ -50,6 +50,14 @@ class EvalCase:
     def gold_path(self) -> Path:
         return self.directory / "gold.json"
 
+    @property
+    def expected_patient(self) -> dict[str, str | None] | None:
+        """True birth date / gender of the patient (``meta.json``, D-10), ``None`` if absent."""
+        value = self.meta.get("expected_patient")
+        if not isinstance(value, dict):
+            return None
+        return {key: value.get(key) for key in ("birth_date", "gender")}
+
     def load_gold(self) -> IpsExtraction:
         return IpsExtraction.model_validate_json(self.gold_path.read_bytes())
 

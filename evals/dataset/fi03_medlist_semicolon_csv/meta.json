@@ -15,5 +15,9 @@
     "indication_not_problem",
     "section_no_information"
   ],
-  "notes": "Pharmacy-style medication list export (';', CRLF, Finnish decimal commas). No patient data. Indications (eteisvärinä, ...) stay in reason_text; problems and allergies are no_information. Each quote is the whole row as rendered by the ingester."
+  "notes": "Pharmacy-style medication list export (';', CRLF, Finnish decimal commas). No patient data. Indications (eteisvärinä, ...) stay in reason_text; problems and allergies are no_information. Each quote is the whole row as rendered by the ingester.",
+  "expected_patient": {
+    "birth_date": null,
+    "gender": null
+  }
 }

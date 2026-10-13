@@ -150,13 +150,19 @@ class ReviewReason(StrEnum):
     DROPPED_NOT_FOUND = "dropped_not_found"  # fact removed: quote not in the document
     SECTION_UNVERIFIED = "section_unverified"  # section set to no_information by grounding
     PRINTED_CODE_NOT_IN_QUOTE = "printed_code_not_in_quote"  # printed_code cleared (D-9)
+    # Raised by app.pipeline.derive (D-10), not by grounding:
+    DERIVED_FROM_IDENTITY_CODE = "derived_from_identity_code"  # reviewer must confirm
+    IDENTITY_CODE_CONFLICT = "identity_code_conflict"  # stated value kept; code disagrees
+    IDENTITY_CODE_AMBIGUOUS = "identity_code_ambiguous"  # several different codes; no derivation
 
 
 class ReviewFlag(BaseModel):
     model_config = ConfigDict(frozen=True, extra="forbid")
 
     path: str
-    """Path in the *grounded* extraction; for dropped facts, the path in the original one."""
+    """Path in the *grounded* extraction; for dropped facts, the path in the original one. For
+    derivation flags, the patient field the derived value is for (``patient.birth_date``,
+    ``patient.gender``) or ``patient.identifiers``."""
     reason: ReviewReason
 
 

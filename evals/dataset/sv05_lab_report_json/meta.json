@@ -11,5 +11,9 @@
     "multi_segment_quote",
     "hetu_without_birth_date"
   ],
-  "notes": "Lab system JSON. Raised liver enzymes are findings, not diagnoses: all three sections are no_information. The name is split over two leaves (multi-segment quote)."
+  "notes": "Lab system JSON. Raised liver enzymes are findings, not diagnoses: all three sections are no_information. The name is split over two leaves (multi-segment quote).",
+  "expected_patient": {
+    "birth_date": "1971-11-02",
+    "gender": null
+  }
 }

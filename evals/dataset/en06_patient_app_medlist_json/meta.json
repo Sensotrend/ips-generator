@@ -14,5 +14,9 @@
     "birth_date_stated",
     "allergy_reactions"
   ],
-  "notes": "Patient-written app export. 'Lisinopirl', 'capsul', 'penicilin' are typos kept verbatim. Heartburn is only a reason for omeprazole (not in conditions)."
+  "notes": "Patient-written app export. 'Lisinopirl', 'capsul', 'penicilin' are typos kept verbatim. Heartburn is only a reason for omeprazole (not in conditions).",
+  "expected_patient": {
+    "birth_date": "1975-05-30",
+    "gender": null
+  }
 }

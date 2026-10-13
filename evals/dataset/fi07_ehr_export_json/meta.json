@@ -17,5 +17,9 @@
     "gender_stated",
     "allergy_reactions"
   ],
-  "notes": "Nested JSON export from a fictional EHR. Each item spans several leaves, so gold quotes run from the first value over the following 'path: value' segments. The name is split into etunimet/sukunimi leaves. 'Ei muita tiedossa olevia allergioita' confirms the list and is not a none_known statement."
+  "notes": "Nested JSON export from a fictional EHR. Each item spans several leaves, so gold quotes run from the first value over the following 'path: value' segments. The name is split into etunimet/sukunimi leaves. 'Ei muita tiedossa olevia allergioita' confirms the list and is not a none_known statement.",
+  "expected_patient": {
+    "birth_date": "1978-02-11",
+    "gender": "female"
+  }
 }

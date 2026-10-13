@@ -5,7 +5,13 @@ from uuid import UUID
 from app.fhir.common import NoteCode
 from app.fhir.constants import DATA_ABSENT_REASON_URL, PROFILE_PATIENT
 from app.fhir.patient import map_patient
-from tests.assembly_cases import build, with_birth_date, without_name
+from tests.assembly_cases import (
+    build,
+    derived_birth_date,
+    derived_birth_date_and_gender,
+    with_birth_date,
+    without_name,
+)
 
 PID = UUID("00000000-0000-4000-8000-000000000001")
 
@@ -72,3 +78,35 @@ def test_narrative_escapes_patient_text() -> None:
     mapped, _ = map_patient(patient, resource_id=PID)
     assert mapped.resource.text is not None
     assert "&lt;b&gt;Virtanen&lt;/b&gt; &amp; Co" in mapped.resource.text.div
+
+
+def test_derived_birth_date_is_used_with_info_note() -> None:
+    enriched = derived_birth_date()
+    mapped, notes = map_patient(enriched.patient, resource_id=PID, derived=enriched.patient_derived)
+    fhir = mapped.resource.to_fhir()
+    assert fhir["birthDate"] == "1972-03-15"
+    assert "_birthDate" not in fhir
+    assert fhir["gender"] == "male"  # stated; the fixture's 900-999 code carries no sex
+    assert [(n.code, n.severity) for n in notes] == [(NoteCode.BIRTH_DATE_DERIVED, "info")]
+    assert "150372" not in notes[0].message  # no identity code in notes
+    assert mapped.resource.text is not None
+    assert "derived from personal identity code" in mapped.resource.text.div
+
+
+def test_derived_gender_used_only_when_not_stated() -> None:
+    enriched = derived_birth_date_and_gender()
+    mapped, notes = map_patient(enriched.patient, resource_id=PID, derived=enriched.patient_derived)
+    fhir = mapped.resource.to_fhir()
+    assert fhir["birthDate"] == "1840-01-01"
+    assert fhir["gender"] == "male"
+    assert {n.code for n in notes} == {NoteCode.BIRTH_DATE_DERIVED, NoteCode.GENDER_DERIVED}
+
+
+def test_stated_values_win_over_derived() -> None:
+    enriched = with_birth_date()  # stated 1972-03-15, gender male
+    derived = derived_birth_date_and_gender().patient_derived  # 1840-01-01, male
+    mapped, notes = map_patient(enriched.patient, resource_id=PID, derived=derived)
+    fhir = mapped.resource.to_fhir()
+    assert fhir["birthDate"] == "1972-03-15"
+    assert fhir["gender"] == "male"
+    assert notes == []

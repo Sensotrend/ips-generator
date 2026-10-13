@@ -133,8 +133,11 @@ field descriptions. Where those leave room, these rules decide.
   lopetettu/utsatt/stopped; `on_hold` for tauolla/tauotettu/uppehåll/on-hold. Wording in the
   entry's own line wins over the list heading.
 - Dates only as precise as written (`03/2024` → `2024-03`, `Aug 2025` → `2025-08`). Birth date
-  and gender only when stated; never derived from a HETU (D-10 is open, so gold keeps
-  `birth_date: null` when only a HETU is present). Titles ("Mr", "rouva") and pronouns are not a
+  and gender only when stated; never derived from a HETU, so gold keeps `birth_date: null`
+  when only a HETU is present. D-10 derivation is a deterministic pipeline step after
+  grounding (`backend/app/pipeline/derive.py`), scored against `meta.json`
+  `expected_patient` (the true birth date/gender; for HETU-only cases the date the synthetic
+  HETU was generated from; never a gender, since 900-999 codes carry none). Titles ("Mr", "rouva") and pronouns are not a
   stated gender; "8-vuotias tyttö", "74-årig kvinna", "69-vuotias mies" are.
 - Dosage: `text` is the instruction as written, including an indication written in it
   ("1x3 tarvittessa kipuun", "2 puffs PRN for wheeze"); an indication in a separate field or

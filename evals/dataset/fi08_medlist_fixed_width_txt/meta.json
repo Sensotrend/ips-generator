@@ -17,5 +17,9 @@
     "hetu_without_birth_date",
     "caps_headings"
   ],
-  "notes": "Fixed-width printout with CRLF and LF line breaks, tabs and trailing spaces. Quotes keep the column padding verbatim. Problems: no_information. '1/2 tabl' -> dose 0.5."
+  "notes": "Fixed-width printout with CRLF and LF line breaks, tabs and trailing spaces. Quotes keep the column padding verbatim. Problems: no_information. '1/2 tabl' -> dose 0.5.",
+  "expected_patient": {
+    "birth_date": "1962-07-05",
+    "gender": null
+  }
 }

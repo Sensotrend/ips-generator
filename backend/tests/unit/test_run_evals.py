@@ -17,6 +17,7 @@ import pytest
 from app.llm.client import LlmClient, LlmProvider
 from app.llm.models import Effort, PipelineStep, StepModelConfig
 from app.llm.prompts import load_extract_prompt
+from app.pipeline.derive import derive_patient_facts
 from app.pipeline.extract import ExtractionRefusedError, ExtractionResult, TokenUsage
 from app.schemas.intermediate import SCHEMA_VERSION, IpsExtraction
 from evals.cases import EvalCase, load_cases, select_cases
@@ -120,6 +121,14 @@ def test_gold_as_prediction_scores_perfectly(tmp_path: Path) -> None:
             assert section.precision == section.recall == section.f1 == 1.0
             assert section.macro_f1 == 1.0
     assert summary.patient.f1 == 1.0
+    for name in ("patient_birth_date_effective", "patient_gender_effective"):
+        assert summary.sections[name].f1 == 1.0
+    # D-10: every HETU-only case gets its birth date derived, correctly; 900-999 codes: no sex.
+    hetu_only = sum("hetu_without_birth_date" in c.meta["features"] for c in CASES)
+    assert summary.derived["birth_date"].n == hetu_only > 0
+    assert summary.derived["birth_date"].accuracy == 1.0
+    assert summary.derived["gender"].n == 0
+    assert summary.review_flags == {"derived_from_identity_code": hetu_only}
     for name in ITEM_SECTIONS:
         assert summary.states[name].accuracy == 1.0
         assert summary.raw_sections[name].recall == 1.0
@@ -428,3 +437,30 @@ def test_judge_session_calls_once_and_caches(tmp_path: Path) -> None:
     broke = LlmJudge(client, step, CostGuard(0.0)).session(None)
     assert list(broke("problems", items_p, items_g)) == []
     assert broke.skipped == 1
+
+
+def test_wrong_derived_birth_date_is_scored_against_the_truth() -> None:
+    case = _case("fi02")  # HETU only; expected_patient.birth_date comes from the HETU
+    gold = case.load_gold()
+    index = DocumentIndex(case.document)
+    expected = case.expected_patient
+    assert expected is not None
+    assert expected["birth_date"] is not None
+    derivation = derive_patient_facts(gold.patient)
+    good = score_case(gold, gold, index, derived=derivation.derived, expected_patient=expected)
+    assert good.derived == {"birth_date": True}
+    assert good.sections["patient_birth_date_effective"].counts.tp == 1
+    wrong = derivation.derived.model_copy(
+        update={
+            "birth_date": derivation.derived.birth_date.model_copy(  # type: ignore[union-attr]
+                update={"value": "1900-01-01"}
+            )
+        }
+    )
+    bad = score_case(gold, gold, index, derived=wrong, expected_patient=expected)
+    assert bad.derived == {"birth_date": False}
+    counts = bad.sections["patient_birth_date_effective"].counts
+    assert (counts.tp, counts.fp, counts.fn) == (0, 1, 1)
+    # The LLM-layer birth date metric is unaffected (gold birth_date stays null).
+    assert bad.sections["patient_birth_date"].counts.tp == 0
+    assert bad.sections["patient_birth_date"].counts.fp == 0

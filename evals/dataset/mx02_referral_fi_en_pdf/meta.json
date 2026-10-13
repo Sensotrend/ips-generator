@@ -15,5 +15,9 @@
     "hetu_without_birth_date",
     "allergy_reactions"
   ],
-  "notes": "Finnish referral quoting an English GP letter. Omeprazole appears in both (gold quotes the current Finnish line). Presenting symptoms without a diagnosis (upper abdominal pain, weight loss) count as problems. 'No other known allergies' and 'Ei muuta säännöllistä lääkitystä' only confirm the lists."
+  "notes": "Finnish referral quoting an English GP letter. Omeprazole appears in both (gold quotes the current Finnish line). Presenting symptoms without a diagnosis (upper abdominal pain, weight loss) count as problems. 'No other known allergies' and 'Ei muuta säännöllistä lääkitystä' only confirm the lists.",
+  "expected_patient": {
+    "birth_date": "1969-08-14",
+    "gender": null
+  }
 }

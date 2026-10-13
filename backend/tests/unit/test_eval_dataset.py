@@ -58,7 +58,16 @@ DOC_TYPES = {
     "lab_report",
     "outpatient_note",
 }
-META_KEYS = {"case_id", "language", "format", "media_type", "doc_type", "features", "notes"}
+META_KEYS = {
+    "case_id",
+    "language",
+    "format",
+    "media_type",
+    "doc_type",
+    "features",
+    "notes",
+    "expected_patient",
+}
 REQUIRED_FEATURES = {
     "nkda_plus_food_allergy",
     "none_known_allergies",
@@ -174,6 +183,33 @@ def test_only_synthetic_hetus(case_id: str) -> None:
             birth, _century, individual, check = match.groups()
             assert int(individual) >= 900, "HETU outside the synthetic range 900-999"
             assert _HETU_CHECK[int(birth + individual) % 31] == check
+
+
+_CENTURIES = {"+": 1800, **dict.fromkeys("-YXWVU", 1900), **dict.fromkeys("ABCDEF", 2000)}
+
+
+@pytest.mark.parametrize("case_id", CASE_IDS)
+def test_expected_patient_is_the_truth(case_id: str) -> None:
+    """``expected_patient`` (D-10) = stated values; for HETU-only cases the birth date encoded in
+    the HETU, decoded here independently of ``app.pipeline.derive``. Never a gender from a
+    900-999 code."""
+    gold = _gold(case_id)
+    expected = _meta(case_id)["expected_patient"]
+    assert set(expected) == {"birth_date", "gender"}
+    from_codes = set()
+    for identifier in gold.patient.identifiers:
+        match = _HETU.fullmatch(identifier.value)
+        if match:
+            ddmmyy, sign, _individual, _check = match.groups()
+            year = _CENTURIES[sign] + int(ddmmyy[4:])
+            from_codes.add(f"{year:04d}-{ddmmyy[2:4]}-{ddmmyy[:2]}")
+    assert len(from_codes) <= 1
+    if gold.patient.birth_date is not None:
+        assert expected["birth_date"] == gold.patient.birth_date.value
+        assert not from_codes or from_codes == {gold.patient.birth_date.value}
+    else:
+        assert expected["birth_date"] == next(iter(from_codes), None)
+    assert expected["gender"] == (gold.patient.gender.value if gold.patient.gender else None)
 
 
 def _has_partial_date(gold: IpsExtraction) -> bool:

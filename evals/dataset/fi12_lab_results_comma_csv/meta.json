@@ -10,5 +10,9 @@
     "decimal_comma",
     "hetu_without_birth_date"
   ],
-  "notes": "Comma-separated lab export with quoted Finnish decimal commas; the patient is repeated on every row (gold quotes the first). Elevated HbA1c/creatinine/albuminuria are not diagnoses: all three sections are no_information."
+  "notes": "Comma-separated lab export with quoted Finnish decimal commas; the patient is repeated on every row (gold quotes the first). Elevated HbA1c/creatinine/albuminuria are not diagnoses: all three sections are no_information.",
+  "expected_patient": {
+    "birth_date": "1949-12-24",
+    "gender": null
+  }
 }

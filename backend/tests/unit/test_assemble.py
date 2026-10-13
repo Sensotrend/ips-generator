@@ -16,6 +16,7 @@ from app.fhir.constants import (
 from app.fhir.device import PipelineInfo
 from app.fhir.models import Bundle
 from app.pipeline.assemble import assemble, seeded_id_factory
+from app.pipeline.derive import apply_derivations
 from app.pipeline.ground import ReviewFlag, ReviewReason
 from tests.assembly_cases import NOW, all_variants, build, past_illness
 
@@ -170,3 +171,20 @@ def test_notes_contain_no_document_text() -> None:
     for note in result.notes:
         for text in ("Maapähkinä", "Metformin", "Virtanen", "E11.9", "A10BA02", "Migreeni"):
             assert text not in note.message
+
+
+def test_derived_birth_date_flags_and_notes_on_patient_entry() -> None:
+    enriched, flags = apply_derivations(build())
+    result = assemble(enriched, now=NOW, flags=flags)
+    patient = result.entry_for_path("patient")
+    assert patient is not None
+    assert patient.review_flags == (ReviewReason.DERIVED_FROM_IDENTITY_CODE,)
+    codes = {n.code for n in result.notes}
+    assert NoteCode.BIRTH_DATE_DERIVED in codes
+    assert NoteCode.BIRTH_DATE_MISSING not in codes
+    resource = next(
+        e["resource"]
+        for e in result.bundle.to_fhir()["entry"]
+        if e["resource"]["resourceType"] == "Patient"
+    )
+    assert resource["birthDate"] == "1972-03-15"

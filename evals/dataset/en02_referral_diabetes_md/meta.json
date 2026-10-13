@@ -13,5 +13,9 @@
     "birth_date_stated",
     "messy_formatting"
   ],
-  "notes": "Markdown referral. 'Mr' and 'gentleman' are not a stated gender (gender null). Father's MI and mother's diabetes are family history; DM2 appears twice (reported once from the PMH list)."
+  "notes": "Markdown referral. 'Mr' and 'gentleman' are not a stated gender (gender null). Father's MI and mother's diabetes are family history; DM2 appears twice (reported once from the PMH list).",
+  "expected_patient": {
+    "birth_date": "1964-03-02",
+    "gender": null
+  }
 }

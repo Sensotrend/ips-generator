@@ -53,6 +53,8 @@ class NoteCode(StrEnum):
     """Why a mapping note was raised. Notes never contain document content."""
 
     BIRTH_DATE_MISSING = "birth_date_missing"  # _birthDate with data-absent-reason
+    BIRTH_DATE_DERIVED = "birth_date_derived"  # D-10: from a Finnish personal identity code
+    GENDER_DERIVED = "gender_derived"  # D-10: from a Finnish personal identity code
     PATIENT_NAME_MISSING = "patient_name_missing"  # name._text with data-absent-reason
     PRINTED_CODE_NOT_EMITTED = "printed_code_not_emitted"  # D-9: text hint only
     CODING_NOT_EMITTED = "coding_not_emitted"  # a lookup coding with no FHIR element to go to

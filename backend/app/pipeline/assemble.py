@@ -140,7 +140,9 @@ def assemble(
     ids = new_id or seeded_id_factory(_default_seed(enriched))
     pipeline = pipeline or PipelineInfo()
 
-    patient, notes = map_patient(enriched.patient, resource_id=ids("patient"))
+    patient, notes = map_patient(
+        enriched.patient, resource_id=ids("patient"), derived=enriched.patient_derived
+    )
     device = map_pipeline_device(pipeline, schema_version=enriched.schema_version)
     ctx = MappingContext(patient=reference(patient.full_url), new_id=ids)
     sections: list[SectionResult] = [

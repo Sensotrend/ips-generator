@@ -1,7 +1,8 @@
 """The per-case eval pipeline and the run directory.
 
 Per case: ingest -> prediction (gold / cached / live extract) -> ground -> apply_grounding ->
-``EnrichedIps.from_extraction`` -> assemble -> optional Matchbox validation -> score against gold.
+derive (D-10, ``app.pipeline.derive``) -> ``EnrichedIps.from_extraction`` -> assemble -> optional
+Matchbox validation -> score against gold (and the case's ``expected_patient``).
 
 Run directory (``evals/runs/<UTC timestamp>_<extract model>_<prompt>/``, gitignored; synthetic
 data only)::
@@ -40,6 +41,7 @@ from app.llm.client import LlmClient
 from app.llm.models import StepModelConfig
 from app.llm.prompts import Prompt
 from app.pipeline.assemble import AssemblyResult, assemble
+from app.pipeline.derive import derive_patient_facts
 from app.pipeline.extract import ExtractionError, TokenUsage, build_user_message, extract
 from app.pipeline.ground import apply_grounding, ground
 from app.pipeline.validate import MatchboxClient, MatchboxError
@@ -320,21 +322,31 @@ def evaluate_case(
     gold = case.load_gold()
     doc = case.document
     index = DocumentIndex(doc)
+    expected = case.expected_patient
     if not meta.ok or prediction.extraction is None:
         return base.model_copy(
             update={
                 "status": "extraction_failed",
                 "error": meta.error or "NoExtraction",
-                "score": score_case(None, gold, index),
+                "score": score_case(None, gold, index, expected_patient=expected),
             }
         )
 
     raw = prediction.extraction
     report = ground(raw, doc)
     grounded = apply_grounding(raw, report)
-    score = score_case(grounded.extraction, gold, index, judge=judge)
+    derivation = derive_patient_facts(grounded.extraction.patient)
+    all_flags = (*grounded.flags, *derivation.flags)
+    score = score_case(
+        grounded.extraction,
+        gold,
+        index,
+        judge=judge,
+        derived=derivation.derived,
+        expected_patient=expected,
+    )
     flags: dict[str, int] = {}
-    for flag in grounded.flags:
+    for flag in all_flags:
         flags[flag.reason.value] = flags.get(flag.reason.value, 0) + 1
 
     updates: dict[str, Any] = {
@@ -346,8 +358,10 @@ def evaluate_case(
     }
     assembly: AssemblyResult | None = None
     try:
-        enriched = EnrichedIps.from_extraction(grounded.extraction)
-        assembly = assemble(enriched, now=now, flags=grounded.flags)
+        enriched = EnrichedIps.from_extraction(
+            grounded.extraction, patient_derived=derivation.derived
+        )
+        assembly = assemble(enriched, now=now, flags=all_flags)
         updates["assembly_ok"] = True
         updates["assembly_warnings"] = len(assembly.warnings)
     except Exception as exc:  # report, don't abort the run

@@ -16,6 +16,13 @@ For every case defined in ``cases_*.py`` it
    ``exact`` at the resolved location and that ``apply_grounding`` raises no flags,
 5. writes ``gold.json`` and ``meta.json``, and regenerates the feature matrix in ``README.md``.
 
+``meta.json`` ``expected_patient`` holds the *true* birth date and gender the IPS Patient should
+carry (D-10): the stated value when the document states one, else, for the birth date, the
+date a case's synthetic HETU was generated from (``gold.HETU_BIRTH_DATES``, the authoring
+input; never the pipeline's parser). Gender is never expected from a HETU: the dataset's codes
+use individual numbers 900-999, which carry no sex (``app.pipeline.derive``). The gold
+extraction itself keeps ``birth_date: null`` when only a HETU is present (LLM-layer truth).
+
 Case directories that no longer have a definition are deleted.
 """
 
@@ -36,6 +43,7 @@ sys.path.insert(0, str(REPO_ROOT / "backend"))
 sys.path.insert(0, str(BUILD_DIR))
 
 from case import Case  # noqa: E402
+from gold import HETU_BIRTH_DATES  # noqa: E402
 from reportlab.lib.pagesizes import A4  # noqa: E402
 from reportlab.pdfgen import canvas  # noqa: E402
 
@@ -249,6 +257,21 @@ def check_case(case: Case, doc: IngestedDocument, gold: dict[str, Any]) -> None:
 # ---- output -------------------------------------------------------------------------------
 
 
+def expected_patient(case: Case, gold: dict[str, Any]) -> dict[str, str | None]:
+    """True birth date / gender of the patient (see the module docstring)."""
+    patient = gold["patient"]
+    births = {
+        HETU_BIRTH_DATES[i["value"]] for i in patient["identifiers"] if i["value"] in HETU_BIRTH_DATES
+    }
+    _require(len(births) <= 1, f"{case.case_id}: identifiers with different HETU birth dates")
+    stated = patient["birth_date"]["value"] if patient["birth_date"] else None
+    if stated is not None and births:
+        _require(births == {stated}, f"{case.case_id}: stated birth date differs from the HETU")
+    birth = stated if stated is not None else next(iter(births), None)
+    gender = patient["gender"]["value"] if patient["gender"] else None
+    return {"birth_date": birth, "gender": gender}
+
+
 def write_json(path: Path, value: Any) -> None:
     path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
@@ -278,6 +301,7 @@ def build_case(case: Case) -> None:
             "doc_type": case.doc_type,
             "features": list(case.features),
             "notes": case.notes,
+            "expected_patient": expected_patient(case, gold),
         },
     )
 

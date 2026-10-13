@@ -15,5 +15,9 @@
     "abbreviations",
     "allergy_reactions"
   ],
-  "notes": "Markdown-ish referral. 'Verenpainetautti' and 'tarvittessa' are typos kept verbatim. Appendectomy is a procedure, not a problem. HETU only: birth_date stays null (D-10)."
+  "notes": "Markdown-ish referral. 'Verenpainetautti' and 'tarvittessa' are typos kept verbatim. Appendectomy is a procedure, not a problem. HETU only: birth_date stays null (D-10).",
+  "expected_patient": {
+    "birth_date": "1968-04-12",
+    "gender": null
+  }
 }

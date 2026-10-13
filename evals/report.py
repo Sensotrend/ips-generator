@@ -5,7 +5,13 @@ from __future__ import annotations
 
 from typing import Any
 
-from evals.metrics import ITEM_SECTIONS, PATIENT_SECTIONS, RunSummary, SectionAggregate
+from evals.metrics import (
+    EFFECTIVE_PATIENT_SECTIONS,
+    ITEM_SECTIONS,
+    PATIENT_SECTIONS,
+    RunSummary,
+    SectionAggregate,
+)
 
 __all__ = ["render_markdown"]
 
@@ -53,10 +59,19 @@ def render_markdown(metadata: dict[str, Any], summary: RunSummary) -> str:
     lines.append(_section_row("patient (all)", summary.patient))
     for name in PATIENT_SECTIONS:
         lines.append(_section_row(name, summary.sections[name]))
+    for name in EFFECTIVE_PATIENT_SECTIONS:
+        if name in summary.sections:
+            lines.append(_section_row(name, summary.sections[name]))
+    derived = ", ".join(
+        f"{name} {_num(agg.accuracy)} (n {agg.n})" for name, agg in summary.derived.items()
+    )
     raw = ", ".join(f"{name} {_num(s.recall)}" for name, s in summary.raw_sections.items())
     lines += [
         "",
         f"Recall before grounding: {raw}. Match methods: {summary.match_methods or 'none'}.",
+        "",
+        "Effective patient values = stated or derived (D-10) vs the true value in "
+        f"`expected_patient`. Derived-value accuracy: {derived or 'n/a'}.",
         "",
         "**Section state** (items_found / none_known / no_information)",
         "",

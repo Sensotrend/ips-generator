@@ -14,5 +14,9 @@
     "section_no_information",
     "partial_dates"
   ],
-  "notes": "Comma-separated medication list with quoted cells containing commas. No patient data. Indications (hypotyreos, diabetes, kärlkramp) stay in reason_text; problems and allergies are no_information."
+  "notes": "Comma-separated medication list with quoted cells containing commas. No patient data. Indications (hypotyreos, diabetes, kärlkramp) stay in reason_text; problems and allergies are no_information.",
+  "expected_patient": {
+    "birth_date": null,
+    "gender": null
+  }
 }

@@ -16,5 +16,9 @@
     "caps_headings",
     "hetu_without_birth_date"
   ],
-  "notes": "Bilingual headings; Swedish consultation paragraph. The same 'no known drug allergies' statement is given in Finnish and Swedish (gold keeps one, the first). Eliquis and Kaleorid appear in the consultation and the list (gold quotes the list). The cholecystectomy is a procedure. 'Paksusuolen' only locates the diverticulosis, so it goes to body_site_text."
+  "notes": "Bilingual headings; Swedish consultation paragraph. The same 'no known drug allergies' statement is given in Finnish and Swedish (gold keeps one, the first). Eliquis and Kaleorid appear in the consultation and the list (gold quotes the list). The cholecystectomy is a procedure. 'Paksusuolen' only locates the diverticulosis, so it goes to body_site_text.",
+  "expected_patient": {
+    "birth_date": "1944-02-29",
+    "gender": null
+  }
 }

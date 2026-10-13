@@ -9,5 +9,9 @@
     "section_no_information",
     "abbreviations"
   ],
-  "notes": "Lab export keyed by a synthetic patient ID only. Low haemoglobin/ferritin suggest iron deficiency but no diagnosis is written: all three sections are no_information."
+  "notes": "Lab export keyed by a synthetic patient ID only. Low haemoglobin/ferritin suggest iron deficiency but no diagnosis is written: all three sections are no_information.",
+  "expected_patient": {
+    "birth_date": null,
+    "gender": null
+  }
 }

@@ -11,7 +11,14 @@ Definitions
   ``items_found``, matched like items by their quote; field ``scope``.
 * **Patient** (``patient_names``, ``patient_identifiers``: matched like items;
   ``patient_birth_date``, ``patient_gender``: a single value, TP when equal, FP + FN when
-  different, FP / FN when only one side has it). ``patient`` sums the four.
+  different, FP / FN when only one side has it). ``patient`` sums the four. These score the
+  LLM layer: gold keeps ``birth_date: null`` when only a HETU is present.
+* **Effective patient values** (D-10; ``patient_birth_date_effective``,
+  ``patient_gender_effective``): the value the Patient resource carries (derived from a Finnish
+  personal identity code if there is one, else stated) vs the case's true value in
+  ``meta.json`` ``expected_patient``, scored like a single value. Empty when the case has no
+  ``expected_patient``. **Derived accuracy** (``derived``): over the values that were derived,
+  the share equal to the true value (``n`` = number of derived values).
 * **Micro** averages sum TP/FP/FN over cases; **macro** averages per-case F1 over the cases
   where the section has at least one gold or predicted item (both empty = undefined, skipped).
 * **Section state** (allergies/medications/problems): ``items_found`` / ``none_known`` /
@@ -50,6 +57,7 @@ from app.schemas.intermediate import (
     ItemsFound,
     MedicationItem,
     NoKnownAllergyStatement,
+    PatientDerivations,
 )
 from evals.matching import (
     Candidate,
@@ -63,6 +71,8 @@ from evals.matching import (
 
 __all__ = [
     "CRITICAL_STATE_ERRORS",
+    "DERIVED_FIELDS",
+    "EFFECTIVE_PATIENT_SECTIONS",
     "ITEM_SECTIONS",
     "PATIENT_SECTIONS",
     "SCORED_SECTIONS",
@@ -88,7 +98,17 @@ PATIENT_SECTIONS: Final = (
     "patient_birth_date",
     "patient_gender",
 )
-SCORED_SECTIONS: Final = (*ITEM_SECTIONS, "allergy_statements", *PATIENT_SECTIONS)
+EFFECTIVE_PATIENT_SECTIONS: Final = (
+    "patient_birth_date_effective",
+    "patient_gender_effective",
+)
+DERIVED_FIELDS: Final = ("birth_date", "gender")
+SCORED_SECTIONS: Final = (
+    *ITEM_SECTIONS,
+    "allergy_statements",
+    *PATIENT_SECTIONS,
+    *EFFECTIVE_PATIENT_SECTIONS,
+)
 STATES: Final = ("items_found", "none_known", "no_information", "error")
 CRITICAL_STATE_ERRORS: Final = frozenset(
     {("items_found", "none_known"), ("none_known", "items_found")}
@@ -196,6 +216,9 @@ class CaseScore(BaseModel):
 
     sections: dict[str, SectionScore]
     states: dict[str, StateOutcome]
+    derived: dict[str, bool] = Field(default_factory=dict)
+    """Derived patient field (``birth_date``, ``gender``) -> equals the true value. Only fields
+    that were derived and whose true value is known."""
 
 
 class UsageRecord(BaseModel):
@@ -469,8 +492,10 @@ def _field_tallies(
 
 def _single_value(pred: Any, gold: Any) -> SectionScore:
     """Birth date / gender: one value or none on each side."""
-    p = getattr(pred, "value", None)
-    g = getattr(gold, "value", None)
+    return _compare_values(getattr(pred, "value", None), getattr(gold, "value", None))
+
+
+def _compare_values(p: str | None, g: str | None) -> SectionScore:
     counts = Counts()
     if p is not None and g is not None and p == g:
         counts.tp = 1
@@ -490,8 +515,13 @@ def score_case(
     index: DocumentIndex,
     *,
     judge: LeftoverJudge | None = None,
+    derived: PatientDerivations | None = None,
+    expected_patient: dict[str, str | None] | None = None,
 ) -> CaseScore:
-    """Score ``pred`` (``None`` = extraction failed) against ``gold`` for one document."""
+    """Score ``pred`` (``None`` = extraction failed) against ``gold`` for one document.
+
+    ``derived`` are the D-10 derivations made from ``pred``; ``expected_patient`` the case's
+    true birth date / gender (``None``: effective-value sections stay empty)."""
     sections: dict[str, SectionScore] = {}
     for section in ITEM_SECTIONS:
         pred_items, gold_items = _items(pred, section), _items(gold, section)
@@ -544,6 +574,21 @@ def score_case(
         pred.patient.gender if pred else None, gold.patient.gender
     )
 
+    derived = derived or PatientDerivations()
+    derived_correct: dict[str, bool] = {}
+    for field in DERIVED_FIELDS:
+        stated = getattr(pred.patient, field) if pred else None
+        derived_value = getattr(derived, field)
+        effective = derived_value.value if derived_value else getattr(stated, "value", None)
+        key = f"patient_{field}_effective"
+        if expected_patient is None:
+            sections[key] = SectionScore()
+            continue
+        truth = expected_patient.get(field)
+        sections[key] = _compare_values(str(effective) if effective is not None else None, truth)
+        if derived_value is not None and truth is not None:
+            derived_correct[field] = str(derived_value.value) == truth
+
     states = {
         section: StateOutcome(
             gold=section_state(gold, section),
@@ -551,7 +596,7 @@ def score_case(
         )
         for section in ITEM_SECTIONS
     }
-    return CaseScore(sections=sections, states=states)
+    return CaseScore(sections=sections, states=states, derived=derived_correct)
 
 
 def item_counts(
@@ -650,6 +695,8 @@ class RunSummary(BaseModel):
     """``case_id section gold->pred``."""
     false_assurance: list[str]
     fields: dict[str, dict[str, FieldAggregate]]
+    derived: dict[str, FieldAggregate]
+    """D-10: derived patient values (n) and the share equal to the true value."""
     grounding: dict[str, int]
     dropped_facts: int
     review_flags: dict[str, int]
@@ -767,6 +814,15 @@ def aggregate(cases: Sequence[CaseResult], *, validation_ran: bool) -> RunSummar
                 lenient_accuracy=_ratio(tally.lenient, tally.total),
             )
 
+    derived: dict[str, FieldAggregate] = {}
+    for name in DERIVED_FIELDS:
+        outcomes = [s.derived[name] for s in scored if name in s.derived]
+        derived[name] = FieldAggregate(
+            n=len(outcomes),
+            accuracy=_ratio(sum(outcomes), len(outcomes)),
+            lenient_accuracy=None,
+        )
+
     grounding: Counter[str] = Counter()
     flags: Counter[str] = Counter()
     for case in run:
@@ -803,6 +859,7 @@ def aggregate(cases: Sequence[CaseResult], *, validation_ran: bool) -> RunSummar
         critical_state_errors=critical,
         false_assurance=assurance,
         fields=fields,
+        derived=derived,
         grounding=dict(grounding),
         dropped_facts=sum(c.dropped for c in run),
         review_flags=dict(flags),

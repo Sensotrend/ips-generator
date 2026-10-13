@@ -16,5 +16,9 @@
     "gender_stated",
     "hetu_without_birth_date"
   ],
-  "notes": "Two-page referral PDF; medications are on page 2. The grandfather's Parkinson's disease and the mother's breast cancer are family history. Tremor is covered by the suspected diagnosis and not listed separately."
+  "notes": "Two-page referral PDF; medications are on page 2. The grandfather's Parkinson's disease and the mother's breast cancer are family history. Tremor is covered by the suspected diagnosis and not listed separately.",
+  "expected_patient": {
+    "birth_date": "1952-03-03",
+    "gender": "female"
+  }
 }

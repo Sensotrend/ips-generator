@@ -14,5 +14,9 @@
     "section_no_information",
     "caps_headings"
   ],
-  "notes": "Home-care visit note. The spouse's type 1 diabetes and Marevan are not the patient's. 'Alzhaimerin' is a typo kept verbatim. Allergies are not mentioned (no_information)."
+  "notes": "Home-care visit note. The spouse's type 1 diabetes and Marevan are not the patient's. 'Alzhaimerin' is a typo kept verbatim. Allergies are not mentioned (no_information).",
+  "expected_patient": {
+    "birth_date": "1935-01-17",
+    "gender": null
+  }
 }

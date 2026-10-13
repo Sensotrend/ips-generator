@@ -13,5 +13,9 @@
     "allergy_reactions",
     "hetu_without_birth_date"
   ],
-  "notes": "JSON note made of headed text sections. 'Inga regelbundna läkemedel' -> medications none_known. Migraine also appears in the assessment (reported once, with its code)."
+  "notes": "JSON note made of headed text sections. 'Inga regelbundna läkemedel' -> medications none_known. Migraine also appears in the assessment (reported once, with its code).",
+  "expected_patient": {
+    "birth_date": "1990-06-15",
+    "gender": "female"
+  }
 }

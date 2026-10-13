@@ -12,6 +12,8 @@ from __future__ import annotations
 
 from typing import Any
 
+from app.pipeline.derive import check_character  # backend/ is on sys.path (see build.py)
+
 Fact = dict[str, Any]
 
 NO_INFO: Fact = {"kind": "no_information"}
@@ -260,17 +262,24 @@ def extraction(
 
 # ---- synthetic Finnish personal identity codes ---------------------------------------------
 
-_HETU_CHECK = "0123456789ABCDEFHJKLMNPRSTUVWXY"
+HETU_BIRTH_DATES: dict[str, str] = {}
+"""Every code made by `hetu` -> the birth date it was made from (the authoring input). The
+builder uses it as the *true* birth date of HETU-only cases (``meta.json`` ``expected_patient``),
+independent of the pipeline's parser in ``app.pipeline.derive``."""
 
 
 def hetu(birth: str, individual: int) -> str:
     """Synthetic Finnish personal identity code for ``birth`` (YYYY-MM-DD).
 
-    Only individual numbers 900-999 (the range never issued to real people) are allowed.
+    Only individual numbers 900-999 (the range never issued to real people) are allowed. The
+    check character comes from ``app.pipeline.derive.check_character`` (one implementation of
+    the mod-31 table; the unit tests check it against DVV's published example).
     """
     if not 900 <= individual <= 999:
         raise ValueError("synthetic HETUs must use individual numbers 900-999")
     year, month, day = birth.split("-")
     century = {"18": "+", "19": "-", "20": "A"}[year[:2]]
     digits = f"{day}{month}{year[2:]}{individual:03d}"
-    return f"{day}{month}{year[2:]}{century}{individual:03d}{_HETU_CHECK[int(digits) % 31]}"
+    code = f"{day}{month}{year[2:]}{century}{individual:03d}{check_character(digits)}"
+    HETU_BIRTH_DATES[code] = birth
+    return code

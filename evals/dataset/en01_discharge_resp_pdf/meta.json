@@ -19,5 +19,9 @@
     "birth_date_stated",
     "allergy_reactions"
   ],
-  "notes": "Two-page discharge summary. Amoxicillin, salbutamol, montelukast, levothyroxine and Symbicort are mentioned in the course (page 1) and listed on page 2 (gold quotes page 2). Appendicectomy is a procedure. 'nocte' is one time of day: 1 per 1 d."
+  "notes": "Two-page discharge summary. Amoxicillin, salbutamol, montelukast, levothyroxine and Symbicort are mentioned in the course (page 1) and listed on page 2 (gold quotes page 2). Appendicectomy is a procedure. 'nocte' is one time of day: 1 per 1 d.",
+  "expected_patient": {
+    "birth_date": "1983-07-19",
+    "gender": "female"
+  }
 }

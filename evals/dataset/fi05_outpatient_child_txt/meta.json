@@ -14,5 +14,9 @@
     "gender_stated",
     "birth_date_stated"
   ],
-  "notes": "Child visit. The mother's asthma and penicillin allergy are not the patient's. 'Ei säännöllistä lääkitystä' -> medications none_known; no new drug prescribed."
+  "notes": "Child visit. The mother's asthma and penicillin allergy are not the patient's. 'Ei säännöllistä lääkitystä' -> medications none_known; no new drug prescribed.",
+  "expected_patient": {
+    "birth_date": "2018-02-14",
+    "gender": "female"
+  }
 }

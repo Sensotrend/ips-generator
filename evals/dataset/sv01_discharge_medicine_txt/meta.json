@@ -20,5 +20,9 @@
     "birth_date_stated",
     "allergy_reactions"
   ],
-  "notes": "Finland-Swedish discharge summary. Warfarin/Eliquis/Metoprolol appear in the narrative and the list (reported once, from the list). Hip prosthesis is a procedure. EpiPen 'vid anafylaxi' is used only on a trigger: as_needed true."
+  "notes": "Finland-Swedish discharge summary. Warfarin/Eliquis/Metoprolol appear in the narrative and the list (reported once, from the list). Hip prosthesis is a procedure. EpiPen 'vid anafylaxi' is used only on a trigger: as_needed true.",
+  "expected_patient": {
+    "birth_date": "1946-08-12",
+    "gender": "male"
+  }
 }

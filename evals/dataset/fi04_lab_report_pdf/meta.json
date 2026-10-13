@@ -12,5 +12,9 @@
     "abbreviations",
     "gender_stated"
   ],
-  "notes": "Lab report with abnormal values (glucose, HbA1c, LDL) but no diagnosis, medication or allergy text: all three sections are no_information (restraint test)."
+  "notes": "Lab report with abnormal values (glucose, HbA1c, LDL) but no diagnosis, medication or allergy text: all three sections are no_information (restraint test).",
+  "expected_patient": {
+    "birth_date": "1960-10-27",
+    "gender": "female"
+  }
 }

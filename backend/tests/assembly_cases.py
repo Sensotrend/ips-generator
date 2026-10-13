@@ -12,6 +12,7 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
+from app.pipeline.derive import apply_derivations
 from app.schemas.intermediate import EnrichedIps
 
 FIXTURE = Path(__file__).parent / "fixtures" / "intermediate" / "enriched_discharge_summary_fi.json"
@@ -127,11 +128,38 @@ def without_name() -> EnrichedIps:
     return build(mutate)
 
 
+NEVER_ISSUED_HETU = "010140+123R"
+"""Born 1840-01-01, individual number 123 (odd = male). Structurally valid, but nobody born in
+1840 was alive (aged 124+) when Finnish identity codes were introduced in 1964, so it was never
+issued (no real data). Used where a 002-899 number is needed (no sex is derived from 900-999)."""
+
+
+def derived_birth_date() -> EnrichedIps:
+    """D-10: no stated birth date; derived from the fixture's synthetic HETU (900-999: no sex)."""
+    enriched, _ = apply_derivations(build())
+    return enriched
+
+
+def derived_birth_date_and_gender() -> EnrichedIps:
+    """D-10: neither birth date nor gender stated; both derived (individual number 123)."""
+
+    def mutate(data: dict[str, Any]) -> None:
+        data["patient"]["gender"] = None
+        identifier = data["patient"]["identifiers"][0]
+        identifier["value"] = NEVER_ISSUED_HETU
+        identifier["source_quote"] = f"Henkilötunnus: {NEVER_ISSUED_HETU}"
+
+    enriched, _ = apply_derivations(build(mutate))
+    return enriched
+
+
 def all_variants() -> dict[str, EnrichedIps]:
     """Every case that must validate against IPS 2.0.1 with 0 errors and no unmatched entry."""
     cases = {
         "fixture_missing_birth_date": build(),
         "with_birth_date": with_birth_date(),
+        "derived_birth_date": derived_birth_date(),
+        "derived_birth_date_and_gender": derived_birth_date_and_gender(),
         "without_name": without_name(),
         "nkda_and_items": nkda_and_items(),
         "past_illness": past_illness(),

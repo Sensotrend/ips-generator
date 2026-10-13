@@ -17,5 +17,9 @@
     "allergy_reactions",
     "caps_headings"
   ],
-  "notes": "Three-page PDF; page 2 holds only a page number (ingest lists it in pages_without_text). Medications are on page 3. Zopinox appears in the narrative (page 1) and in the stopped list (page 3); gold quotes page 3. The femoral neck is part of the fracture's name, so only 'Vasemman' goes to body_site_text."
+  "notes": "Three-page PDF; page 2 holds only a page number (ingest lists it in pages_without_text). Medications are on page 3. Zopinox appears in the narrative (page 1) and in the stopped list (page 3); gold quotes page 3. The femoral neck is part of the fracture's name, so only 'Vasemman' goes to body_site_text.",
+  "expected_patient": {
+    "birth_date": "1939-11-21",
+    "gender": null
+  }
 }

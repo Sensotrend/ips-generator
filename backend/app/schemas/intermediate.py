@@ -11,6 +11,10 @@ Two layers
    a stable ``id`` and ``codings`` filled *only* by the terminology step, each with lookup
    provenance. FHIR mappers in ``app/fhir/`` consume this layer and never the raw LLM output.
    ``EnrichedIps.from_extraction()`` converts layer 1 to layer 2 (no codings yet).
+   ``EnrichedIps.patient_derived`` holds patient facts derived deterministically after grounding
+   (birth date / sex from a Finnish personal identity code, D-10, ``app.pipeline.derive``),
+   each marked ``derived`` with its method and source identifier path. The LLM never fills
+   them: they are not part of layer 1.
 
 Provenance
 ----------
@@ -953,6 +957,76 @@ class Enriched[ItemT: BaseModel](BaseModel):
         return []
 
 
+class DerivationMethod(StrEnum):
+    FI_HETU = "fi-hetu"  # Finnish personal identity code (app.pipeline.derive)
+
+
+class IdentifierRecognition(StrEnum):
+    """Why an identifier was taken as a Finnish personal identity code."""
+
+    LABEL = "label"  # its type/issuer text names it (henkilötunnus, hetu, personbeteckning, ...)
+    FORMAT = "format"  # unlabelled or generically labelled; syntax, date and check char valid
+
+
+class Derivation(BaseModel):
+    """How a derived patient fact was computed. Contains no document content."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    method: DerivationMethod
+    source_path: NonEmptyText
+    """Path of the identifier it was computed from, e.g. ``patient.identifiers[0]``."""
+    recognised_by: IdentifierRecognition
+    completes_stated: bool = False
+    """True when the document states a partial birth date (``YYYY`` / ``YYYY-MM``) consistent
+    with the code, and the derived value completes it."""
+
+
+def _check_full_date(value: str) -> str:
+    _check_partial_date(value)
+    if len(value) != 10:
+        raise ValueError("a derived birth date is a full date YYYY-MM-DD")
+    return value
+
+
+class DerivedBirthDate(BaseModel):
+    """A birth date computed deterministically (never by the LLM) from a patient identifier."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    value: Annotated[str, AfterValidator(_check_full_date)]
+    derived: Literal[True] = True
+    derivation: Derivation
+
+
+class DerivedGender(BaseModel):
+    """An administrative gender computed deterministically from a patient identifier."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    value: AdministrativeGender
+    derived: Literal[True] = True
+    derivation: Derivation
+
+    @model_validator(mode="after")
+    def _binary(self) -> Self:
+        if self.value not in (AdministrativeGender.MALE, AdministrativeGender.FEMALE):
+            raise ValueError("a derived gender is male or female")
+        return self
+
+
+class PatientDerivations(BaseModel):
+    """Patient facts derived after grounding (PLAN.md D-10), only where the document does not
+    state them (or, for the birth date, states only part of it). Stated values in
+    ``EnrichedIps.patient`` are never overwritten; the mappers prefer a derived value only
+    because one exists solely when it may be used."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    birth_date: DerivedBirthDate | None = None
+    gender: DerivedGender | None = None
+
+
 EnrichedAllergySection = Annotated[
     Annotated[AllergiesFound[Enriched[AllergyItem]], _FOUND]
     | Annotated[NoKnownAllergies, _NONE]
@@ -981,17 +1055,23 @@ class EnrichedIps(BaseModel):
     schema_version: str = SCHEMA_VERSION
     document_language: NonEmptyText
     patient: PatientExtraction
+    patient_derived: PatientDerivations = Field(default_factory=PatientDerivations)
+    """Deterministically derived patient facts (``app.pipeline.derive``), kept apart from the
+    stated ones in ``patient`` so the review UI can show them as derived."""
     allergies: EnrichedAllergySection
     medications: EnrichedMedicationSection
     problems: EnrichedProblemSection
 
     @classmethod
-    def from_extraction(cls, extraction: IpsExtraction) -> EnrichedIps:
+    def from_extraction(
+        cls, extraction: IpsExtraction, *, patient_derived: PatientDerivations | None = None
+    ) -> EnrichedIps:
         """Wrap every extracted item (fresh ids, no codings yet)."""
         return cls.model_validate(
             {
                 "document_language": extraction.document_language,
                 "patient": extraction.patient,
+                "patient_derived": patient_derived or PatientDerivations(),
                 "allergies": _wrap_items(extraction.allergies),
                 "medications": _wrap_items(extraction.medications),
                 "problems": _wrap_items(extraction.problems),
