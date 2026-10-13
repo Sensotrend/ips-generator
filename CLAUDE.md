@@ -10,7 +10,8 @@ and phased task list. Work on the current phase, tick completed tasks, and note 
   deterministic mappers in `backend/app/fhir/`. Never have the LLM emit FHIR resources directly.
 - Never invent clinical codes. Codes must come from terminology-server lookups; otherwise keep text only.
   Only exception: codes fixed by the IPS IG (section codes, "no known …" codes) as named constants in
-  `backend/app/fhir/`. The LLM never outputs codes.
+  `backend/app/fhir/`. The LLM never outputs codes; it may only copy a code printed in the document into a
+  `printed_code` hint field, which is used only as a terminology search hint (PLAN D-9).
 - Every extracted fact keeps `source_quote` and `page`.
 - No real patient data in the repo, fixtures, logs, or prompts. Use Synthea / synthetic documents.
 - Never log document contents or PHI. Never cache PHI in the PWA service worker.

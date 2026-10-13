@@ -1,0 +1,2 @@
+# Lint evals/ with the backend's rules: `cd backend && uv run ruff check ../evals`.
+extend = "../backend/pyproject.toml"

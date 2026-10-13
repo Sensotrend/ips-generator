@@ -1,0 +1,208 @@
+{
+  "document_language": "en",
+  "patient": {
+    "names": [
+      {
+        "source_quote": "Testwood\npatient.name.given[0]: Harriet",
+        "page": 1,
+        "locator": "$.patient.name.family",
+        "text": "Harriet Testwood",
+        "family": "Testwood",
+        "given": [
+          "Harriet"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "birth_date": {
+      "source_quote": "birthDate: 1958-12-01",
+      "page": 1,
+      "locator": "$.patient.birthDate",
+      "value": "1958-12-01",
+      "confidence": "high"
+    },
+    "gender": {
+      "source_quote": "gender: female",
+      "page": 1,
+      "locator": "$.patient.gender",
+      "value": "female",
+      "confidence": "high"
+    },
+    "identifiers": [
+      {
+        "source_quote": "local-mrn\npatient.identifiers[0].value: TW-778201",
+        "page": 1,
+        "locator": "$.patient.identifiers[0].system",
+        "value": "TW-778201",
+        "type_text": "local-mrn",
+        "issuer_text": "",
+        "confidence": "high"
+      }
+    ]
+  },
+  "allergies": {
+    "kind": "no_information"
+  },
+  "medications": {
+    "kind": "items_found",
+    "items": [
+      {
+        "source_quote": "Aspirin\nmedications[0].strength: 75 mg\nmedications[0].form: tablet\nmedications[0].sig: 1 tablet once daily\nmedications[0].atc: B01AC06\nmedications[0].status: active",
+        "page": 1,
+        "locator": "$.medications[0].name",
+        "medication_text": "Aspirin",
+        "printed_code": "B01AC06",
+        "printed_code_system_text": "atc",
+        "strength_text": "75 mg",
+        "dose_form_text": "tablet",
+        "dosage": {
+          "text": "1 tablet once daily",
+          "dose_value": "1",
+          "dose_unit": "tablet",
+          "frequency": "1",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Bisoprolol\nmedications[1].strength: 2.5 mg\nmedications[1].form: tablet\nmedications[1].sig: 1 tablet once daily\nmedications[1].atc: C07AB07\nmedications[1].status: active",
+        "page": 1,
+        "locator": "$.medications[1].name",
+        "medication_text": "Bisoprolol",
+        "printed_code": "C07AB07",
+        "printed_code_system_text": "atc",
+        "strength_text": "2.5 mg",
+        "dose_form_text": "tablet",
+        "dosage": {
+          "text": "1 tablet once daily",
+          "dose_value": "1",
+          "dose_unit": "tablet",
+          "frequency": "1",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Isosorbide mononitrate\nmedications[2].strength: 60 mg\nmedications[2].form: modified-release tablet\nmedications[2].sig: 1 tablet every morning\nmedications[2].atc: C01DA14\nmedications[2].status: on-hold\nmedications[2].comment: held while BP low",
+        "page": 1,
+        "locator": "$.medications[2].name",
+        "medication_text": "Isosorbide mononitrate",
+        "printed_code": "C01DA14",
+        "printed_code_system_text": "atc",
+        "strength_text": "60 mg",
+        "dose_form_text": "modified-release tablet",
+        "dosage": {
+          "text": "1 tablet every morning",
+          "dose_value": "1",
+          "dose_unit": "tablet",
+          "frequency": "1",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "on_hold",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "held while BP low",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "GTN spray\nmedications[3].strength: 400 micrograms/dose\nmedications[3].form: sublingual spray\nmedications[3].sig: 1-2 sprays as needed for chest pain\nmedications[3].atc: C01DA02\nmedications[3].status: active",
+        "page": 1,
+        "locator": "$.medications[3].name",
+        "medication_text": "GTN spray",
+        "printed_code": "C01DA02",
+        "printed_code_system_text": "atc",
+        "strength_text": "400 micrograms/dose",
+        "dose_form_text": "sublingual spray",
+        "dosage": {
+          "text": "1-2 sprays as needed for chest pain",
+          "dose_value": "",
+          "dose_unit": "sprays",
+          "frequency": "",
+          "period": "",
+          "period_unit": "not_stated",
+          "as_needed": true,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "chest pain",
+        "note": "",
+        "confidence": "high"
+      }
+    ]
+  },
+  "problems": {
+    "kind": "items_found",
+    "items": [
+      {
+        "source_quote": "ICD-10\nproblems[0].code.value: I25.1\nproblems[0].display: Atherosclerotic heart disease\nproblems[0].status: active\nproblems[0].onset: 2016",
+        "page": 1,
+        "locator": "$.problems[0].code.system",
+        "condition_text": "Atherosclerotic heart disease",
+        "printed_code": "I25.1",
+        "printed_code_system_text": "ICD-10",
+        "clinical_status": "active",
+        "verification_status": "not_stated",
+        "severity": "not_stated",
+        "body_site_text": "",
+        "onset": "2016",
+        "abatement": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "ICD-10\nproblems[1].code.value: N18.3\nproblems[1].display: Chronic kidney disease, stage 3\nproblems[1].status: active\nproblems[1].onset: 2021-04",
+        "page": 1,
+        "locator": "$.problems[1].code.system",
+        "condition_text": "Chronic kidney disease, stage 3",
+        "printed_code": "N18.3",
+        "printed_code_system_text": "ICD-10",
+        "clinical_status": "active",
+        "verification_status": "not_stated",
+        "severity": "not_stated",
+        "body_site_text": "",
+        "onset": "2021-04",
+        "abatement": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "ICD-10\nproblems[2].code.value: S82.6\nproblems[2].display: Fracture of lateral malleolus, left\nproblems[2].status: resolved\nproblems[2].onset: 2012-01\nproblems[2].resolved: 2012-03",
+        "page": 1,
+        "locator": "$.problems[2].code.system",
+        "condition_text": "Fracture of lateral malleolus",
+        "printed_code": "S82.6",
+        "printed_code_system_text": "ICD-10",
+        "clinical_status": "resolved",
+        "verification_status": "not_stated",
+        "severity": "not_stated",
+        "body_site_text": "left",
+        "onset": "2012-01",
+        "abatement": "2012-03",
+        "note": "",
+        "confidence": "high"
+      }
+    ]
+  }
+}

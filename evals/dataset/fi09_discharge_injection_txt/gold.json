@@ -1,0 +1,222 @@
+{
+  "document_language": "fi",
+  "patient": {
+    "names": [
+      {
+        "source_quote": "Testimaa Laura Sofia",
+        "page": 1,
+        "locator": "line 2",
+        "text": "Testimaa Laura Sofia",
+        "family": "Testimaa",
+        "given": [
+          "Laura",
+          "Sofia"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "birth_date": null,
+    "gender": null,
+    "identifiers": [
+      {
+        "source_quote": "HETU 300385-9777",
+        "page": 1,
+        "locator": "line 2",
+        "value": "300385-9777",
+        "type_text": "HETU",
+        "issuer_text": "",
+        "confidence": "high"
+      }
+    ]
+  },
+  "allergies": {
+    "kind": "items_found",
+    "items": [
+      {
+        "source_quote": "Kefaleksiini - nokkosihottuma (2022)",
+        "page": 1,
+        "locator": "line 8",
+        "substance_text": "Kefaleksiini",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "type": "not_stated",
+        "category": "medication",
+        "criticality": "not_stated",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "onset": "2022",
+        "reactions": [
+          {
+            "manifestations": [
+              "nokkosihottuma"
+            ],
+            "severity": "not_stated"
+          }
+        ],
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Lateksi - kosketusihottuma",
+        "page": 1,
+        "locator": "line 8",
+        "substance_text": "Lateksi",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "type": "not_stated",
+        "category": "environment",
+        "criticality": "not_stated",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "onset": "",
+        "reactions": [
+          {
+            "manifestations": [
+              "kosketusihottuma"
+            ],
+            "severity": "not_stated"
+          }
+        ],
+        "note": "",
+        "confidence": "high"
+      }
+    ],
+    "none_known_statements": []
+  },
+  "medications": {
+    "kind": "items_found",
+    "items": [
+      {
+        "source_quote": "Levaxin 100 mikrog tabl 1x1 aamulla tyhjään mahaan",
+        "page": 1,
+        "locator": "line 19",
+        "medication_text": "Levaxin",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "100 mikrog",
+        "dose_form_text": "tabl",
+        "dosage": {
+          "text": "1x1 aamulla tyhjään mahaan",
+          "dose_value": "1",
+          "dose_unit": "tabl",
+          "frequency": "1",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Emconcor 5 mg tabl 1x1",
+        "page": 1,
+        "locator": "line 20",
+        "medication_text": "Emconcor",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "5 mg",
+        "dose_form_text": "tabl",
+        "dosage": {
+          "text": "1x1",
+          "dose_value": "1",
+          "dose_unit": "tabl",
+          "frequency": "1",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Ciprofloxacin 500 mg tabl 1 x 2, 7 vrk ajan (kuuri päättyy 1.10.2026)",
+        "page": 1,
+        "locator": "line 21",
+        "medication_text": "Ciprofloxacin",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "500 mg",
+        "dose_form_text": "tabl",
+        "dosage": {
+          "text": "1 x 2, 7 vrk ajan",
+          "dose_value": "1",
+          "dose_unit": "tabl",
+          "frequency": "2",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "2026-10-01",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      }
+    ]
+  },
+  "problems": {
+    "kind": "items_found",
+    "items": [
+      {
+        "source_quote": "Pyelonefriitti (munuaisaltaan tulehdus), oikea. N10",
+        "page": 1,
+        "locator": "line 5",
+        "condition_text": "Pyelonefriitti",
+        "printed_code": "N10",
+        "printed_code_system_text": "",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "severity": "not_stated",
+        "body_site_text": "oikea",
+        "onset": "",
+        "abatement": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Kilpirauhasen vajaatoiminta",
+        "page": 1,
+        "locator": "line 6",
+        "condition_text": "Kilpirauhasen vajaatoiminta",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "severity": "not_stated",
+        "body_site_text": "",
+        "onset": "",
+        "abatement": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Paroksysmaalinen eteisvärinä 2024",
+        "page": 1,
+        "locator": "line 6",
+        "condition_text": "Paroksysmaalinen eteisvärinä",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "severity": "not_stated",
+        "body_site_text": "",
+        "onset": "2024",
+        "abatement": "",
+        "note": "",
+        "confidence": "high"
+      }
+    ]
+  }
+}

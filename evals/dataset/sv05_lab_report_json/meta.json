@@ -1,0 +1,15 @@
+{
+  "case_id": "sv05_lab_report_json",
+  "language": "sv",
+  "format": "json",
+  "media_type": "application/json",
+  "doc_type": "lab_report",
+  "features": [
+    "lab_report_all_no_information",
+    "section_no_information",
+    "decimal_comma",
+    "multi_segment_quote",
+    "hetu_without_birth_date"
+  ],
+  "notes": "Lab system JSON. Raised liver enzymes are findings, not diagnoses: all three sections are no_information. The name is split over two leaves (multi-segment quote)."
+}

@@ -7,6 +7,7 @@ dependencies = [
     "anthropic>=1.12.0",
     "fastapi>=0.142.2",
     "httpx>=0.28.1",
+    "pdfplumber>=0.11.10",
     "pydantic>=2",
     "pydantic-settings>=2.15.0",
     "redis>=8.1.0",
@@ -19,10 +20,13 @@ package = false
 
 [dependency-groups]
 dev = [
+    "httpx2>=2.13.1",
     "mypy>=2.4.0",
     "pytest>=9.1.1",
     "pytest-asyncio>=1.4.0",
+    "reportlab>=5.0.1",
     "ruff>=0.16.10",
+    "types-reportlab>=5.0.0.20261006",
 ]
 
 [tool.ruff]
@@ -33,6 +37,9 @@ target-version = "py312"
 select = ["E", "W", "F", "I", "B", "UP", "SIM", "RUF", "N", "S", "C4", "PT", "RET"]
 ignore = []
 
+[tool.ruff.lint.isort]
+known-first-party = ["app", "evals", "tests"]
+
 [tool.ruff.lint.per-file-ignores]
 "tests/**" = ["S101"]
 
@@ -42,6 +49,8 @@ strict = true
 plugins = ["pydantic.mypy"]
 warn_unreachable = true
 files = ["app", "tests"]
+# The repo root, so `evals` (imported by tests/unit/test_run_evals.py) is found and type-checked.
+mypy_path = ".."
 
 [[tool.mypy.overrides]]
 module = ["rq.*"]
@@ -54,6 +63,6 @@ warn_required_dynamic_aliases = true
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-pythonpath = ["."]
+pythonpath = [".", ".."]  # ".." for the `evals` package (tests/unit/test_run_evals.py)
 asyncio_mode = "auto"
 addopts = "-ra --strict-markers --import-mode=importlib"

@@ -1,0 +1,24 @@
+{
+  "case_id": "fi01_discharge_internal_txt",
+  "language": "fi",
+  "format": "txt",
+  "media_type": "text/plain",
+  "doc_type": "discharge_summary",
+  "features": [
+    "caps_headings",
+    "printed_icd10",
+    "printed_atc",
+    "resolved_condition",
+    "family_history_distractor",
+    "duplicated_medication",
+    "stopped_medication",
+    "as_needed_dosing",
+    "partial_dates",
+    "abbreviations",
+    "decimal_comma",
+    "gender_stated",
+    "birth_date_stated",
+    "allergy_reactions"
+  ],
+  "notes": "Internal medicine discharge summary. Furesis and bisoprolol appear in the narrative and in the discharge list; the pneumonia and DM2 appear in background and diagnosis list (each reported once, from the more informative occurrence). Family history excluded."
+}

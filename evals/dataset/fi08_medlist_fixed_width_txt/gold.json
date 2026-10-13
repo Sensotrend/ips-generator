@@ -1,0 +1,244 @@
+{
+  "document_language": "fi",
+  "patient": {
+    "names": [
+      {
+        "source_quote": "KOETTAJA PEKKA ANTERO",
+        "page": 1,
+        "locator": "line 4",
+        "text": "KOETTAJA PEKKA ANTERO",
+        "family": "KOETTAJA",
+        "given": [
+          "PEKKA",
+          "ANTERO"
+        ],
+        "confidence": "medium"
+      }
+    ],
+    "birth_date": null,
+    "gender": null,
+    "identifiers": [
+      {
+        "source_quote": "Hetu: 050762-923M",
+        "page": 1,
+        "locator": "line 4",
+        "value": "050762-923M",
+        "type_text": "Hetu",
+        "issuer_text": "",
+        "confidence": "high"
+      }
+    ]
+  },
+  "allergies": {
+    "kind": "items_found",
+    "items": [
+      {
+        "source_quote": "Laktoosi-intoleranssi",
+        "page": 1,
+        "locator": "line 5",
+        "substance_text": "Laktoosi",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "type": "intolerance",
+        "category": "food",
+        "criticality": "not_stated",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "onset": "",
+        "reactions": [],
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Kodeiini - pahoinvointi, oksentelu",
+        "page": 1,
+        "locator": "line 5",
+        "substance_text": "Kodeiini",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "type": "not_stated",
+        "category": "medication",
+        "criticality": "not_stated",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "onset": "",
+        "reactions": [
+          {
+            "manifestations": [
+              "pahoinvointi",
+              "oksentelu"
+            ],
+            "severity": "not_stated"
+          }
+        ],
+        "note": "",
+        "confidence": "high"
+      }
+    ],
+    "none_known_statements": []
+  },
+  "medications": {
+    "kind": "items_found",
+    "items": [
+      {
+        "source_quote": "Klopidogreeli Orion      75 mg       1x1 p.o.                         B01AC04",
+        "page": 1,
+        "locator": "line 8",
+        "medication_text": "Klopidogreeli Orion",
+        "printed_code": "B01AC04",
+        "printed_code_system_text": "",
+        "strength_text": "75 mg",
+        "dose_form_text": "",
+        "dosage": {
+          "text": "1x1 p.o.",
+          "dose_value": "1",
+          "dose_unit": "",
+          "frequency": "1",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": "p.o."
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Metoprolol ret           47,5 mg     1 tabl aamulla                   C07AB02",
+        "page": 1,
+        "locator": "line 9",
+        "medication_text": "Metoprolol",
+        "printed_code": "C07AB02",
+        "printed_code_system_text": "",
+        "strength_text": "47,5 mg",
+        "dose_form_text": "ret",
+        "dosage": {
+          "text": "1 tabl aamulla",
+          "dose_value": "1",
+          "dose_unit": "tabl",
+          "frequency": "1",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Furesis                  40mg        1/2 tabl x1 aamuisin             C03CA01",
+        "page": 1,
+        "locator": "line 10",
+        "medication_text": "Furesis",
+        "printed_code": "C03CA01",
+        "printed_code_system_text": "",
+        "strength_text": "40mg",
+        "dose_form_text": "",
+        "dosage": {
+          "text": "1/2 tabl x1 aamuisin",
+          "dose_value": "0.5",
+          "dose_unit": "tabl",
+          "frequency": "1",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Levolac mikst            670 mg/ml   15 ml 1-2 x vrk tarv.            A06AD11",
+        "page": 1,
+        "locator": "line 11",
+        "medication_text": "Levolac",
+        "printed_code": "A06AD11",
+        "printed_code_system_text": "",
+        "strength_text": "670 mg/ml",
+        "dose_form_text": "mikst",
+        "dosage": {
+          "text": "15 ml 1-2 x vrk tarv.",
+          "dose_value": "15",
+          "dose_unit": "ml",
+          "frequency": "",
+          "period": "",
+          "period_unit": "not_stated",
+          "as_needed": true,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Oxynorm                  5 mg        1 kaps tarv. kipuun, max 4/vrk   N02AA05",
+        "page": 1,
+        "locator": "line 12",
+        "medication_text": "Oxynorm",
+        "printed_code": "N02AA05",
+        "printed_code_system_text": "",
+        "strength_text": "5 mg",
+        "dose_form_text": "",
+        "dosage": {
+          "text": "1 kaps tarv. kipuun, max 4/vrk",
+          "dose_value": "1",
+          "dose_unit": "kaps",
+          "frequency": "",
+          "period": "",
+          "period_unit": "not_stated",
+          "as_needed": true,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "kipuun",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Eliquis 5 mg 1x2 - tauotettu 28.9.2026 hammastoimenpiteen vuoksi, jatketaan 3.10.",
+        "page": 1,
+        "locator": "line 15",
+        "medication_text": "Eliquis",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "5 mg",
+        "dose_form_text": "",
+        "dosage": {
+          "text": "1x2",
+          "dose_value": "1",
+          "dose_unit": "",
+          "frequency": "2",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "on_hold",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "tauotettu 28.9.2026 hammastoimenpiteen vuoksi, jatketaan 3.10.",
+        "confidence": "high"
+      }
+    ]
+  },
+  "problems": {
+    "kind": "no_information"
+  }
+}

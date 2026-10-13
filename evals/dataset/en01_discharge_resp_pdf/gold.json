@@ -1,0 +1,287 @@
+{
+  "document_language": "en",
+  "patient": {
+    "names": [
+      {
+        "source_quote": "SAMPLEWOOD, Jennifer Ann",
+        "page": 1,
+        "locator": "",
+        "text": "SAMPLEWOOD, Jennifer Ann",
+        "family": "SAMPLEWOOD",
+        "given": [
+          "Jennifer",
+          "Ann"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "birth_date": {
+      "source_quote": "DOB: 19/07/1983",
+      "page": 1,
+      "locator": "",
+      "value": "1983-07-19",
+      "confidence": "high"
+    },
+    "gender": {
+      "source_quote": "Sex: Female",
+      "page": 1,
+      "locator": "",
+      "value": "female",
+      "confidence": "high"
+    },
+    "identifiers": [
+      {
+        "source_quote": "MRN: SYN-0042817",
+        "page": 1,
+        "locator": "",
+        "value": "SYN-0042817",
+        "type_text": "MRN",
+        "issuer_text": "",
+        "confidence": "high"
+      }
+    ]
+  },
+  "allergies": {
+    "kind": "items_found",
+    "items": [
+      {
+        "source_quote": "Shellfish allergy - throat swelling and hives (2019)",
+        "page": 1,
+        "locator": "",
+        "substance_text": "Shellfish",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "type": "allergy",
+        "category": "food",
+        "criticality": "not_stated",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "onset": "2019",
+        "reactions": [
+          {
+            "manifestations": [
+              "throat swelling",
+              "hives"
+            ],
+            "severity": "not_stated"
+          }
+        ],
+        "note": "",
+        "confidence": "high"
+      }
+    ],
+    "none_known_statements": [
+      {
+        "source_quote": "NKDA",
+        "page": 1,
+        "locator": "",
+        "confidence": "high",
+        "scope": "medication"
+      }
+    ]
+  },
+  "medications": {
+    "kind": "items_found",
+    "items": [
+      {
+        "source_quote": "Amoxicillin 500 mg capsules, 1 capsule PO TDS for 4 more days (course ends 29/09/2026)",
+        "page": 2,
+        "locator": "",
+        "medication_text": "Amoxicillin",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "500 mg",
+        "dose_form_text": "capsules",
+        "dosage": {
+          "text": "1 capsule PO TDS for 4 more days",
+          "dose_value": "1",
+          "dose_unit": "capsule",
+          "frequency": "3",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": "PO"
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "2026-09-29",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Levothyroxine 75 micrograms PO OD",
+        "page": 2,
+        "locator": "",
+        "medication_text": "Levothyroxine",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "75 micrograms",
+        "dose_form_text": "",
+        "dosage": {
+          "text": "PO OD",
+          "dose_value": "",
+          "dose_unit": "",
+          "frequency": "1",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": "PO"
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Symbicort 200/6 two puffs BID",
+        "page": 2,
+        "locator": "",
+        "medication_text": "Symbicort",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "200/6",
+        "dose_form_text": "",
+        "dosage": {
+          "text": "two puffs BID",
+          "dose_value": "2",
+          "dose_unit": "puffs",
+          "frequency": "2",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Salbutamol 100 mcg inhaler 2 puffs PRN for wheeze",
+        "page": 2,
+        "locator": "",
+        "medication_text": "Salbutamol",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "100 mcg",
+        "dose_form_text": "inhaler",
+        "dosage": {
+          "text": "2 puffs PRN for wheeze",
+          "dose_value": "2",
+          "dose_unit": "puffs",
+          "frequency": "",
+          "period": "",
+          "period_unit": "not_stated",
+          "as_needed": true,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "wheeze",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Montelukast 10 mg nocte - stopped 21/09/2026 (no benefit)",
+        "page": 2,
+        "locator": "",
+        "medication_text": "Montelukast",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "10 mg",
+        "dose_form_text": "",
+        "dosage": {
+          "text": "nocte",
+          "dose_value": "",
+          "dose_unit": "",
+          "frequency": "1",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "stopped",
+        "effective_start": "",
+        "effective_end": "2026-09-21",
+        "reason_text": "",
+        "note": "no benefit",
+        "confidence": "high"
+      }
+    ]
+  },
+  "problems": {
+    "kind": "items_found",
+    "items": [
+      {
+        "source_quote": "Community-acquired pneumonia, right lower lobe (J18.1)",
+        "page": 1,
+        "locator": "",
+        "condition_text": "Community-acquired pneumonia",
+        "printed_code": "J18.1",
+        "printed_code_system_text": "",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "severity": "not_stated",
+        "body_site_text": "right lower lobe",
+        "onset": "",
+        "abatement": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Asthma, moderate persistent (J45.9)",
+        "page": 1,
+        "locator": "",
+        "condition_text": "Asthma",
+        "printed_code": "J45.9",
+        "printed_code_system_text": "",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "severity": "moderate",
+        "body_site_text": "",
+        "onset": "",
+        "abatement": "",
+        "note": "persistent",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Hypothyroidism (E03.9)",
+        "page": 1,
+        "locator": "",
+        "condition_text": "Hypothyroidism",
+        "printed_code": "E03.9",
+        "printed_code_system_text": "",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "severity": "not_stated",
+        "body_site_text": "",
+        "onset": "",
+        "abatement": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "gestational diabetes 2014, resolved postpartum",
+        "page": 1,
+        "locator": "",
+        "condition_text": "gestational diabetes",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "clinical_status": "resolved",
+        "verification_status": "not_stated",
+        "severity": "not_stated",
+        "body_site_text": "",
+        "onset": "2014",
+        "abatement": "",
+        "note": "resolved postpartum",
+        "confidence": "high"
+      }
+    ]
+  }
+}

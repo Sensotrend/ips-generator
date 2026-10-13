@@ -1,0 +1,17 @@
+{
+  "case_id": "sv04_outpatient_sections_json",
+  "language": "sv",
+  "format": "json",
+  "media_type": "application/json",
+  "doc_type": "outpatient_note",
+  "features": [
+    "no_regular_medication",
+    "printed_icd10",
+    "resolved_condition",
+    "partial_dates",
+    "gender_stated",
+    "allergy_reactions",
+    "hetu_without_birth_date"
+  ],
+  "notes": "JSON note made of headed text sections. 'Inga regelbundna läkemedel' -> medications none_known. Migraine also appears in the assessment (reported once, with its code)."
+}

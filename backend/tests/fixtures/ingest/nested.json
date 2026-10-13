@@ -1,0 +1,42 @@
+{
+  "_comment": "Synthetic test data",
+  "patient": {
+    "name": {
+      "given": [
+        "Testi"
+      ],
+      "family": "Åkerlund"
+    },
+    "birthDate": "1962-07-15"
+  },
+  "medications": [
+    {
+      "name": "Metformin 500 mg",
+      "dose": "1 x 2",
+      "active": true
+    },
+    {
+      "name": "Simvastatin 20 mg",
+      "dose": "1 x 1 illalla",
+      "active": true
+    },
+    {
+      "name": "Burana 600 mg",
+      "dose": null,
+      "active": false
+    }
+  ],
+  "allergies": [],
+  "problems": [
+    {
+      "text": "Hypertensio",
+      "onset": {
+        "year": 2015,
+        "note": "dg. terveyskeskuksessa"
+      }
+    }
+  ],
+  "lab results": {
+    "P-Krea": 84.5
+  }
+}

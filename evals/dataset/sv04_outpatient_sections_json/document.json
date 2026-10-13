@@ -1,0 +1,38 @@
+{
+  "journalanteckning": {
+    "datum": "2026-09-22",
+    "enhet": "Testby hälsocentral (fiktiv enhet)",
+    "yrkesroll": "Läkare",
+    "patient": {
+      "namn": "Exempelqvist, Linnea",
+      "personbeteckning": "150690-961R",
+      "kön": "kvinna"
+    },
+    "sektioner": [
+      {
+        "rubrik": "Kontaktorsak",
+        "text": "Huvudvärk, återkommande, ca 3 attacker/månad."
+      },
+      {
+        "rubrik": "Diagnoser",
+        "rader": [
+          "Migrän utan aura (G43.0)",
+          "Järnbristanemi 2023, behandlad och utläkt"
+        ]
+      },
+      {
+        "rubrik": "Allergier",
+        "text": "Björkpollenallergi med rinokonjunktivit varje vår."
+      },
+      {
+        "rubrik": "Läkemedel",
+        "text": "Inga regelbundna läkemedel."
+      },
+      {
+        "rubrik": "Bedömning",
+        "text": "Migrän utan aura. Rekommenderar huvudvärksdagbok. Ny kontakt vid behov."
+      }
+    ],
+    "syntetiska_data": true
+  }
+}

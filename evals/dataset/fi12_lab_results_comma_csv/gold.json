@@ -1,0 +1,40 @@
+{
+  "document_language": "fi",
+  "patient": {
+    "names": [
+      {
+        "source_quote": "Esimerkki, Toivo",
+        "page": 1,
+        "locator": "row 2",
+        "text": "Esimerkki, Toivo",
+        "family": "Esimerkki",
+        "given": [
+          "Toivo"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "birth_date": null,
+    "gender": null,
+    "identifiers": [
+      {
+        "source_quote": "Henkilötunnus: 241249-903X",
+        "page": 1,
+        "locator": "row 2",
+        "value": "241249-903X",
+        "type_text": "Henkilötunnus",
+        "issuer_text": "",
+        "confidence": "high"
+      }
+    ]
+  },
+  "allergies": {
+    "kind": "no_information"
+  },
+  "medications": {
+    "kind": "no_information"
+  },
+  "problems": {
+    "kind": "no_information"
+  }
+}

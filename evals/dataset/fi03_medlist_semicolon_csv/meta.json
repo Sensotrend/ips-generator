@@ -1,0 +1,19 @@
+{
+  "case_id": "fi03_medlist_semicolon_csv",
+  "language": "fi",
+  "format": "csv",
+  "media_type": "text/csv",
+  "doc_type": "medication_list",
+  "features": [
+    "printed_atc",
+    "decimal_comma",
+    "paused_medication",
+    "stopped_medication",
+    "as_needed_dosing",
+    "partial_dates",
+    "abbreviations",
+    "indication_not_problem",
+    "section_no_information"
+  ],
+  "notes": "Pharmacy-style medication list export (';', CRLF, Finnish decimal commas). No patient data. Indications (eteisvärinä, ...) stay in reason_text; problems and allergies are no_information. Each quote is the whole row as rendered by the ingester."
+}

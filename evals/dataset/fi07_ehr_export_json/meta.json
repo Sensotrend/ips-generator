@@ -1,0 +1,21 @@
+{
+  "case_id": "fi07_ehr_export_json",
+  "language": "fi",
+  "format": "json",
+  "media_type": "application/json",
+  "doc_type": "outpatient_note",
+  "features": [
+    "multi_segment_quote",
+    "printed_icd10",
+    "printed_atc",
+    "resolved_condition",
+    "stopped_medication",
+    "as_needed_dosing",
+    "partial_dates",
+    "decimal_comma",
+    "birth_date_stated",
+    "gender_stated",
+    "allergy_reactions"
+  ],
+  "notes": "Nested JSON export from a fictional EHR. Each item spans several leaves, so gold quotes run from the first value over the following 'path: value' segments. The name is split into etunimet/sukunimi leaves. 'Ei muita tiedossa olevia allergioita' confirms the list and is not a none_known statement."
+}

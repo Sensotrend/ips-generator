@@ -1,0 +1,229 @@
+{
+  "document_language": "en",
+  "patient": {
+    "names": [
+      {
+        "source_quote": "Tom Sampleton",
+        "page": 1,
+        "locator": "$.owner.displayName",
+        "text": "Tom Sampleton",
+        "family": "Sampleton",
+        "given": [
+          "Tom"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "birth_date": {
+      "source_quote": "dateOfBirth: 1975-05-30",
+      "page": 1,
+      "locator": "$.owner.dateOfBirth",
+      "value": "1975-05-30",
+      "confidence": "high"
+    },
+    "gender": null,
+    "identifiers": []
+  },
+  "allergies": {
+    "kind": "items_found",
+    "items": [
+      {
+        "source_quote": "penicilin - rash as a kid",
+        "page": 1,
+        "locator": "$.allergies[0]",
+        "substance_text": "penicilin",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "type": "not_stated",
+        "category": "medication",
+        "criticality": "not_stated",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "onset": "",
+        "reactions": [
+          {
+            "manifestations": [
+              "rash"
+            ],
+            "severity": "not_stated"
+          }
+        ],
+        "note": "",
+        "confidence": "medium"
+      }
+    ],
+    "none_known_statements": []
+  },
+  "medications": {
+    "kind": "items_found",
+    "items": [
+      {
+        "source_quote": "Lisinopirl 10mg\nitems[0].when: once a day morning\nitems[0].why: blood pressure\nitems[0].active: true",
+        "page": 1,
+        "locator": "$.items[0].med",
+        "medication_text": "Lisinopirl",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "10mg",
+        "dose_form_text": "",
+        "dosage": {
+          "text": "once a day morning",
+          "dose_value": "",
+          "dose_unit": "",
+          "frequency": "1",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "blood pressure",
+        "note": "",
+        "confidence": "medium"
+      },
+      {
+        "source_quote": "Omeprazole 20 mg\nitems[1].when: 1 before breakfast\nitems[1].why: heartburn\nitems[1].active: true",
+        "page": 1,
+        "locator": "$.items[1].med",
+        "medication_text": "Omeprazole",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "20 mg",
+        "dose_form_text": "",
+        "dosage": {
+          "text": "1 before breakfast",
+          "dose_value": "1",
+          "dose_unit": "",
+          "frequency": "1",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "heartburn",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Sertraline 50mg\nitems[2].when: 1 daily\nitems[2].active: false\nitems[2].notes: stopped Aug 2025, felt better",
+        "page": 1,
+        "locator": "$.items[2].med",
+        "medication_text": "Sertraline",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "50mg",
+        "dose_form_text": "",
+        "dosage": {
+          "text": "1 daily",
+          "dose_value": "1",
+          "dose_unit": "",
+          "frequency": "1",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "stopped",
+        "effective_start": "",
+        "effective_end": "2025-08",
+        "reason_text": "",
+        "note": "felt better",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Ibuprofen 200mg\nitems[3].when: 2 tabs when needed for back pain\nitems[3].active: true",
+        "page": 1,
+        "locator": "$.items[3].med",
+        "medication_text": "Ibuprofen",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "200mg",
+        "dose_form_text": "",
+        "dosage": {
+          "text": "2 tabs when needed for back pain",
+          "dose_value": "2",
+          "dose_unit": "tabs",
+          "frequency": "",
+          "period": "",
+          "period_unit": "not_stated",
+          "as_needed": true,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "back pain",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Fish oil\nitems[4].when: 1 capsul daily\nitems[4].active: true",
+        "page": 1,
+        "locator": "$.items[4].med",
+        "medication_text": "Fish oil",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "",
+        "dose_form_text": "",
+        "dosage": {
+          "text": "1 capsul daily",
+          "dose_value": "1",
+          "dose_unit": "capsul",
+          "frequency": "1",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      }
+    ]
+  },
+  "problems": {
+    "kind": "items_found",
+    "items": [
+      {
+        "source_quote": "high blood pressure",
+        "page": 1,
+        "locator": "$.conditions[0]",
+        "condition_text": "high blood pressure",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "severity": "not_stated",
+        "body_site_text": "",
+        "onset": "",
+        "abatement": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "back pain (on and off)",
+        "page": 1,
+        "locator": "$.conditions[1]",
+        "condition_text": "back pain",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "severity": "not_stated",
+        "body_site_text": "",
+        "onset": "",
+        "abatement": "",
+        "note": "on and off",
+        "confidence": "high"
+      }
+    ]
+  }
+}

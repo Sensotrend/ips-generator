@@ -1,0 +1,17 @@
+LÄÄKITYSLISTA   tulostettu 01.10.2026    (SYNTEETTINEN TESTIAINEISTO)
+Kuvitteelan terveyskeskus, vastaanotto 2
+
+Potilas:   KOETTAJA PEKKA ANTERO        Hetu: 050762-923M
+Riskitiedot: Laktoosi-intoleranssi.  Kodeiini - pahoinvointi, oksentelu
+
+Valmiste                 Vahvuus     Annostus                         ATC
+Klopidogreeli Orion      75 mg       1x1 p.o.                         B01AC04
+Metoprolol ret           47,5 mg     1 tabl aamulla                   C07AB02
+Furesis                  40mg        1/2 tabl x1 aamuisin             C03CA01
+Levolac mikst            670 mg/ml   15 ml 1-2 x vrk tarv.            A06AD11
+Oxynorm                  5 mg        1 kaps tarv. kipuun, max 4/vrk   N02AA05
+
+TAUOLLA:	
+Eliquis 5 mg 1x2 - tauotettu 28.9.2026 hammastoimenpiteen vuoksi, jatketaan 3.10.
+
+Lista ei sisällä itsehoitovalmisteita.   

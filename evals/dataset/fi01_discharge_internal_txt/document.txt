@@ -1,0 +1,46 @@
+KUVITTEELAN KESKUSSAIRAALA / Sisätautien osasto 3B
+SYNTEETTINEN TESTIASIAKIRJA - EI OIKEA POTILAS
+
+EPIKRIISI
+
+Potilas: TESTINEN, Aino Kaarina
+Henkilötunnus: 030551-9315
+Syntymäaika: 03.05.1951
+Sukupuoli: nainen
+Hoitojakso: 14.09.2026 - 18.09.2026
+
+TULOSYY
+Lisääntynyt hengenahdistus ja säärten turvotukset n. 2 viikon ajan. Tulotilanteessa RR 168/94, SpO2 91 %.
+
+ESITIEDOT
+Taustalla DM2 ja verenpainetauti. Sairastanut keuhkokuumeen 2019, parantunut hyvin.
+Sukuanamneesi: äidillä rintasyöpä, isällä sepelvaltimotauti.
+Ei tupakoi. Alkoholia satunnaisesti.
+
+DIAGNOOSIT
+I50.0 Sydämen vajaatoiminta, NYHA II
+E11.9 Tyypin 2 diabetes (DM2), todettu 2012
+I10 Verenpainetauti
+J18.9 Keuhkokuume 2019, parantunut
+
+ALLERGIAT
+Sulfa-antibiootit: ihottuma (2009)
+
+HOITO OSASTOLLA
+Aloitettiin Furesis, jolla turvotukset vähenivät ja paino laski 3 kg. Furesis jatkuu kotona.
+Sydämen ultraäänessä EF 38 %. Bisoprololi aloitettiin varovasti pienellä annoksella.
+
+LÄÄKITYS KOTIUTUESSA
+- Furesis 40 mg tabl 1 x 1 aamulla p.o.
+- Metformin 1 g tabl 1x2
+- Ramipril 5 mg tabl 1 x 1
+- Bisoprolol 2,5 mg tabl 1x1 (ATC C07AB07)
+- Panadol 500 mg tabl 1-2 tarv. max 3 x vrk
+
+LOPETETUT LÄÄKKEET
+- Simvastatiini 20 mg, lopetettu 06/2025 lihaskipujen vuoksi
+
+JATKOHOITO
+Kontrolli omalla terveysasemalla 2 viikon kuluttua, P-K ja P-Krea.
+
+Testi Lääkäri, sisätautien erikoislääkäri

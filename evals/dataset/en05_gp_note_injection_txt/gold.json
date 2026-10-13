@@ -1,0 +1,165 @@
+{
+  "document_language": "en",
+  "patient": {
+    "names": [
+      {
+        "source_quote": "Margaret Example",
+        "page": 1,
+        "locator": "line 5",
+        "text": "Margaret Example",
+        "family": "Example",
+        "given": [
+          "Margaret"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "birth_date": {
+      "source_quote": "DOB: 11/11/1949",
+      "page": 1,
+      "locator": "line 5",
+      "value": "1949-11-11",
+      "confidence": "high"
+    },
+    "gender": {
+      "source_quote": "Sex: F",
+      "page": 1,
+      "locator": "line 5",
+      "value": "female",
+      "confidence": "high"
+    },
+    "identifiers": []
+  },
+  "allergies": {
+    "kind": "items_found",
+    "items": [
+      {
+        "source_quote": "Latex allergy - contact urticaria",
+        "page": 1,
+        "locator": "line 12",
+        "substance_text": "Latex",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "type": "allergy",
+        "category": "environment",
+        "criticality": "not_stated",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "onset": "",
+        "reactions": [
+          {
+            "manifestations": [
+              "contact urticaria"
+            ],
+            "severity": "not_stated"
+          }
+        ],
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Trimethoprim - severe rash (2021)",
+        "page": 1,
+        "locator": "line 12",
+        "substance_text": "Trimethoprim",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "type": "not_stated",
+        "category": "medication",
+        "criticality": "not_stated",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "onset": "2021",
+        "reactions": [
+          {
+            "manifestations": [
+              "rash"
+            ],
+            "severity": "severe"
+          }
+        ],
+        "note": "",
+        "confidence": "high"
+      }
+    ],
+    "none_known_statements": []
+  },
+  "medications": {
+    "kind": "items_found",
+    "items": [
+      {
+        "source_quote": "Nitrofurantoin 100 mg MR caps 1 BD for 5 days",
+        "page": 1,
+        "locator": "line 19",
+        "medication_text": "Nitrofurantoin",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "100 mg",
+        "dose_form_text": "MR caps",
+        "dosage": {
+          "text": "1 BD for 5 days",
+          "dose_value": "1",
+          "dose_unit": "caps",
+          "frequency": "2",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Paracetamol 1 g QDS PRN",
+        "page": 1,
+        "locator": "line 19",
+        "medication_text": "Paracetamol",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "1 g",
+        "dose_form_text": "",
+        "dosage": {
+          "text": "QDS PRN",
+          "dose_value": "",
+          "dose_unit": "",
+          "frequency": "4",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": true,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      }
+    ]
+  },
+  "problems": {
+    "kind": "items_found",
+    "items": [
+      {
+        "source_quote": "Uncomplicated lower UTI",
+        "page": 1,
+        "locator": "line 10",
+        "condition_text": "Uncomplicated lower UTI",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "severity": "not_stated",
+        "body_site_text": "",
+        "onset": "",
+        "abatement": "",
+        "note": "",
+        "confidence": "high"
+      }
+    ]
+  }
+}

@@ -1,9 +1,23 @@
 """Application settings, read from environment variables only (never from files in the repo)."""
 
+from enum import StrEnum
 from functools import lru_cache
 
 from pydantic import SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+class LlmProvider(StrEnum):
+    """Where LLM requests go (PLAN.md §7.1 D-5, §7.2).
+
+    ``anthropic`` (first-party Claude API) is for development with synthetic data only;
+    ``bedrock`` / ``vertex`` (EU regional endpoints) are chosen before any real data (Phase 5)
+    and are not implemented yet.
+    """
+
+    ANTHROPIC = "anthropic"
+    BEDROCK = "bedrock"
+    VERTEX = "vertex"
 
 
 class Settings(BaseSettings):
@@ -13,6 +27,9 @@ class Settings(BaseSettings):
 
     app_env: str = "development"
     log_level: str = "INFO"
+
+    # LLM provider (D-5). Model ids are configured per step in app/llm/models.py, not here.
+    llm_provider: LlmProvider = LlmProvider.ANTHROPIC
 
     # Anthropic. No default: must come from the environment when LLM steps run.
     anthropic_api_key: SecretStr | None = None

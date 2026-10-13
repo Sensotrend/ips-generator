@@ -1,0 +1,48 @@
+{
+  "provsvar": {
+    "laboratorium": "Testlab Österbotten (fiktivt)",
+    "remitterande_enhet": "Testby hälsocentral",
+    "patient": {
+      "efternamn": "Provberg",
+      "fornamn": "Nils Olof",
+      "id": "021171-974W"
+    },
+    "provtagning": "2026-09-30T07:40",
+    "analyser": [
+      {
+        "kod": "B-Hb",
+        "resultat": "151",
+        "enhet": "g/l",
+        "referens": "134-167"
+      },
+      {
+        "kod": "P-ALAT",
+        "resultat": "68",
+        "enhet": "U/l",
+        "referens": "< 50",
+        "flagga": "H"
+      },
+      {
+        "kod": "P-GT",
+        "resultat": "112",
+        "enhet": "U/l",
+        "referens": "< 80",
+        "flagga": "H"
+      },
+      {
+        "kod": "fP-Trigly",
+        "resultat": "2,4",
+        "enhet": "mmol/l",
+        "referens": "< 1,7",
+        "flagga": "H"
+      },
+      {
+        "kod": "P-CRP",
+        "resultat": "< 3",
+        "enhet": "mg/l",
+        "referens": "< 3"
+      }
+    ],
+    "kommentar": "Förhöjda leverenzymer, kontroll om 4 veckor rekommenderas."
+  }
+}

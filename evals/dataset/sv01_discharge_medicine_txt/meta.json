@@ -1,0 +1,24 @@
+{
+  "case_id": "sv01_discharge_medicine_txt",
+  "language": "sv",
+  "format": "txt",
+  "media_type": "text/plain",
+  "doc_type": "discharge_summary",
+  "features": [
+    "nkda_plus_food_allergy",
+    "printed_icd10",
+    "resolved_condition",
+    "duplicated_medication",
+    "stopped_medication",
+    "as_needed_dosing",
+    "abbreviations",
+    "procedure_distractor",
+    "caps_headings",
+    "partial_dates",
+    "decimal_comma",
+    "gender_stated",
+    "birth_date_stated",
+    "allergy_reactions"
+  ],
+  "notes": "Finland-Swedish discharge summary. Warfarin/Eliquis/Metoprolol appear in the narrative and the list (reported once, from the list). Hip prosthesis is a procedure. EpiPen 'vid anafylaxi' is used only on a trigger: as_needed true."
+}

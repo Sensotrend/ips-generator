@@ -22,3 +22,7 @@ coverage/
 .DS_Store
 .idea/
 .vscode/
+
+# Eval run outputs (synthetic data only; keep the directory)
+evals/runs/*
+!evals/runs/.gitkeep

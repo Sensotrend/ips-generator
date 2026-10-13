@@ -1,0 +1,176 @@
+{
+  "document_language": "fi",
+  "patient": {
+    "names": [],
+    "birth_date": null,
+    "gender": null,
+    "identifiers": []
+  },
+  "allergies": {
+    "kind": "no_information"
+  },
+  "medications": {
+    "kind": "items_found",
+    "items": [
+      {
+        "source_quote": "Lääke: Marevan | Vahvuus: 3 mg | Lääkemuoto: tabl | Annostus: annostus INR:n mukaan | Käyttötarkoitus: eteisvärinä | ATC: B01AA03 | Tila: käytössä | Aloitettu: 2019",
+        "page": 1,
+        "locator": "row 2",
+        "medication_text": "Marevan",
+        "printed_code": "B01AA03",
+        "printed_code_system_text": "ATC",
+        "strength_text": "3 mg",
+        "dose_form_text": "tabl",
+        "dosage": {
+          "text": "annostus INR:n mukaan",
+          "dose_value": "",
+          "dose_unit": "",
+          "frequency": "",
+          "period": "",
+          "period_unit": "not_stated",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "2019",
+        "effective_end": "",
+        "reason_text": "eteisvärinä",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Lääke: Bisoprolol Orion | Vahvuus: 2,5 mg | Lääkemuoto: tabl | Annostus: 0,5 tabl aamulla | Käyttötarkoitus: sydämen vajaatoiminta | ATC: C07AB07 | Tila: käytössä | Aloitettu: 03/2024",
+        "page": 1,
+        "locator": "row 3",
+        "medication_text": "Bisoprolol Orion",
+        "printed_code": "C07AB07",
+        "printed_code_system_text": "ATC",
+        "strength_text": "2,5 mg",
+        "dose_form_text": "tabl",
+        "dosage": {
+          "text": "0,5 tabl aamulla",
+          "dose_value": "0.5",
+          "dose_unit": "tabl",
+          "frequency": "1",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "2024-03",
+        "effective_end": "",
+        "reason_text": "sydämen vajaatoiminta",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Lääke: Pantoprazol Actavis | Vahvuus: 20 mg | Lääkemuoto: enterotabl | Annostus: 1 x 1 | Käyttötarkoitus: närästys | ATC: A02BC02 | Tila: tauolla | Aloitettu: 2022",
+        "page": 1,
+        "locator": "row 4",
+        "medication_text": "Pantoprazol Actavis",
+        "printed_code": "A02BC02",
+        "printed_code_system_text": "ATC",
+        "strength_text": "20 mg",
+        "dose_form_text": "enterotabl",
+        "dosage": {
+          "text": "1 x 1",
+          "dose_value": "1",
+          "dose_unit": "enterotabl",
+          "frequency": "1",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "on_hold",
+        "effective_start": "2022",
+        "effective_end": "",
+        "reason_text": "närästys",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Lääke: Diapam | Vahvuus: 5 mg | Lääkemuoto: tabl | Annostus: 1 tabl tarv. illalla, max 1/vrk | Käyttötarkoitus: unettomuus | ATC: N05BA01 | Tila: käytössä",
+        "page": 1,
+        "locator": "row 5",
+        "medication_text": "Diapam",
+        "printed_code": "N05BA01",
+        "printed_code_system_text": "ATC",
+        "strength_text": "5 mg",
+        "dose_form_text": "tabl",
+        "dosage": {
+          "text": "1 tabl tarv. illalla, max 1/vrk",
+          "dose_value": "1",
+          "dose_unit": "tabl",
+          "frequency": "",
+          "period": "",
+          "period_unit": "not_stated",
+          "as_needed": true,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "unettomuus",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Lääke: Atorvastatin Krka | Vahvuus: 20 mg | Lääkemuoto: tabl | Annostus: 1x1 illalla | Käyttötarkoitus: kolesteroli | ATC: C10AA05 | Tila: lopetettu | Aloitettu: 2020 | Lopetettu: 8.2025",
+        "page": 1,
+        "locator": "row 6",
+        "medication_text": "Atorvastatin Krka",
+        "printed_code": "C10AA05",
+        "printed_code_system_text": "ATC",
+        "strength_text": "20 mg",
+        "dose_form_text": "tabl",
+        "dosage": {
+          "text": "1x1 illalla",
+          "dose_value": "1",
+          "dose_unit": "tabl",
+          "frequency": "1",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "stopped",
+        "effective_start": "2020",
+        "effective_end": "2025-08",
+        "reason_text": "kolesteroli",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Lääke: Calcichew-D3 Forte | Vahvuus: 500 mg/10 mikrog | Lääkemuoto: purutabl | Annostus: 1 x 2 | Käyttötarkoitus: osteoporoosin ehkäisy | ATC: A12AX | Tila: käytössä",
+        "page": 1,
+        "locator": "row 7",
+        "medication_text": "Calcichew-D3 Forte",
+        "printed_code": "A12AX",
+        "printed_code_system_text": "ATC",
+        "strength_text": "500 mg/10 mikrog",
+        "dose_form_text": "purutabl",
+        "dosage": {
+          "text": "1 x 2",
+          "dose_value": "1",
+          "dose_unit": "purutabl",
+          "frequency": "2",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "osteoporoosin ehkäisy",
+        "note": "",
+        "confidence": "high"
+      }
+    ]
+  },
+  "problems": {
+    "kind": "no_information"
+  }
+}

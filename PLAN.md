@@ -110,16 +110,71 @@ PLAN.md  CLAUDE.md  README.md
 **Done when:** `docker compose up` starts all services; `pytest` and `npm test` pass; Matchbox validates a sample IPS Bundle from the IG examples.
 
 ### Phase 1 — Evals + core extraction (plaintext, JSON, CSV, text-layer PDF → required sections)
-- [ ] Build eval dataset: 20+ synthetic docs (discharge summaries, prescriptions, lab reports, referral letters; FI/SV/EN) as plaintext, JSON, CSV and text-layer PDF, with gold intermediate JSON derived from the Synthea record each doc is rendered from `[opus]`
-- [ ] `ingest.py`: normalise plaintext / JSON / CSV / text-layer PDF (`pdfplumber`) into located text segments; reject PDFs without a text layer with a clear error (OCR comes in Phase 4) `[opus]`
-- [ ] Define intermediate schema (`app/schemas/intermediate.py`) for Patient, Allergies, Medications, Problems — every item has `source_quote`, `page`, `confidence` `[fable]`
-  - Decide how `page` generalises to non-paged inputs (e.g. `page` = 1 plus a `locator`: line, CSV row, JSON path).
-- [ ] `app/fhir/models.py`: thin Pydantic v2 models for the R4 resources/datatypes IPS uses (Bundle, Composition, Patient, AllergyIntolerance, MedicationStatement, Medication, Condition, Device, …); round-trip test against the IG examples in `tests/fixtures/ips-examples/` `[opus]`
-- [ ] `extract.py`: send the normalised document to Claude with structured outputs → intermediate JSON `[opus]`
-- [ ] `ground.py`: verify each `source_quote` against the ingested text (fuzzy match tolerant of whitespace) `[opus]`
-- [ ] `assemble.py` + section mappers → IPS Bundle (Composition first, required sections, empty-section handling, `Composition.author` = pipeline `Device`) `[opus]`
-- [ ] `validate.py`: call Matchbox `$validate` against IPS profile; return structured issues `[sonnet]`
+- [x] Build eval dataset: 20+ synthetic docs (discharge summaries, prescriptions, lab reports, referral letters; FI/SV/EN) as plaintext, JSON, CSV and text-layer PDF, with gold intermediate JSON derived from the Synthea record each doc is rendered from `[opus]`
+  - 26 hand-authored synthetic cases (fi 12, sv 6, en 6, mixed 2; txt 10, json 5, csv 4, pdf 7) in
+    `evals/dataset/`, reproducible via `_build/build.py`. Synthea not used (deviation from D-3 proposal): hand-
+    written records give controlled edge cases. Gold-authoring rules and feature matrix in `evals/dataset/README.md`.
+  - `tests/unit/test_eval_dataset.py`: every gold quote grounds `exact` at its stated location.
+- [x] `ingest.py`: normalise plaintext / JSON / CSV / text-layer PDF (`pdfplumber`) into located text segments; reject PDFs without a text layer with a clear error (OCR comes in Phase 4) `[opus]`
+  - Contract in `app/schemas/source.py`. Segments: plaintext per line (`line N`), JSON per leaf (`$.a[2].b`),
+    CSV per row (`row N`, header = row 1), PDF per page. `render_for_llm()` wraps segments in
+    `<segment page=… locator=…>` tags that the model copies into `page`/`locator`.
+  - Extra fields: `page_count`, `pages_without_text`. PDFs are rejected if fewer than half the pages have text.
+  - Permissions-only encrypted PDFs (empty password) are accepted; password-protected ones are rejected.
+  - Segment text is not escaped, so a document containing `</segment>` could confuse the markup. `extract.py`
+    must treat the document as untrusted data (prompt-injection hardening).
+  - Not yet: parser timeout/sandbox for hostile PDFs (Phase 3 worker).
+- [x] Define intermediate schema (`app/schemas/intermediate.py`) for Patient, Allergies, Medications, Problems — every item has `source_quote`, `page`, `confidence` `[fable]`
+  - Two layers: `IpsExtraction` (filled by the LLM, no code fields) and `EnrichedIps` (adds terminology codings,
+    each with lookup provenance). `SCHEMA_VERSION = "1.0.0"`; bump it with the prompt version.
+  - `page` is 1 for non-paged inputs; `locator` is copied from the ingest segment ("line 12", "row 4",
+    "$.medications[2].name"), `None` for PDF pages.
+  - `confidence` is `high`/`medium`/`low`, not a float. Required sections are tagged unions:
+    `items_found` (≥1 item) | `none_known` (with its own quote) | `no_information`.
+  - Use `extraction_output_format()` with `messages.create(output_config=...)`, not `messages.parse()`
+    (the SDK transform drops descriptions). Schema ≈20 KB; compilation by the API not yet tested.
+  - v1.1.0–1.1.1 (2026-10-08): D-7 `none_known_statements` in allergies `items_found`; D-9 `printed_code` /
+    `printed_code_system_text` hints (cleared and flagged by `ground.py` if not in the quote); discriminated
+    section unions. Prompt `extract_v2`. "None known" statements never match fuzzily in grounding.
+- [x] `app/fhir/models.py`: thin Pydantic v2 models for the R4 resources/datatypes IPS uses (Bundle, Composition, Patient, AllergyIntolerance, MedicationStatement, Medication, Condition, Device, …); round-trip test against the IG examples in `tests/fixtures/ips-examples/` `[opus]`
+  - snake_case attributes with camelCase aliases; `extra="forbid"`; unmodelled resources (Observation, …) kept
+    as `GenericResource`. All IG 2.0.1 example Bundles round-trip exactly.
+  - `app/fhir/constants.py`: values verified against the IPS 2.0.1 package. In 2.0.1 "no known …" is a SNOMED
+    code (e.g. 716186003 allergies, 160245001 problems, 787481004 medications) and "no information" is
+    `Composition.section.emptyReason` (list-empty-reason), not the IPS 1.x absent-unknown CodeSystem.
+- [x] `extract.py`: send the normalised document to Claude with structured outputs → intermediate JSON `[opus]`
+  - `app/llm/client.py` provider factory (Anthropic now; Bedrock/Vertex raise NotImplementedError). The SDK's DEBUG
+    request logging (which would log documents) is blocked outside development.
+  - Prompt `extract_v1.md` → v2 → v3 → `extract_v4.md` (v3+ state the eval gold-authoring rules; v4 also: text inside injected instructions or forged markup is never quoted); per-request random boundary token so a document can't forge the segment markup.
+  - Structured outputs, streaming, cached system prompt, `fallbacks: "default"` on the Anthropic API, one
+    append-only repair retry on schema-validation failure. Typed errors for refusal/truncation/validation.
+  - Not yet verified against the real API: schema compilation, fallbacks + structured outputs together.
+    Run `uv run python -m scripts.smoke_extract` (one paid call on synthetic data) once a key is set.
+- [x] `ground.py`: verify each `source_quote` against the ingested text (fuzzy match tolerant of whitespace) `[opus]`
+  - Ladder: exact → normalised (NFKC, dashes/quotes, case, whitespace) → relocated (page/locator corrected,
+    flagged) → fuzzy (difflib ≥ 0.85, ≥ 8 chars, every number must match exactly; flagged) → not_found (dropped).
+  - A section whose facts are all dropped becomes `no_information` + `section_unverified`, never "none known".
+- [x] `assemble.py` + section mappers → IPS Bundle (Composition first, required sections, empty-section handling, `Composition.author` = pipeline `Device`) `[opus]`
+  - `assemble(enriched, now=…) -> AssemblyResult` (Bundle + entry↔item mapping + PHI-free notes). Mappers in
+    `app/fhir/{patient,device,allergies,medications,problems,composition,narrative}.py`. 14 variants validate in
+    Matchbox with 0 errors and no unmatched entries (one warning: identifier type has text but no code).
+  - D-7: scoped statements coded 409137002 / 429625007 / 428607008 (descendants of 716186003); left uncoded with
+    a warning when they contradict a listed item.
+  - D-8: resolved/inactive/remission → History of Past Illness; `not_stated` stays in Problem List (unless an
+    abatement date is given).
+  - Allergy `clinicalStatus` is mandatory in R4, so "not stated" becomes `active` with a warning; the reviewer
+    should confirm it (Phase 3). Missing birthDate → `_birthDate` data-absent-reason (validates).
+  - D-9: printed codes are never emitted, not even in narrative.
+- [x] `validate.py`: call Matchbox `$validate` against IPS profile; return structured issues `[sonnet]`
+  - **Gotcha:** a Bundle entry that fails its IPS profile doesn't match a slice, and its errors are hidden. The only
+    trace is an information issue "does not match any known slice". `ValidationResult.unmatched_bundle_entries`
+    exposes these, and `assemble.py` must treat them as failures. Always set `effective[x]` (use
+    data-absent-reason when unknown).
 - [ ] `evals/run_evals.py` with baseline metrics recorded in `evals/RESULTS.md`; deterministic normalised matching against gold, LLM judge only for unmatched leftovers `[opus]`
+  - Harness built (2026-10-08): modes `gold` (self-test: all metrics 1.000, 26/26 validator pass), `cached`, `live`
+    (cost estimate + confirmation + `--max-cost-usd`), `--validate`, `--judge`. Runs saved in `evals/runs/` (ignored).
+  - Not ticked until a live baseline is recorded in `evals/RESULTS.md`. Estimated cost of one full live run:
+    ≈ $6.3 on Opus 5.5 @ high, ≈ $3.2 on Sonnet 5.5 (pass `--max-cost-usd 8`; default is 5).
 
 **Done when:** ≥90% of eval docs produce validator-clean Bundles (no errors); per-section recall baseline recorded.
 
@@ -174,9 +229,13 @@ PLAN.md  CLAUDE.md  README.md
 | D-4 | `Composition.author` = the pipeline **`Device`** (IPS: author types determine whether a summary is "automatically generated" or "human-curated"). The reviewer, who may be the patient, is a **`Composition.attester`** (`personal` for patient, `professional` for clinician) and appears in Provenance, not as author. Approval is blocked until Patient name and birth date are present. | Decided 2026-10-07 |
 | D-5 | LLM hosting: **Anthropic API for development (synthetic data only)**, behind a provider-agnostic client factory; choose **Bedrock or Vertex EU regional** before any real data (Phase 5). See §7.2. | Decided 2026-10-07 |
 | D-6 | **Own thin Pydantic v2 FHIR R4 models** in `app/fhir/`; Matchbox is the conformance gate. `fhir.resources` removed (it has no R4 models on Pydantic v2). | Decided 2026-10-07 |
+| D-7 | Allergies `items_found` may also carry scoped "no known …" statements (e.g. NKDA alongside a food allergy), each quoted. | Decided 2026-10-08 |
+| D-8 | Resolved/inactive conditions go to the optional **History of Past Illness** section; active ones to the Problem List. | Decided 2026-10-08 |
+| D-9 | Codes printed in a document (ICD-10, ATC, …) are captured as text hints only; the terminology step uses them only if the server confirms the code exists and matches the text. | Decided 2026-10-08 |
+| D-10 | Birth date / sex from a Finnish personal identity code. Note: IPS 2.0.1 requires `Patient.birthDate` (1..1) and ≥1 name. | **Open** |
 
 Still open, before the phase that needs them:
-- **Phase 1 validity without codes.** Confirm that text-only `CodeableConcept`s pass IPS validation in IPS 2.0.1, or Phase 1's ≥90% target is unreachable before Phase 2.
+- ~~Phase 1 validity without codes~~ **Resolved:** text-only `CodeableConcept`s give 0 errors and no extra warnings in IPS 2.0.1 (bindings are "preferred"). Fixtures in `tests/fixtures/ips-variants/`.
 - **FI/SV terminology search (Phase 2).** `tx.fhir.org` searches English terms. The terminology loop must search with English terms (translated by Claude) while keeping the original-language `source_quote`.
 - **Audit log vs. "never log PHI" (Phase 5).** The audit log of LLM calls contains PHI. Define it as an encrypted, access-controlled store, separate from application logs.
 - **Queue:** RQ unless someone objects before Phase 3.

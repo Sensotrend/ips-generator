@@ -1,0 +1,14 @@
+LOPPULAUSUNTO (synteettinen testiaineisto)
+
+Potilas: Testi Äijälä-Öhman, s. 01.02.1950
+Osasto: Sisätautien vuodeosasto 4
+
+Diagnoosit:
+- Tyypin 2 diabetes
+- Eteisvärinä
+
+Lääkitys:
+- Metformiini 500 mg 1 x 2
+- Burana 600 mg tarvittaessa, enintään 3 x päivässä
+
+Allergiat: Penisilliini (nokkosihottuma). Ålandsk patient, talar svenska.

@@ -1,0 +1,27 @@
+EPIKRIISI / EPIKRIS
+Kuvitteelan keskussairaala, kirurgian osasto K4 / Kirurgiska avdelningen K4
+SYNTEETTINEN TESTIASIAKIRJA - SYNTETISKT TESTDOKUMENT
+
+Potilas / Patient: Kokkonen-Prov, Elsa Maria
+Hetu / Personbeteckning: 290244-951B
+Hoitojakso / Vårdtid: 26.9.-30.9.2026
+
+DIAGNOOSIT / DIAGNOSER
+K80.2 Sappikivitauti / Gallsten
+K57.3 Paksusuolen divertikuloosi, todettu 2019
+
+ALLERGIAT / ALLERGIER
+Ei tiedossa olevia lääkeaineallergioita / Inga kända läkemedelsallergier. Laktoosi-intoleranssi.
+
+HOIDON KULKU
+Potilas tuli päivystykseen oikean kylkikaaren alaisen kivun vuoksi. UÄ:ssä sappikiviä, ei kolekystiittiä.
+Laparoskooppinen kolekystektomia 27.9.2026, toipuminen hyvä.
+
+Konsultation, internmedicin (på svenska): Patienten har känd hypertoni sedan 2012 och förmaksflimmer.
+Rekommenderar fortsatt Eliquis 5 mg 1 x 2. Kaliumvärdet lågt, Kaleorid 750 mg 1 x 2 i två veckor.
+
+KOTILÄÄKITYS / HEMMEDICINERING
+Eliquis 5 mg tabl 1 x 2
+Amlodipin 5 mg tabl 1 x 1
+Kaleorid 750 mg depottabl 1 x 2 kahden viikon ajan
+Panacod 500/30 mg tabl 1-2 tarv. kipuun, max 6/vrk, 3 vrk ajan

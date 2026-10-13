@@ -1,0 +1,236 @@
+{
+  "document_language": "fi",
+  "patient": {
+    "names": [
+      {
+        "source_quote": "Marja Liisa\npotilas.sukunimi: Koelainen",
+        "page": 1,
+        "locator": "$.potilas.etunimet",
+        "text": "Marja Liisa Koelainen",
+        "family": "Koelainen",
+        "given": [
+          "Marja",
+          "Liisa"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "birth_date": {
+      "source_quote": "syntymaaika: 1978-02-11",
+      "page": 1,
+      "locator": "$.potilas.syntymaaika",
+      "value": "1978-02-11",
+      "confidence": "high"
+    },
+    "gender": {
+      "source_quote": "sukupuoli: nainen",
+      "page": 1,
+      "locator": "$.potilas.sukupuoli",
+      "value": "female",
+      "confidence": "high"
+    },
+    "identifiers": [
+      {
+        "source_quote": "hetu: 110278-9405",
+        "page": 1,
+        "locator": "$.potilas.hetu",
+        "value": "110278-9405",
+        "type_text": "hetu",
+        "issuer_text": "",
+        "confidence": "high"
+      }
+    ]
+  },
+  "allergies": {
+    "kind": "items_found",
+    "items": [
+      {
+        "source_quote": "Ibuprofeeni\nriskitiedot.allergiat[0].reaktio: astmakohtaus\nriskitiedot.allergiat[0].varmuus: varmistettu",
+        "page": 1,
+        "locator": "$.riskitiedot.allergiat[0].aine",
+        "substance_text": "Ibuprofeeni",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "type": "not_stated",
+        "category": "medication",
+        "criticality": "not_stated",
+        "clinical_status": "not_stated",
+        "verification_status": "confirmed",
+        "onset": "",
+        "reactions": [
+          {
+            "manifestations": [
+              "astmakohtaus"
+            ],
+            "severity": "not_stated"
+          }
+        ],
+        "note": "",
+        "confidence": "high"
+      }
+    ],
+    "none_known_statements": []
+  },
+  "medications": {
+    "kind": "items_found",
+    "items": [
+      {
+        "source_quote": "Symbicort Turbuhaler 160/4,5 mikrog/annos\nlaakitys[0].atc: R03AK07\nlaakitys[0].annostus: 2 inhalaatiota 2 kertaa päivässä\nlaakitys[0].tila: voimassa",
+        "page": 1,
+        "locator": "$.laakitys[0].valmiste",
+        "medication_text": "Symbicort Turbuhaler",
+        "printed_code": "R03AK07",
+        "printed_code_system_text": "atc",
+        "strength_text": "160/4,5 mikrog/annos",
+        "dose_form_text": "",
+        "dosage": {
+          "text": "2 inhalaatiota 2 kertaa päivässä",
+          "dose_value": "2",
+          "dose_unit": "inhalaatiota",
+          "frequency": "2",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Ventoline Evohaler 0,1 mg/annos\nlaakitys[1].atc: R03AC02\nlaakitys[1].annostus: 1-2 inhalaatiota tarvittaessa\nlaakitys[1].tila: voimassa",
+        "page": 1,
+        "locator": "$.laakitys[1].valmiste",
+        "medication_text": "Ventoline Evohaler",
+        "printed_code": "R03AC02",
+        "printed_code_system_text": "atc",
+        "strength_text": "0,1 mg/annos",
+        "dose_form_text": "",
+        "dosage": {
+          "text": "1-2 inhalaatiota tarvittaessa",
+          "dose_value": "",
+          "dose_unit": "inhalaatiota",
+          "frequency": "",
+          "period": "",
+          "period_unit": "not_stated",
+          "as_needed": true,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Sertralin Krka 50 mg tabl\nlaakitys[2].atc: N06AB06\nlaakitys[2].annostus: 1 x 1\nlaakitys[2].tila: voimassa\nlaakitys[2].aloitettu: 2022-11",
+        "page": 1,
+        "locator": "$.laakitys[2].valmiste",
+        "medication_text": "Sertralin Krka",
+        "printed_code": "N06AB06",
+        "printed_code_system_text": "atc",
+        "strength_text": "50 mg",
+        "dose_form_text": "tabl",
+        "dosage": {
+          "text": "1 x 1",
+          "dose_value": "1",
+          "dose_unit": "tabl",
+          "frequency": "1",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "2022-11",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Diklofenaakki 50 mg tabl\nlaakitys[3].atc: M01AB05\nlaakitys[3].annostus: 1 x 2\nlaakitys[3].tila: lopetettu\nlaakitys[3].lopetettu: 2016",
+        "page": 1,
+        "locator": "$.laakitys[3].valmiste",
+        "medication_text": "Diklofenaakki",
+        "printed_code": "M01AB05",
+        "printed_code_system_text": "atc",
+        "strength_text": "50 mg",
+        "dose_form_text": "tabl",
+        "dosage": {
+          "text": "1 x 2",
+          "dose_value": "1",
+          "dose_unit": "tabl",
+          "frequency": "2",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "stopped",
+        "effective_start": "",
+        "effective_end": "2016",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      }
+    ]
+  },
+  "problems": {
+    "kind": "items_found",
+    "items": [
+      {
+        "source_quote": "J45.9\ndiagnoosit[0].teksti: Astma\ndiagnoosit[0].tila: aktiivinen\ndiagnoosit[0].alkanut: 2003",
+        "page": 1,
+        "locator": "$.diagnoosit[0].koodi",
+        "condition_text": "Astma",
+        "printed_code": "J45.9",
+        "printed_code_system_text": "",
+        "clinical_status": "active",
+        "verification_status": "not_stated",
+        "severity": "not_stated",
+        "body_site_text": "",
+        "onset": "2003",
+        "abatement": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "K35.8\ndiagnoosit[1].teksti: Akuutti umpilisäkkeen tulehdus\ndiagnoosit[1].tila: parantunut\ndiagnoosit[1].alkanut: 2010-06",
+        "page": 1,
+        "locator": "$.diagnoosit[1].koodi",
+        "condition_text": "Akuutti umpilisäkkeen tulehdus",
+        "printed_code": "K35.8",
+        "printed_code_system_text": "",
+        "clinical_status": "resolved",
+        "verification_status": "not_stated",
+        "severity": "not_stated",
+        "body_site_text": "",
+        "onset": "2010-06",
+        "abatement": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "F41.1\ndiagnoosit[2].teksti: Yleistynyt ahdistuneisuushäiriö\ndiagnoosit[2].tila: aktiivinen\ndiagnoosit[2].alkanut: 2022",
+        "page": 1,
+        "locator": "$.diagnoosit[2].koodi",
+        "condition_text": "Yleistynyt ahdistuneisuushäiriö",
+        "printed_code": "F41.1",
+        "printed_code_system_text": "",
+        "clinical_status": "active",
+        "verification_status": "not_stated",
+        "severity": "not_stated",
+        "body_site_text": "",
+        "onset": "2022",
+        "abatement": "",
+        "note": "",
+        "confidence": "high"
+      }
+    ]
+  }
+}

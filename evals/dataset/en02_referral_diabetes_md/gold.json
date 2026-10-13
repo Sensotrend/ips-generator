@@ -1,0 +1,224 @@
+{
+  "document_language": "en",
+  "patient": {
+    "names": [
+      {
+        "source_quote": "Oliver James Dummett",
+        "page": 1,
+        "locator": "line 7",
+        "text": "Oliver James Dummett",
+        "family": "Dummett",
+        "given": [
+          "Oliver",
+          "James"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "birth_date": {
+      "source_quote": "DOB 02 March 1964",
+      "page": 1,
+      "locator": "line 7",
+      "value": "1964-03-02",
+      "confidence": "high"
+    },
+    "gender": null,
+    "identifiers": [
+      {
+        "source_quote": "Hospital no.: TST-55102",
+        "page": 1,
+        "locator": "line 7",
+        "value": "TST-55102",
+        "type_text": "Hospital no.",
+        "issuer_text": "",
+        "confidence": "high"
+      }
+    ]
+  },
+  "allergies": {
+    "kind": "none_known",
+    "source_quote": "No known allergies.",
+    "page": 1,
+    "locator": "line 21",
+    "confidence": "high",
+    "scope": "all"
+  },
+  "medications": {
+    "kind": "items_found",
+    "items": [
+      {
+        "source_quote": "Metformin 1g PO BD",
+        "page": 1,
+        "locator": "line 24",
+        "medication_text": "Metformin",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "1g",
+        "dose_form_text": "",
+        "dosage": {
+          "text": "PO BD",
+          "dose_value": "",
+          "dose_unit": "",
+          "frequency": "2",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": "PO"
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Gliclazide MR 60mg OD",
+        "page": 1,
+        "locator": "line 25",
+        "medication_text": "Gliclazide",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "60mg",
+        "dose_form_text": "MR",
+        "dosage": {
+          "text": "OD",
+          "dose_value": "",
+          "dose_unit": "",
+          "frequency": "1",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Ramipril 5mg OD",
+        "page": 1,
+        "locator": "line 26",
+        "medication_text": "Ramipril",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "5mg",
+        "dose_form_text": "",
+        "dosage": {
+          "text": "OD",
+          "dose_value": "",
+          "dose_unit": "",
+          "frequency": "1",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Atorvastatin 20mg ON",
+        "page": 1,
+        "locator": "line 27",
+        "medication_text": "Atorvastatin",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "20mg",
+        "dose_form_text": "",
+        "dosage": {
+          "text": "ON",
+          "dose_value": "",
+          "dose_unit": "",
+          "frequency": "1",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "medium"
+      }
+    ]
+  },
+  "problems": {
+    "kind": "items_found",
+    "items": [
+      {
+        "source_quote": "Type 2 diabetes mellitus, dx 2019",
+        "page": 1,
+        "locator": "line 14",
+        "condition_text": "Type 2 diabetes mellitus",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "clinical_status": "not_stated",
+        "verification_status": "confirmed",
+        "severity": "not_stated",
+        "body_site_text": "",
+        "onset": "2019",
+        "abatement": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Hypertension",
+        "page": 1,
+        "locator": "line 15",
+        "condition_text": "Hypertension",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "severity": "not_stated",
+        "body_site_text": "",
+        "onset": "",
+        "abatement": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Hepatitis A in 1999 – fully recovered",
+        "page": 1,
+        "locator": "line 16",
+        "condition_text": "Hepatitis A",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "clinical_status": "resolved",
+        "verification_status": "not_stated",
+        "severity": "not_stated",
+        "body_site_text": "",
+        "onset": "1999",
+        "abatement": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Diabetic retinopathy, background, both eyes (noted 06/2025)",
+        "page": 1,
+        "locator": "line 17",
+        "condition_text": "Diabetic retinopathy, background",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "severity": "not_stated",
+        "body_site_text": "both eyes",
+        "onset": "2025-06",
+        "abatement": "",
+        "note": "",
+        "confidence": "high"
+      }
+    ]
+  }
+}

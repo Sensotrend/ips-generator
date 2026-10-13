@@ -1,0 +1,18 @@
+{
+  "case_id": "fi05_outpatient_child_txt",
+  "language": "fi",
+  "format": "txt",
+  "media_type": "text/plain",
+  "doc_type": "outpatient_note",
+  "features": [
+    "none_known_allergies",
+    "no_regular_medication",
+    "other_person_mentioned",
+    "printed_icd10",
+    "abbreviations",
+    "decimal_comma",
+    "gender_stated",
+    "birth_date_stated"
+  ],
+  "notes": "Child visit. The mother's asthma and penicillin allergy are not the patient's. 'Ei säännöllistä lääkitystä' -> medications none_known; no new drug prescribed."
+}

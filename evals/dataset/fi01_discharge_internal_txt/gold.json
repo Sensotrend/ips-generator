@@ -1,0 +1,304 @@
+{
+  "document_language": "fi",
+  "patient": {
+    "names": [
+      {
+        "source_quote": "TESTINEN, Aino Kaarina",
+        "page": 1,
+        "locator": "line 6",
+        "text": "TESTINEN, Aino Kaarina",
+        "family": "TESTINEN",
+        "given": [
+          "Aino",
+          "Kaarina"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "birth_date": {
+      "source_quote": "Syntymäaika: 03.05.1951",
+      "page": 1,
+      "locator": "line 8",
+      "value": "1951-05-03",
+      "confidence": "high"
+    },
+    "gender": {
+      "source_quote": "Sukupuoli: nainen",
+      "page": 1,
+      "locator": "line 9",
+      "value": "female",
+      "confidence": "high"
+    },
+    "identifiers": [
+      {
+        "source_quote": "Henkilötunnus: 030551-9315",
+        "page": 1,
+        "locator": "line 7",
+        "value": "030551-9315",
+        "type_text": "Henkilötunnus",
+        "issuer_text": "",
+        "confidence": "high"
+      }
+    ]
+  },
+  "allergies": {
+    "kind": "items_found",
+    "items": [
+      {
+        "source_quote": "Sulfa-antibiootit: ihottuma (2009)",
+        "page": 1,
+        "locator": "line 27",
+        "substance_text": "Sulfa-antibiootit",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "type": "not_stated",
+        "category": "medication",
+        "criticality": "not_stated",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "onset": "2009",
+        "reactions": [
+          {
+            "manifestations": [
+              "ihottuma"
+            ],
+            "severity": "not_stated"
+          }
+        ],
+        "note": "",
+        "confidence": "high"
+      }
+    ],
+    "none_known_statements": []
+  },
+  "medications": {
+    "kind": "items_found",
+    "items": [
+      {
+        "source_quote": "Furesis 40 mg tabl 1 x 1 aamulla p.o.",
+        "page": 1,
+        "locator": "line 34",
+        "medication_text": "Furesis",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "40 mg",
+        "dose_form_text": "tabl",
+        "dosage": {
+          "text": "1 x 1 aamulla p.o.",
+          "dose_value": "1",
+          "dose_unit": "tabl",
+          "frequency": "1",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": "p.o."
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Metformin 1 g tabl 1x2",
+        "page": 1,
+        "locator": "line 35",
+        "medication_text": "Metformin",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "1 g",
+        "dose_form_text": "tabl",
+        "dosage": {
+          "text": "1x2",
+          "dose_value": "1",
+          "dose_unit": "tabl",
+          "frequency": "2",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Ramipril 5 mg tabl 1 x 1",
+        "page": 1,
+        "locator": "line 36",
+        "medication_text": "Ramipril",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "5 mg",
+        "dose_form_text": "tabl",
+        "dosage": {
+          "text": "1 x 1",
+          "dose_value": "1",
+          "dose_unit": "tabl",
+          "frequency": "1",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Bisoprolol 2,5 mg tabl 1x1 (ATC C07AB07)",
+        "page": 1,
+        "locator": "line 37",
+        "medication_text": "Bisoprolol",
+        "printed_code": "C07AB07",
+        "printed_code_system_text": "ATC",
+        "strength_text": "2,5 mg",
+        "dose_form_text": "tabl",
+        "dosage": {
+          "text": "1x1",
+          "dose_value": "1",
+          "dose_unit": "tabl",
+          "frequency": "1",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Panadol 500 mg tabl 1-2 tarv. max 3 x vrk",
+        "page": 1,
+        "locator": "line 38",
+        "medication_text": "Panadol",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "500 mg",
+        "dose_form_text": "tabl",
+        "dosage": {
+          "text": "1-2 tarv. max 3 x vrk",
+          "dose_value": "",
+          "dose_unit": "tabl",
+          "frequency": "",
+          "period": "",
+          "period_unit": "not_stated",
+          "as_needed": true,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Simvastatiini 20 mg, lopetettu 06/2025 lihaskipujen vuoksi",
+        "page": 1,
+        "locator": "line 41",
+        "medication_text": "Simvastatiini",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "20 mg",
+        "dose_form_text": "",
+        "dosage": {
+          "text": "",
+          "dose_value": "",
+          "dose_unit": "",
+          "frequency": "",
+          "period": "",
+          "period_unit": "not_stated",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "stopped",
+        "effective_start": "",
+        "effective_end": "2025-06",
+        "reason_text": "",
+        "note": "lihaskipujen vuoksi",
+        "confidence": "high"
+      }
+    ]
+  },
+  "problems": {
+    "kind": "items_found",
+    "items": [
+      {
+        "source_quote": "I50.0 Sydämen vajaatoiminta, NYHA II",
+        "page": 1,
+        "locator": "line 21",
+        "condition_text": "Sydämen vajaatoiminta",
+        "printed_code": "I50.0",
+        "printed_code_system_text": "",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "severity": "not_stated",
+        "body_site_text": "",
+        "onset": "",
+        "abatement": "",
+        "note": "NYHA II",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "E11.9 Tyypin 2 diabetes (DM2), todettu 2012",
+        "page": 1,
+        "locator": "line 22",
+        "condition_text": "Tyypin 2 diabetes",
+        "printed_code": "E11.9",
+        "printed_code_system_text": "",
+        "clinical_status": "not_stated",
+        "verification_status": "confirmed",
+        "severity": "not_stated",
+        "body_site_text": "",
+        "onset": "2012",
+        "abatement": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "I10 Verenpainetauti",
+        "page": 1,
+        "locator": "line 23",
+        "condition_text": "Verenpainetauti",
+        "printed_code": "I10",
+        "printed_code_system_text": "",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "severity": "not_stated",
+        "body_site_text": "",
+        "onset": "",
+        "abatement": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "J18.9 Keuhkokuume 2019, parantunut",
+        "page": 1,
+        "locator": "line 24",
+        "condition_text": "Keuhkokuume",
+        "printed_code": "J18.9",
+        "printed_code_system_text": "",
+        "clinical_status": "resolved",
+        "verification_status": "not_stated",
+        "severity": "not_stated",
+        "body_site_text": "",
+        "onset": "2019",
+        "abatement": "",
+        "note": "",
+        "confidence": "high"
+      }
+    ]
+  }
+}

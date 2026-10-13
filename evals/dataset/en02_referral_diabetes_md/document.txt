@@ -1,0 +1,31 @@
+## Referral letter – Diabetes & Endocrinology clinic
+*Synthetic test document – not a real patient*
+
+From: Dr A. Placeholder, Hollowbrook Medical Practice (fictional)
+Date: 30 September 2026
+
+Re: **Mr Oliver James Dummett**, DOB 02 March 1964, Hospital no.: TST-55102
+
+Dear colleague,
+
+I would be grateful if you could see this gentleman with poorly controlled DM2 (HbA1c 78 mmol/mol) despite dual therapy.
+
+**PMH**
+- Type 2 diabetes mellitus, dx 2019
+- Hypertension
+- Hepatitis A in 1999 – fully recovered
+- Diabetic retinopathy, background, both eyes (noted 06/2025)
+
+**FH:** Father had an MI at 52; mother has type 2 diabetes.
+
+**Allergies:** No known allergies.
+
+**Current medications**
+- Metformin 1g PO BD
+- Gliclazide MR 60mg OD
+- Ramipril 5mg OD
+- Atorvastatin 20mg ON
+
+Many thanks,
+
+Dr A. Placeholder

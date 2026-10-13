@@ -1,0 +1,15 @@
+{
+  "case_id": "sv06_prescription_pdf",
+  "language": "sv",
+  "format": "pdf",
+  "media_type": "application/pdf",
+  "doc_type": "prescription",
+  "features": [
+    "none_known_allergies",
+    "as_needed_dosing",
+    "indication_not_problem",
+    "section_no_information",
+    "hetu_without_birth_date"
+  ],
+  "notes": "Prescription summary. 'Inga kända läkemedelsallergier' alone -> allergies none_known with scope medication. Otitis is only an indication: problems no_information. Medication quotes span the product, dosage and indication lines."
+}

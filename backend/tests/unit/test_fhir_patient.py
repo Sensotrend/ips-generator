@@ -1,0 +1,74 @@
+"""Patient mapper: names, identifiers without invented systems, missing birth date / name."""
+
+from uuid import UUID
+
+from app.fhir.common import NoteCode
+from app.fhir.constants import DATA_ABSENT_REASON_URL, PROFILE_PATIENT
+from app.fhir.patient import map_patient
+from tests.assembly_cases import build, with_birth_date, without_name
+
+PID = UUID("00000000-0000-4000-8000-000000000001")
+
+
+def test_patient_from_fixture() -> None:
+    mapped, _ = map_patient(build().patient, resource_id=PID)
+    fhir = mapped.resource.to_fhir()
+    assert mapped.full_url == f"urn:uuid:{PID}"
+    assert mapped.path == "patient"
+    assert fhir["id"] == str(PID)
+    assert fhir["meta"] == {"profile": [PROFILE_PATIENT]}
+    assert fhir["name"] == [
+        {"text": "Virtanen, Matti Juhani", "family": "Virtanen", "given": ["Matti", "Juhani"]}
+    ]
+    assert fhir["gender"] == "male"
+
+
+def test_identifier_has_label_but_no_system() -> None:
+    mapped, _ = map_patient(build().patient, resource_id=PID)
+    assert mapped.resource.to_fhir()["identifier"] == [
+        {"type": {"text": "Henkilötunnus"}, "value": "150372-9477"}
+    ]
+
+
+def test_identifier_issuer_becomes_assigner_display() -> None:
+    patient = build().patient
+    patient.identifiers[0].issuer_text = "Digi- ja väestötietovirasto"
+    mapped, _ = map_patient(patient, resource_id=PID)
+    identifier = mapped.resource.to_fhir()["identifier"][0]
+    assert identifier["assigner"] == {"display": "Digi- ja väestötietovirasto"}
+    assert "system" not in identifier
+
+
+def test_missing_birth_date_is_data_absent_with_warning() -> None:
+    mapped, notes = map_patient(build().patient, resource_id=PID)
+    fhir = mapped.resource.to_fhir()
+    assert "birthDate" not in fhir
+    assert fhir["_birthDate"] == {
+        "extension": [{"url": DATA_ABSENT_REASON_URL, "valueCode": "unknown"}]
+    }
+    assert [(n.code, n.severity) for n in notes] == [(NoteCode.BIRTH_DATE_MISSING, "warning")]
+
+
+def test_birth_date_partial_and_full() -> None:
+    mapped, notes = map_patient(with_birth_date().patient, resource_id=PID)
+    fhir = mapped.resource.to_fhir()
+    assert fhir["birthDate"] == "1972-03-15"
+    assert "_birthDate" not in fhir
+    assert notes == []
+
+
+def test_missing_name_is_data_absent_never_invented() -> None:
+    mapped, notes = map_patient(without_name().patient, resource_id=PID)
+    fhir = mapped.resource.to_fhir()
+    assert fhir["name"] == [
+        {"_text": {"extension": [{"url": DATA_ABSENT_REASON_URL, "valueCode": "unknown"}]}}
+    ]
+    assert NoteCode.PATIENT_NAME_MISSING in {n.code for n in notes}
+
+
+def test_narrative_escapes_patient_text() -> None:
+    patient = build().patient
+    patient.names[0].text = "<b>Virtanen</b> & Co"
+    mapped, _ = map_patient(patient, resource_id=PID)
+    assert mapped.resource.text is not None
+    assert "&lt;b&gt;Virtanen&lt;/b&gt; &amp; Co" in mapped.resource.text.div

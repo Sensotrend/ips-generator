@@ -1,0 +1,176 @@
+{
+  "document_language": "sv",
+  "patient": {
+    "names": [],
+    "birth_date": null,
+    "gender": null,
+    "identifiers": []
+  },
+  "allergies": {
+    "kind": "no_information"
+  },
+  "medications": {
+    "kind": "items_found",
+    "items": [
+      {
+        "source_quote": "Läkemedel: Levaxin | Styrka: 0,1 mg | Form: tablett | Dosering: 1 x 1 på morgonen | Ändamål: hypotyreos | Status: Aktuell",
+        "page": 1,
+        "locator": "row 2",
+        "medication_text": "Levaxin",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "0,1 mg",
+        "dose_form_text": "tablett",
+        "dosage": {
+          "text": "1 x 1 på morgonen",
+          "dose_value": "1",
+          "dose_unit": "tablett",
+          "frequency": "1",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "hypotyreos",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Läkemedel: Losartan | Styrka: 50 mg | Form: tablett | Dosering: 1 x 1 | Ändamål: blodtryck | Status: Aktuell",
+        "page": 1,
+        "locator": "row 3",
+        "medication_text": "Losartan",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "50 mg",
+        "dose_form_text": "tablett",
+        "dosage": {
+          "text": "1 x 1",
+          "dose_value": "1",
+          "dose_unit": "tablett",
+          "frequency": "1",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "blodtryck",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Läkemedel: Metformin | Styrka: 500 mg | Form: tablett | Dosering: 1 x 2 (morgon, kväll) | Ändamål: diabetes | Status: Aktuell",
+        "page": 1,
+        "locator": "row 4",
+        "medication_text": "Metformin",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "500 mg",
+        "dose_form_text": "tablett",
+        "dosage": {
+          "text": "1 x 2 (morgon, kväll)",
+          "dose_value": "1",
+          "dose_unit": "tablett",
+          "frequency": "2",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "diabetes",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Läkemedel: Ipren | Styrka: 400 mg | Form: tablett | Dosering: 1 vb | Ändamål: smärta | Status: Utsatt | Kommentar: utsatt 03/2026 pga magbesvär",
+        "page": 1,
+        "locator": "row 5",
+        "medication_text": "Ipren",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "400 mg",
+        "dose_form_text": "tablett",
+        "dosage": {
+          "text": "1 vb",
+          "dose_value": "1",
+          "dose_unit": "tablett",
+          "frequency": "",
+          "period": "",
+          "period_unit": "not_stated",
+          "as_needed": true,
+          "route_text": ""
+        },
+        "status": "stopped",
+        "effective_start": "",
+        "effective_end": "2026-03",
+        "reason_text": "smärta",
+        "note": "utsatt 03/2026 pga magbesvär",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Läkemedel: Omeprazol | Styrka: 20 mg | Form: kapsel | Dosering: 1 x 1 | Ändamål: magskydd | Status: Uppehåll | Kommentar: uppehåll under utredning",
+        "page": 1,
+        "locator": "row 6",
+        "medication_text": "Omeprazol",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "20 mg",
+        "dose_form_text": "kapsel",
+        "dosage": {
+          "text": "1 x 1",
+          "dose_value": "1",
+          "dose_unit": "kapsel",
+          "frequency": "1",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "on_hold",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "magskydd",
+        "note": "uppehåll under utredning",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Läkemedel: Nitroglycerin | Styrka: 0,25 mg | Form: resoriblett | Dosering: 1 vb vid bröstsmärta | Ändamål: kärlkramp | Status: Aktuell",
+        "page": 1,
+        "locator": "row 7",
+        "medication_text": "Nitroglycerin",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "0,25 mg",
+        "dose_form_text": "resoriblett",
+        "dosage": {
+          "text": "1 vb vid bröstsmärta",
+          "dose_value": "1",
+          "dose_unit": "resoriblett",
+          "frequency": "",
+          "period": "",
+          "period_unit": "not_stated",
+          "as_needed": true,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "kärlkramp",
+        "note": "",
+        "confidence": "high"
+      }
+    ]
+  },
+  "problems": {
+    "kind": "no_information"
+  }
+}

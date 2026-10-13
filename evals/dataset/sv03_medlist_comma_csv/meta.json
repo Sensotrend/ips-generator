@@ -1,0 +1,18 @@
+{
+  "case_id": "sv03_medlist_comma_csv",
+  "language": "sv",
+  "format": "csv",
+  "media_type": "text/csv",
+  "doc_type": "medication_list",
+  "features": [
+    "decimal_comma",
+    "stopped_medication",
+    "paused_medication",
+    "as_needed_dosing",
+    "abbreviations",
+    "indication_not_problem",
+    "section_no_information",
+    "partial_dates"
+  ],
+  "notes": "Comma-separated medication list with quoted cells containing commas. No patient data. Indications (hypotyreos, diabetes, kärlkramp) stay in reason_text; problems and allergies are no_information."
+}

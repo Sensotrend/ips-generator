@@ -1,0 +1,14 @@
+{
+  "case_id": "fi12_lab_results_comma_csv",
+  "language": "fi",
+  "format": "csv",
+  "media_type": "text/csv",
+  "doc_type": "lab_report",
+  "features": [
+    "lab_report_all_no_information",
+    "section_no_information",
+    "decimal_comma",
+    "hetu_without_birth_date"
+  ],
+  "notes": "Comma-separated lab export with quoted Finnish decimal commas; the patient is repeated on every row (gold quotes the first). Elevated HbA1c/creatinine/albuminuria are not diagnoses: all three sections are no_information."
+}

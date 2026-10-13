@@ -1,0 +1,111 @@
+{
+  "document_language": "sv",
+  "patient": {
+    "names": [
+      {
+        "source_quote": "Exempelqvist, Linnea",
+        "page": 1,
+        "locator": "$.journalanteckning.patient.namn",
+        "text": "Exempelqvist, Linnea",
+        "family": "Exempelqvist",
+        "given": [
+          "Linnea"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "birth_date": null,
+    "gender": {
+      "source_quote": "kön: kvinna",
+      "page": 1,
+      "locator": "$.journalanteckning.patient.kön",
+      "value": "female",
+      "confidence": "high"
+    },
+    "identifiers": [
+      {
+        "source_quote": "personbeteckning: 150690-961R",
+        "page": 1,
+        "locator": "$.journalanteckning.patient.personbeteckning",
+        "value": "150690-961R",
+        "type_text": "personbeteckning",
+        "issuer_text": "",
+        "confidence": "high"
+      }
+    ]
+  },
+  "allergies": {
+    "kind": "items_found",
+    "items": [
+      {
+        "source_quote": "Björkpollenallergi med rinokonjunktivit",
+        "page": 1,
+        "locator": "$.journalanteckning.sektioner[2].text",
+        "substance_text": "Björkpollen",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "type": "allergy",
+        "category": "environment",
+        "criticality": "not_stated",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "onset": "",
+        "reactions": [
+          {
+            "manifestations": [
+              "rinokonjunktivit"
+            ],
+            "severity": "not_stated"
+          }
+        ],
+        "note": "",
+        "confidence": "high"
+      }
+    ],
+    "none_known_statements": []
+  },
+  "medications": {
+    "kind": "none_known",
+    "source_quote": "Inga regelbundna läkemedel.",
+    "page": 1,
+    "locator": "$.journalanteckning.sektioner[3].text",
+    "confidence": "high"
+  },
+  "problems": {
+    "kind": "items_found",
+    "items": [
+      {
+        "source_quote": "Migrän utan aura (G43.0)",
+        "page": 1,
+        "locator": "$.journalanteckning.sektioner[1].rader[0]",
+        "condition_text": "Migrän utan aura",
+        "printed_code": "G43.0",
+        "printed_code_system_text": "",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "severity": "not_stated",
+        "body_site_text": "",
+        "onset": "",
+        "abatement": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Järnbristanemi 2023, behandlad och utläkt",
+        "page": 1,
+        "locator": "$.journalanteckning.sektioner[1].rader[1]",
+        "condition_text": "Järnbristanemi",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "clinical_status": "resolved",
+        "verification_status": "not_stated",
+        "severity": "not_stated",
+        "body_site_text": "",
+        "onset": "2023",
+        "abatement": "",
+        "note": "",
+        "confidence": "high"
+      }
+    ]
+  }
+}

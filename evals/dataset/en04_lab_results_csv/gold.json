@@ -1,0 +1,28 @@
+{
+  "document_language": "en",
+  "patient": {
+    "names": [],
+    "birth_date": null,
+    "gender": null,
+    "identifiers": [
+      {
+        "source_quote": "Patient ID: SYN-LAB-2231",
+        "page": 1,
+        "locator": "row 2",
+        "value": "SYN-LAB-2231",
+        "type_text": "Patient ID",
+        "issuer_text": "",
+        "confidence": "high"
+      }
+    ]
+  },
+  "allergies": {
+    "kind": "no_information"
+  },
+  "medications": {
+    "kind": "no_information"
+  },
+  "problems": {
+    "kind": "no_information"
+  }
+}

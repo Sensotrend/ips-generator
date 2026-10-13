@@ -1,0 +1,18 @@
+{
+  "case_id": "en06_patient_app_medlist_json",
+  "language": "en",
+  "format": "json",
+  "media_type": "application/json",
+  "doc_type": "medication_list",
+  "features": [
+    "typos",
+    "multi_segment_quote",
+    "stopped_medication",
+    "as_needed_dosing",
+    "partial_dates",
+    "indication_not_problem",
+    "birth_date_stated",
+    "allergy_reactions"
+  ],
+  "notes": "Patient-written app export. 'Lisinopirl', 'capsul', 'penicilin' are typos kept verbatim. Heartburn is only a reason for omeprazole (not in conditions)."
+}

@@ -1,0 +1,19 @@
+{
+  "case_id": "fi11_referral_cardio_pdf",
+  "language": "fi",
+  "format": "pdf",
+  "media_type": "application/pdf",
+  "doc_type": "referral_letter",
+  "features": [
+    "printed_icd10",
+    "resolved_condition",
+    "family_history_distractor",
+    "none_known_allergies",
+    "partial_dates",
+    "abbreviations",
+    "decimal_comma",
+    "gender_stated",
+    "hetu_without_birth_date"
+  ],
+  "notes": "Single-page referral PDF. 'Allergiat: Ei tiedossa.' is read as no known allergies (scope all, medium confidence). 'Aiemmat sairaudet' mixes a resolved embolism with ongoing gout and sleep apnoea, so status comes from wording, not the heading."
+}

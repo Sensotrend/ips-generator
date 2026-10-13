@@ -1,0 +1,23 @@
+{
+  "case_id": "en01_discharge_resp_pdf",
+  "language": "en",
+  "format": "pdf",
+  "media_type": "application/pdf",
+  "doc_type": "discharge_summary",
+  "features": [
+    "multi_page_pdf",
+    "nkda_plus_food_allergy",
+    "printed_icd10",
+    "resolved_condition",
+    "duplicated_medication",
+    "stopped_medication",
+    "as_needed_dosing",
+    "abbreviations",
+    "procedure_distractor",
+    "partial_dates",
+    "gender_stated",
+    "birth_date_stated",
+    "allergy_reactions"
+  ],
+  "notes": "Two-page discharge summary. Amoxicillin, salbutamol, montelukast, levothyroxine and Symbicort are mentioned in the course (page 1) and listed on page 2 (gold quotes page 2). Appendicectomy is a procedure. 'nocte' is one time of day: 1 per 1 d."
+}

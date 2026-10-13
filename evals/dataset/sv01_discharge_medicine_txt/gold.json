@@ -1,0 +1,337 @@
+{
+  "document_language": "sv",
+  "patient": {
+    "names": [
+      {
+        "source_quote": "Provsson, Karl-Erik",
+        "page": 1,
+        "locator": "line 6",
+        "text": "Provsson, Karl-Erik",
+        "family": "Provsson",
+        "given": [
+          "Karl-Erik"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "birth_date": {
+      "source_quote": "Född: 12.08.1946",
+      "page": 1,
+      "locator": "line 8",
+      "value": "1946-08-12",
+      "confidence": "high"
+    },
+    "gender": {
+      "source_quote": "Kön: man",
+      "page": 1,
+      "locator": "line 9",
+      "value": "male",
+      "confidence": "high"
+    },
+    "identifiers": [
+      {
+        "source_quote": "Personbeteckning: 120846-948M",
+        "page": 1,
+        "locator": "line 7",
+        "value": "120846-948M",
+        "type_text": "Personbeteckning",
+        "issuer_text": "",
+        "confidence": "high"
+      }
+    ]
+  },
+  "allergies": {
+    "kind": "items_found",
+    "items": [
+      {
+        "source_quote": "Jordnötsallergi (anafylaxi 2008)",
+        "page": 1,
+        "locator": "line 25",
+        "substance_text": "Jordnöt",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "type": "allergy",
+        "category": "food",
+        "criticality": "not_stated",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "onset": "2008",
+        "reactions": [
+          {
+            "manifestations": [
+              "anafylaxi"
+            ],
+            "severity": "not_stated"
+          }
+        ],
+        "note": "",
+        "confidence": "high"
+      }
+    ],
+    "none_known_statements": [
+      {
+        "source_quote": "Inga kända läkemedelsallergier",
+        "page": 1,
+        "locator": "line 25",
+        "confidence": "high",
+        "scope": "medication"
+      }
+    ]
+  },
+  "medications": {
+    "kind": "items_found",
+    "items": [
+      {
+        "source_quote": "Eliquis 5 mg 1 tabl x 2, insatt 17.09.2026",
+        "page": 1,
+        "locator": "line 31",
+        "medication_text": "Eliquis",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "5 mg",
+        "dose_form_text": "",
+        "dosage": {
+          "text": "1 tabl x 2",
+          "dose_value": "1",
+          "dose_unit": "tabl",
+          "frequency": "2",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "2026-09-17",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Metoprolol depot 100 mg 1 x 1 morgon",
+        "page": 1,
+        "locator": "line 32",
+        "medication_text": "Metoprolol",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "100 mg",
+        "dose_form_text": "depot",
+        "dosage": {
+          "text": "1 x 1 morgon",
+          "dose_value": "1",
+          "dose_unit": "",
+          "frequency": "1",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Enalapril 10 mg 1 x 1",
+        "page": 1,
+        "locator": "line 33",
+        "medication_text": "Enalapril",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "10 mg",
+        "dose_form_text": "",
+        "dosage": {
+          "text": "1 x 1",
+          "dose_value": "1",
+          "dose_unit": "",
+          "frequency": "1",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Atorvastatin 40 mg 1 x 1 till kvällen",
+        "page": 1,
+        "locator": "line 34",
+        "medication_text": "Atorvastatin",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "40 mg",
+        "dose_form_text": "",
+        "dosage": {
+          "text": "1 x 1 till kvällen",
+          "dose_value": "1",
+          "dose_unit": "",
+          "frequency": "1",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Alvedon 500 mg 1–2 tabl vid behov, högst 6 tabl/dygn",
+        "page": 1,
+        "locator": "line 35",
+        "medication_text": "Alvedon",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "500 mg",
+        "dose_form_text": "",
+        "dosage": {
+          "text": "1–2 tabl vid behov, högst 6 tabl/dygn",
+          "dose_value": "",
+          "dose_unit": "tabl",
+          "frequency": "",
+          "period": "",
+          "period_unit": "not_stated",
+          "as_needed": true,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "EpiPen 0,3 mg autoinjektor vid anafylaxi",
+        "page": 1,
+        "locator": "line 36",
+        "medication_text": "EpiPen",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "0,3 mg",
+        "dose_form_text": "autoinjektor",
+        "dosage": {
+          "text": "vid anafylaxi",
+          "dose_value": "",
+          "dose_unit": "",
+          "frequency": "",
+          "period": "",
+          "period_unit": "not_stated",
+          "as_needed": true,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "anafylaxi",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Warfarin (Marevan) 3 mg – UTSATT 17.09.2026, ersatt med Eliquis",
+        "page": 1,
+        "locator": "line 37",
+        "medication_text": "Warfarin (Marevan)",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "3 mg",
+        "dose_form_text": "",
+        "dosage": {
+          "text": "",
+          "dose_value": "",
+          "dose_unit": "",
+          "frequency": "",
+          "period": "",
+          "period_unit": "not_stated",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "stopped",
+        "effective_start": "",
+        "effective_end": "2026-09-17",
+        "reason_text": "",
+        "note": "ersatt med Eliquis",
+        "confidence": "high"
+      }
+    ]
+  },
+  "problems": {
+    "kind": "items_found",
+    "items": [
+      {
+        "source_quote": "Lunginflammation 2021, utläkt.",
+        "page": 1,
+        "locator": "line 16",
+        "condition_text": "Lunginflammation",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "clinical_status": "resolved",
+        "verification_status": "not_stated",
+        "severity": "not_stated",
+        "body_site_text": "",
+        "onset": "2021",
+        "abatement": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "I48.0 Paroxysmalt förmaksflimmer",
+        "page": 1,
+        "locator": "line 20",
+        "condition_text": "Paroxysmalt förmaksflimmer",
+        "printed_code": "I48.0",
+        "printed_code_system_text": "",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "severity": "not_stated",
+        "body_site_text": "",
+        "onset": "",
+        "abatement": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "I10 Essentiell hypertoni",
+        "page": 1,
+        "locator": "line 21",
+        "condition_text": "Essentiell hypertoni",
+        "printed_code": "I10",
+        "printed_code_system_text": "",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "severity": "not_stated",
+        "body_site_text": "",
+        "onset": "",
+        "abatement": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "E78.0 Hyperkolesterolemi",
+        "page": 1,
+        "locator": "line 22",
+        "condition_text": "Hyperkolesterolemi",
+        "printed_code": "E78.0",
+        "printed_code_system_text": "",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "severity": "not_stated",
+        "body_site_text": "",
+        "onset": "",
+        "abatement": "",
+        "note": "",
+        "confidence": "high"
+      }
+    ]
+  }
+}

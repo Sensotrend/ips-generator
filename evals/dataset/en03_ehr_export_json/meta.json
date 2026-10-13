@@ -1,0 +1,21 @@
+{
+  "case_id": "en03_ehr_export_json",
+  "language": "en",
+  "format": "json",
+  "media_type": "application/json",
+  "doc_type": "outpatient_note",
+  "features": [
+    "multi_segment_quote",
+    "printed_icd10",
+    "printed_atc",
+    "resolved_condition",
+    "paused_medication",
+    "as_needed_dosing",
+    "partial_dates",
+    "section_no_information",
+    "birth_date_stated",
+    "gender_stated",
+    "abbreviations"
+  ],
+  "notes": "Custom (non-FHIR) EHR export; codes, display text and status sit in separate leaves, so quotes span several segments. 'allergies: []' is an empty structure, not an explicit statement: gold is no_information (see README). The lateral malleolus is part of the fracture's name, so only 'left' goes to body_site_text."
+}

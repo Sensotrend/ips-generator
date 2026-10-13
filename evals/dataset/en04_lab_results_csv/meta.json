@@ -1,0 +1,13 @@
+{
+  "case_id": "en04_lab_results_csv",
+  "language": "en",
+  "format": "csv",
+  "media_type": "text/csv",
+  "doc_type": "lab_report",
+  "features": [
+    "lab_report_all_no_information",
+    "section_no_information",
+    "abbreviations"
+  ],
+  "notes": "Lab export keyed by a synthetic patient ID only. Low haemoglobin/ferritin suggest iron deficiency but no diagnosis is written: all three sections are no_information."
+}

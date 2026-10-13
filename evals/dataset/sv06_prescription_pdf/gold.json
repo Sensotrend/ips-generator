@@ -1,0 +1,99 @@
+{
+  "document_language": "sv",
+  "patient": {
+    "names": [
+      {
+        "source_quote": "Oskar Testlund",
+        "page": 1,
+        "locator": "",
+        "text": "Oskar Testlund",
+        "family": "Testlund",
+        "given": [
+          "Oskar"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "birth_date": null,
+    "gender": null,
+    "identifiers": [
+      {
+        "source_quote": "Personbeteckning: 210499-933D",
+        "page": 1,
+        "locator": "",
+        "value": "210499-933D",
+        "type_text": "Personbeteckning",
+        "issuer_text": "",
+        "confidence": "high"
+      }
+    ]
+  },
+  "allergies": {
+    "kind": "none_known",
+    "source_quote": "Inga kända läkemedelsallergier",
+    "page": 1,
+    "locator": "",
+    "confidence": "high",
+    "scope": "medication"
+  },
+  "medications": {
+    "kind": "items_found",
+    "items": [
+      {
+        "source_quote": "Amoxicillin Orion 500 mg kapsel, 21 st\nDosering: 1 kapsel 3 gånger dagligen i 7 dagar\nÄndamål: mot öroninflammation",
+        "page": 1,
+        "locator": "",
+        "medication_text": "Amoxicillin Orion",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "500 mg",
+        "dose_form_text": "kapsel",
+        "dosage": {
+          "text": "1 kapsel 3 gånger dagligen i 7 dagar",
+          "dose_value": "1",
+          "dose_unit": "kapsel",
+          "frequency": "3",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "öroninflammation",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Ibuprofen 400 mg tablett, 30 st\nDosering: 1 tablett 1-3 gånger dagligen vid behov mot smärta",
+        "page": 1,
+        "locator": "",
+        "medication_text": "Ibuprofen",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "400 mg",
+        "dose_form_text": "tablett",
+        "dosage": {
+          "text": "1 tablett 1-3 gånger dagligen vid behov mot smärta",
+          "dose_value": "1",
+          "dose_unit": "tablett",
+          "frequency": "",
+          "period": "",
+          "period_unit": "not_stated",
+          "as_needed": true,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "smärta",
+        "note": "",
+        "confidence": "high"
+      }
+    ]
+  },
+  "problems": {
+    "kind": "no_information"
+  }
+}

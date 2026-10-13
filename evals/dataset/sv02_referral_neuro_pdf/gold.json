@@ -1,0 +1,181 @@
+{
+  "document_language": "sv",
+  "patient": {
+    "names": [
+      {
+        "source_quote": "Birgitta Testström",
+        "page": 1,
+        "locator": "",
+        "text": "Birgitta Testström",
+        "family": "Testström",
+        "given": [
+          "Birgitta"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "birth_date": null,
+    "gender": {
+      "source_quote": "74-årig kvinna",
+      "page": 1,
+      "locator": "",
+      "value": "female",
+      "confidence": "high"
+    },
+    "identifiers": [
+      {
+        "source_quote": "Personbeteckning: 030352-919D",
+        "page": 1,
+        "locator": "",
+        "value": "030352-919D",
+        "type_text": "Personbeteckning",
+        "issuer_text": "",
+        "confidence": "high"
+      }
+    ]
+  },
+  "allergies": {
+    "kind": "none_known",
+    "source_quote": "Inga kända allergier.",
+    "page": 1,
+    "locator": "",
+    "confidence": "high",
+    "scope": "all"
+  },
+  "medications": {
+    "kind": "items_found",
+    "items": [
+      {
+        "source_quote": "Enalapril 10 mg 1x1",
+        "page": 2,
+        "locator": "",
+        "medication_text": "Enalapril",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "10 mg",
+        "dose_form_text": "",
+        "dosage": {
+          "text": "1x1",
+          "dose_value": "1",
+          "dose_unit": "",
+          "frequency": "1",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Alvedon 500 mg 1-2 tabl vid behov",
+        "page": 2,
+        "locator": "",
+        "medication_text": "Alvedon",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "500 mg",
+        "dose_form_text": "",
+        "dosage": {
+          "text": "1-2 tabl vid behov",
+          "dose_value": "",
+          "dose_unit": "tabl",
+          "frequency": "",
+          "period": "",
+          "period_unit": "not_stated",
+          "as_needed": true,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "D-vitamin 50 mikrog 1 kapsel dagligen",
+        "page": 2,
+        "locator": "",
+        "medication_text": "D-vitamin",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "50 mikrog",
+        "dose_form_text": "",
+        "dosage": {
+          "text": "1 kapsel dagligen",
+          "dose_value": "1",
+          "dose_unit": "kapsel",
+          "frequency": "1",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      }
+    ]
+  },
+  "problems": {
+    "kind": "items_found",
+    "items": [
+      {
+        "source_quote": "Misstänkt Parkinsons sjukdom",
+        "page": 1,
+        "locator": "",
+        "condition_text": "Parkinsons sjukdom",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "clinical_status": "not_stated",
+        "verification_status": "provisional",
+        "severity": "not_stated",
+        "body_site_text": "",
+        "onset": "",
+        "abatement": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Hypertoni sedan 2010, välbehandlad.",
+        "page": 1,
+        "locator": "",
+        "condition_text": "Hypertoni",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "severity": "not_stated",
+        "body_site_text": "",
+        "onset": "2010",
+        "abatement": "",
+        "note": "välbehandlad",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Depression 2015-2016, utläkt.",
+        "page": 1,
+        "locator": "",
+        "condition_text": "Depression",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "clinical_status": "resolved",
+        "verification_status": "not_stated",
+        "severity": "not_stated",
+        "body_site_text": "",
+        "onset": "2015",
+        "abatement": "2016",
+        "note": "",
+        "confidence": "high"
+      }
+    ]
+  }
+}

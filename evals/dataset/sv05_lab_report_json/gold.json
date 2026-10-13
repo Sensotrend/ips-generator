@@ -1,0 +1,41 @@
+{
+  "document_language": "sv",
+  "patient": {
+    "names": [
+      {
+        "source_quote": "Provberg\nprovsvar.patient.fornamn: Nils Olof",
+        "page": 1,
+        "locator": "$.provsvar.patient.efternamn",
+        "text": "Provberg Nils Olof",
+        "family": "Provberg",
+        "given": [
+          "Nils",
+          "Olof"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "birth_date": null,
+    "gender": null,
+    "identifiers": [
+      {
+        "source_quote": "id: 021171-974W",
+        "page": 1,
+        "locator": "$.provsvar.patient.id",
+        "value": "021171-974W",
+        "type_text": "id",
+        "issuer_text": "",
+        "confidence": "medium"
+      }
+    ]
+  },
+  "allergies": {
+    "kind": "no_information"
+  },
+  "medications": {
+    "kind": "no_information"
+  },
+  "problems": {
+    "kind": "no_information"
+  }
+}

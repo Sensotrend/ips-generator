@@ -1,0 +1,75 @@
+{
+  "vienti": {
+    "jarjestelma": "TestiPTJ 4.2 (synteettinen testiaineisto)",
+    "luotu": "2026-09-30T10:12:00+03:00",
+    "versio": 3
+  },
+  "potilas": {
+    "etunimet": "Marja Liisa",
+    "sukunimi": "Koelainen",
+    "hetu": "110278-9405",
+    "syntymaaika": "1978-02-11",
+    "sukupuoli": "nainen",
+    "kotikunta": "Kuvitteela"
+  },
+  "kayntisyy": "Astman vuosikontrolli",
+  "riskitiedot": {
+    "allergiat": [
+      {
+        "aine": "Ibuprofeeni",
+        "reaktio": "astmakohtaus",
+        "varmuus": "varmistettu",
+        "kirjattu": "2016"
+      }
+    ],
+    "huomautus": "Ei muita tiedossa olevia allergioita."
+  },
+  "diagnoosit": [
+    {
+      "koodi": "J45.9",
+      "teksti": "Astma",
+      "tila": "aktiivinen",
+      "alkanut": "2003"
+    },
+    {
+      "koodi": "K35.8",
+      "teksti": "Akuutti umpilisäkkeen tulehdus",
+      "tila": "parantunut",
+      "alkanut": "2010-06"
+    },
+    {
+      "koodi": "F41.1",
+      "teksti": "Yleistynyt ahdistuneisuushäiriö",
+      "tila": "aktiivinen",
+      "alkanut": "2022"
+    }
+  ],
+  "laakitys": [
+    {
+      "valmiste": "Symbicort Turbuhaler 160/4,5 mikrog/annos",
+      "atc": "R03AK07",
+      "annostus": "2 inhalaatiota 2 kertaa päivässä",
+      "tila": "voimassa"
+    },
+    {
+      "valmiste": "Ventoline Evohaler 0,1 mg/annos",
+      "atc": "R03AC02",
+      "annostus": "1-2 inhalaatiota tarvittaessa",
+      "tila": "voimassa"
+    },
+    {
+      "valmiste": "Sertralin Krka 50 mg tabl",
+      "atc": "N06AB06",
+      "annostus": "1 x 1",
+      "tila": "voimassa",
+      "aloitettu": "2022-11"
+    },
+    {
+      "valmiste": "Diklofenaakki 50 mg tabl",
+      "atc": "M01AB05",
+      "annostus": "1 x 2",
+      "tila": "lopetettu",
+      "lopetettu": "2016"
+    }
+  ]
+}

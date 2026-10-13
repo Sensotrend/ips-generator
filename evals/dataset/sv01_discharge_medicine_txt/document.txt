@@ -1,0 +1,39 @@
+VASA TESTSJUKHUS (fiktivt) – Medicinska avdelningen M2
+SYNTETISKT TESTDOKUMENT – INTE EN VERKLIG PATIENT
+
+EPIKRIS
+
+Patient: Provsson, Karl-Erik
+Personbeteckning: 120846-948M
+Född: 12.08.1946
+Kön: man
+Vårdtid: 15.09.2026–19.09.2026
+
+ORSAK TILL INLÄGGNING
+Bröstsmärta och andnöd. Förmaksflimmer med snabb kammarfrekvens, RR 158/96.
+
+TIDIGARE SJUKDOMAR
+Lunginflammation 2021, utläkt.
+Höftprotes vänster 2018.
+
+DIAGNOSER
+I48.0 Paroxysmalt förmaksflimmer
+I10 Essentiell hypertoni
+E78.0 Hyperkolesterolemi
+
+ALLERGIER
+Inga kända läkemedelsallergier. Jordnötsallergi (anafylaxi 2008), bär adrenalinpenna.
+
+BEHANDLING
+Warfarin utsattes och Eliquis insattes, se läkemedelslistan. Metoprolol dosen höjdes.
+
+LÄKEMEDEL VID UTSKRIVNING
+Eliquis 5 mg 1 tabl x 2, insatt 17.09.2026
+Metoprolol depot 100 mg 1 x 1 morgon
+Enalapril 10 mg 1 x 1
+Atorvastatin 40 mg 1 x 1 till kvällen
+Alvedon 500 mg 1–2 tabl vid behov, högst 6 tabl/dygn
+EpiPen 0,3 mg autoinjektor vid anafylaxi
+Warfarin (Marevan) 3 mg – UTSATT 17.09.2026, ersatt med Eliquis
+
+Uppföljning: Kontroll hos hälsovårdscentralens läkare om 2 veckor.

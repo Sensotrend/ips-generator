@@ -1,0 +1,282 @@
+{
+  "document_language": "fi",
+  "patient": {
+    "names": [
+      {
+        "source_quote": "MALLIKAS Veikko Olavi",
+        "page": 1,
+        "locator": "",
+        "text": "MALLIKAS Veikko Olavi",
+        "family": "MALLIKAS",
+        "given": [
+          "Veikko",
+          "Olavi"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "birth_date": {
+      "source_quote": "Syntynyt: 21.11.1939",
+      "page": 1,
+      "locator": "",
+      "value": "1939-11-21",
+      "confidence": "high"
+    },
+    "gender": null,
+    "identifiers": [
+      {
+        "source_quote": "Hetu: 211139-912W",
+        "page": 1,
+        "locator": "",
+        "value": "211139-912W",
+        "type_text": "Hetu",
+        "issuer_text": "",
+        "confidence": "high"
+      }
+    ]
+  },
+  "allergies": {
+    "kind": "items_found",
+    "items": [
+      {
+        "source_quote": "Penisilliini - anafylaksia 1985, vaikea reaktio.",
+        "page": 1,
+        "locator": "",
+        "substance_text": "Penisilliini",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "type": "not_stated",
+        "category": "medication",
+        "criticality": "not_stated",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "onset": "1985",
+        "reactions": [
+          {
+            "manifestations": [
+              "anafylaksia"
+            ],
+            "severity": "severe"
+          }
+        ],
+        "note": "",
+        "confidence": "high"
+      }
+    ],
+    "none_known_statements": []
+  },
+  "medications": {
+    "kind": "items_found",
+    "items": [
+      {
+        "source_quote": "Donepezil 10 mg tabl 1 x 1 illalla",
+        "page": 3,
+        "locator": "",
+        "medication_text": "Donepezil",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "10 mg",
+        "dose_form_text": "tabl",
+        "dosage": {
+          "text": "1 x 1 illalla",
+          "dose_value": "1",
+          "dose_unit": "tabl",
+          "frequency": "1",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Eliquis 2,5 mg tabl 1 x 2",
+        "page": 3,
+        "locator": "",
+        "medication_text": "Eliquis",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "2,5 mg",
+        "dose_form_text": "tabl",
+        "dosage": {
+          "text": "1 x 2",
+          "dose_value": "1",
+          "dose_unit": "tabl",
+          "frequency": "2",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Bisoprolol 5 mg tabl 1 x 1",
+        "page": 3,
+        "locator": "",
+        "medication_text": "Bisoprolol",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "5 mg",
+        "dose_form_text": "tabl",
+        "dosage": {
+          "text": "1 x 1",
+          "dose_value": "1",
+          "dose_unit": "tabl",
+          "frequency": "1",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Panadol Forte 1 g tabl 1 x 3",
+        "page": 3,
+        "locator": "",
+        "medication_text": "Panadol Forte",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "1 g",
+        "dose_form_text": "tabl",
+        "dosage": {
+          "text": "1 x 3",
+          "dose_value": "1",
+          "dose_unit": "tabl",
+          "frequency": "3",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Oxynorm 5 mg kaps 1 tarv. kipuun, enint. 4 x vrk",
+        "page": 3,
+        "locator": "",
+        "medication_text": "Oxynorm",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "5 mg",
+        "dose_form_text": "kaps",
+        "dosage": {
+          "text": "1 tarv. kipuun, enint. 4 x vrk",
+          "dose_value": "1",
+          "dose_unit": "kaps",
+          "frequency": "",
+          "period": "",
+          "period_unit": "not_stated",
+          "as_needed": true,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "kipuun",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Zopinox 7,5 mg tabl 1 iltaisin - lopetettu 3.10.2026 kaatumisriskin vuoksi",
+        "page": 3,
+        "locator": "",
+        "medication_text": "Zopinox",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "7,5 mg",
+        "dose_form_text": "tabl",
+        "dosage": {
+          "text": "1 iltaisin",
+          "dose_value": "1",
+          "dose_unit": "tabl",
+          "frequency": "1",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "stopped",
+        "effective_start": "",
+        "effective_end": "2026-10-03",
+        "reason_text": "",
+        "note": "kaatumisriskin vuoksi",
+        "confidence": "high"
+      }
+    ]
+  },
+  "problems": {
+    "kind": "items_found",
+    "items": [
+      {
+        "source_quote": "S72.00 Vasemman reisiluun kaulan murtuma (leikattu 1.10.2026)",
+        "page": 1,
+        "locator": "",
+        "condition_text": "reisiluun kaulan murtuma",
+        "printed_code": "S72.00",
+        "printed_code_system_text": "",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "severity": "not_stated",
+        "body_site_text": "Vasemman",
+        "onset": "",
+        "abatement": "",
+        "note": "leikattu 1.10.2026",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "G30.1 Alzheimerin tauti, keskivaikea",
+        "page": 1,
+        "locator": "",
+        "condition_text": "Alzheimerin tauti",
+        "printed_code": "G30.1",
+        "printed_code_system_text": "",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "severity": "moderate",
+        "body_site_text": "",
+        "onset": "",
+        "abatement": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "I48.1 Eteisvärinä, pysyvä",
+        "page": 1,
+        "locator": "",
+        "condition_text": "Eteisvärinä",
+        "printed_code": "I48.1",
+        "printed_code_system_text": "",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "severity": "not_stated",
+        "body_site_text": "",
+        "onset": "",
+        "abatement": "",
+        "note": "pysyvä",
+        "confidence": "high"
+      }
+    ]
+  }
+}

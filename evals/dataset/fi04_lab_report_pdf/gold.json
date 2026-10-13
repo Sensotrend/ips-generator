@@ -1,0 +1,47 @@
+{
+  "document_language": "fi",
+  "patient": {
+    "names": [
+      {
+        "source_quote": "Koekoski, Helmi Annikki",
+        "page": 1,
+        "locator": "",
+        "text": "Koekoski, Helmi Annikki",
+        "family": "Koekoski",
+        "given": [
+          "Helmi",
+          "Annikki"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "birth_date": null,
+    "gender": {
+      "source_quote": "Sukupuoli: nainen",
+      "page": 1,
+      "locator": "",
+      "value": "female",
+      "confidence": "high"
+    },
+    "identifiers": [
+      {
+        "source_quote": "Henkilötunnus: 271060-9686",
+        "page": 1,
+        "locator": "",
+        "value": "271060-9686",
+        "type_text": "Henkilötunnus",
+        "issuer_text": "",
+        "confidence": "high"
+      }
+    ]
+  },
+  "allergies": {
+    "kind": "no_information"
+  },
+  "medications": {
+    "kind": "no_information"
+  },
+  "problems": {
+    "kind": "no_information"
+  }
+}

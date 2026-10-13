@@ -1,0 +1,20 @@
+{
+  "case_id": "sv02_referral_neuro_pdf",
+  "language": "sv",
+  "format": "pdf",
+  "media_type": "application/pdf",
+  "doc_type": "referral_letter",
+  "features": [
+    "multi_page_pdf",
+    "none_known_allergies",
+    "family_history_distractor",
+    "suspected_condition",
+    "resolved_condition",
+    "partial_dates",
+    "as_needed_dosing",
+    "abbreviations",
+    "gender_stated",
+    "hetu_without_birth_date"
+  ],
+  "notes": "Two-page referral PDF; medications are on page 2. The grandfather's Parkinson's disease and the mother's breast cancer are family history. Tremor is covered by the suspected diagnosis and not listed separately."
+}

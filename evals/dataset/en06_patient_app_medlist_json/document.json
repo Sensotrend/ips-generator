@@ -1,0 +1,45 @@
+{
+  "app": "MyMeds Tracker (demo build, synthetic data)",
+  "owner": {
+    "displayName": "Tom Sampleton",
+    "dateOfBirth": "1975-05-30"
+  },
+  "lastUpdated": "2026-09-28",
+  "items": [
+    {
+      "med": "Lisinopirl 10mg",
+      "when": "once a day morning",
+      "why": "blood pressure",
+      "active": true
+    },
+    {
+      "med": "Omeprazole 20 mg",
+      "when": "1 before breakfast",
+      "why": "heartburn",
+      "active": true
+    },
+    {
+      "med": "Sertraline 50mg",
+      "when": "1 daily",
+      "active": false,
+      "notes": "stopped Aug 2025, felt better"
+    },
+    {
+      "med": "Ibuprofen 200mg",
+      "when": "2 tabs when needed for back pain",
+      "active": true
+    },
+    {
+      "med": "Fish oil",
+      "when": "1 capsul daily",
+      "active": true
+    }
+  ],
+  "allergies": [
+    "penicilin - rash as a kid"
+  ],
+  "conditions": [
+    "high blood pressure",
+    "back pain (on and off)"
+  ]
+}

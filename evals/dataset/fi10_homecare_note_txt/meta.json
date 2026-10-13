@@ -1,0 +1,18 @@
+{
+  "case_id": "fi10_homecare_note_txt",
+  "language": "fi",
+  "format": "txt",
+  "media_type": "text/plain",
+  "doc_type": "outpatient_note",
+  "features": [
+    "other_person_mentioned",
+    "typos",
+    "abbreviations",
+    "as_needed_dosing",
+    "partial_dates",
+    "hetu_without_birth_date",
+    "section_no_information",
+    "caps_headings"
+  ],
+  "notes": "Home-care visit note. The spouse's type 1 diabetes and Marevan are not the patient's. 'Alzhaimerin' is a typo kept verbatim. Allergies are not mentioned (no_information)."
+}

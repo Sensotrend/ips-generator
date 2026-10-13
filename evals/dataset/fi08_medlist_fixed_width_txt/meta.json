@@ -1,0 +1,21 @@
+{
+  "case_id": "fi08_medlist_fixed_width_txt",
+  "language": "fi",
+  "format": "txt",
+  "media_type": "text/plain",
+  "doc_type": "medication_list",
+  "features": [
+    "printed_atc",
+    "paused_medication",
+    "as_needed_dosing",
+    "abbreviations",
+    "messy_formatting",
+    "decimal_comma",
+    "intolerance",
+    "allergy_reactions",
+    "section_no_information",
+    "hetu_without_birth_date",
+    "caps_headings"
+  ],
+  "notes": "Fixed-width printout with CRLF and LF line breaks, tabs and trailing spaces. Quotes keep the column padding verbatim. Problems: no_information. '1/2 tabl' -> dose 0.5."
+}

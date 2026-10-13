@@ -1,0 +1,19 @@
+{
+  "case_id": "fi02_referral_ortho_md",
+  "language": "fi",
+  "format": "txt",
+  "media_type": "text/plain",
+  "doc_type": "referral_letter",
+  "features": [
+    "nkda_plus_food_allergy",
+    "hetu_without_birth_date",
+    "typos",
+    "suspected_condition",
+    "procedure_distractor",
+    "partial_dates",
+    "as_needed_dosing",
+    "abbreviations",
+    "allergy_reactions"
+  ],
+  "notes": "Markdown-ish referral. 'Verenpainetautti' and 'tarvittessa' are typos kept verbatim. Appendectomy is a procedure, not a problem. HETU only: birth_date stays null (D-10)."
+}

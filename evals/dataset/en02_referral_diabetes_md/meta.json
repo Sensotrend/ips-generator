@@ -1,0 +1,17 @@
+{
+  "case_id": "en02_referral_diabetes_md",
+  "language": "en",
+  "format": "txt",
+  "media_type": "text/plain",
+  "doc_type": "referral_letter",
+  "features": [
+    "none_known_allergies",
+    "family_history_distractor",
+    "resolved_condition",
+    "abbreviations",
+    "partial_dates",
+    "birth_date_stated",
+    "messy_formatting"
+  ],
+  "notes": "Markdown referral. 'Mr' and 'gentleman' are not a stated gender (gender null). Father's MI and mother's diabetes are family history; DM2 appears twice (reported once from the PMH list)."
+}

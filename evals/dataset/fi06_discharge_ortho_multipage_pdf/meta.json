@@ -1,0 +1,21 @@
+{
+  "case_id": "fi06_discharge_ortho_multipage_pdf",
+  "language": "fi",
+  "format": "pdf",
+  "media_type": "application/pdf",
+  "doc_type": "discharge_summary",
+  "features": [
+    "multi_page_pdf",
+    "mostly_empty_page",
+    "printed_icd10",
+    "duplicated_medication",
+    "stopped_medication",
+    "as_needed_dosing",
+    "abbreviations",
+    "decimal_comma",
+    "birth_date_stated",
+    "allergy_reactions",
+    "caps_headings"
+  ],
+  "notes": "Three-page PDF; page 2 holds only a page number (ingest lists it in pages_without_text). Medications are on page 3. Zopinox appears in the narrative (page 1) and in the stopped list (page 3); gold quotes page 3. The femoral neck is part of the fracture's name, so only 'Vasemman' goes to body_site_text."
+}

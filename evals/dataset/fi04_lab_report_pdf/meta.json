@@ -1,0 +1,16 @@
+{
+  "case_id": "fi04_lab_report_pdf",
+  "language": "fi",
+  "format": "pdf",
+  "media_type": "application/pdf",
+  "doc_type": "lab_report",
+  "features": [
+    "lab_report_all_no_information",
+    "section_no_information",
+    "hetu_without_birth_date",
+    "decimal_comma",
+    "abbreviations",
+    "gender_stated"
+  ],
+  "notes": "Lab report with abnormal values (glucose, HbA1c, LDL) but no diagnosis, medication or allergy text: all three sections are no_information (restraint test)."
+}

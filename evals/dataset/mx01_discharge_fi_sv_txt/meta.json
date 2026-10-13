@@ -1,0 +1,20 @@
+{
+  "case_id": "mx01_discharge_fi_sv_txt",
+  "language": "fi+sv",
+  "format": "txt",
+  "media_type": "text/plain",
+  "doc_type": "discharge_summary",
+  "features": [
+    "mixed_language",
+    "printed_icd10",
+    "duplicated_medication",
+    "as_needed_dosing",
+    "abbreviations",
+    "intolerance",
+    "procedure_distractor",
+    "partial_dates",
+    "caps_headings",
+    "hetu_without_birth_date"
+  ],
+  "notes": "Bilingual headings; Swedish consultation paragraph. The same 'no known drug allergies' statement is given in Finnish and Swedish (gold keeps one, the first). Eliquis and Kaleorid appear in the consultation and the list (gold quotes the list). The cholecystectomy is a procedure. 'Paksusuolen' only locates the diverticulosis, so it goes to body_site_text."
+}
