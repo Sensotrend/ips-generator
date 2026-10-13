@@ -6,6 +6,7 @@ import { PatientReview } from './components/PatientReview'
 import { ReviewScreen } from './components/ReviewScreen'
 import { RoleScreen } from './components/RoleScreen'
 import { UploadScreen } from './components/UploadScreen'
+import { LOCALE_NAMES, LOCALES, setLocale, useT, type Locale } from './lib/i18n'
 import { useRole } from './lib/role'
 
 /** Hash routes: `#/` (upload) and `#/jobs/<id>`. The job id is not PHI. */
@@ -25,28 +26,32 @@ function useHashRoute() {
 }
 
 function JobScreen({ jobId, role }: { jobId: string; role: ReviewerRole }) {
+  const { t } = useT()
   const job = useJob(jobId)
   const running = job.data?.status === 'queued' || job.data?.status === 'running'
   const events = useJobEvents(jobId, running)
-  if (job.isPending) return <p className="muted">Loading…</p>
-  if (job.isError) return <p className="note note-warning">This job was not found.</p>
+  if (job.isPending) return <p className="muted">{t('job.loading')}</p>
+  if (job.isError) return <p className="note note-warning">{t('job.notFound')}</p>
   const data = job.data
   if (data.status === 'failed') {
     return (
       <div className="failed" role="alert">
-        <h2>Processing failed</h2>
+        <h2>{t('job.failed')}</h2>
         <p>{data.error?.message}</p>
         <p className="muted">
-          Step: {data.error?.step ?? 'unknown'} · code: {data.error?.code}
+          {t('job.failed.step', {
+            step: data.error?.step ?? t('job.failed.unknownStep'),
+            code: data.error?.code ?? '',
+          })}
         </p>
-        <a href="#/">Upload another document</a>
+        <a href="#/">{t('job.failed.another')}</a>
       </div>
     )
   }
   if (running) {
     return (
       <div>
-        <h2>Processing…</h2>
+        <h2>{t('job.processing')}</h2>
         <JobProgress events={events} />
       </div>
     )
@@ -61,6 +66,7 @@ function JobScreen({ jobId, role }: { jobId: string; role: ReviewerRole }) {
 function App() {
   const { jobId } = useHashRoute()
   const [role, setRole] = useRole()
+  const { t, locale } = useT()
   return (
     <div className={`app${role ? ` role-${role}` : ' role-none'}`}>
       <header className="app-header">
@@ -70,13 +76,27 @@ function App() {
         <span className="header-right">
           {role && (
             <>
-              <span className="role-chip">{role === 'patient' ? 'Patient' : 'Clinician'}</span>
+              <span className="role-chip">
+                {t(role === 'patient' ? 'role.patient' : 'role.clinician')}
+              </span>
               <button type="button" className="link-button" onClick={() => setRole(null)}>
-                Change
+                {t('app.change')}
               </button>
             </>
           )}
-          <span className="muted">Synthetic data only</span>
+          <select
+            className="language-select"
+            aria-label={t('language.switch')}
+            value={locale}
+            onChange={(event) => setLocale(event.target.value as Locale)}
+          >
+            {LOCALES.map((code) => (
+              <option key={code} value={code} lang={code}>
+                {LOCALE_NAMES[code]}
+              </option>
+            ))}
+          </select>
+          <span className="muted">{t('app.syntheticOnly')}</span>
         </span>
       </header>
       <main>

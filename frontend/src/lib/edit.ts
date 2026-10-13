@@ -1,8 +1,9 @@
 import type { Fact, FactKind, FactValue } from '../api/types'
+import type { TKey } from './i18n'
 
 interface EditField {
   key: string
-  label: string
+  label: TKey
   options?: string[]
 }
 
@@ -10,31 +11,31 @@ const STATUS = ['active', 'inactive', 'resolved', 'not_stated']
 
 const EDIT_FIELDS: Partial<Record<FactKind, EditField[]>> = {
   allergy: [
-    { key: 'substance_text', label: 'Substance' },
-    { key: 'clinical_status', label: 'Status', options: STATUS },
+    { key: 'substance_text', label: 'field.substance' },
+    { key: 'clinical_status', label: 'field.status', options: STATUS },
     {
       key: 'criticality',
-      label: 'Criticality',
+      label: 'field.criticality',
       options: ['low', 'high', 'unable_to_assess', 'not_stated'],
     },
-    { key: 'note', label: 'Note' },
+    { key: 'note', label: 'field.note' },
   ],
   medication: [
-    { key: 'medication_text', label: 'Medication' },
-    { key: 'strength_text', label: 'Strength' },
-    { key: 'dosage.text', label: 'Dosage' },
+    { key: 'medication_text', label: 'field.medication' },
+    { key: 'strength_text', label: 'field.strength' },
+    { key: 'dosage.text', label: 'field.dosage' },
     {
       key: 'status',
-      label: 'Status',
+      label: 'field.status',
       options: ['active', 'completed', 'stopped', 'on_hold', 'intended', 'not_taken', 'not_stated'],
     },
   ],
   condition: [
-    { key: 'condition_text', label: 'Condition' },
-    { key: 'body_site_text', label: 'Body site' },
+    { key: 'condition_text', label: 'field.condition' },
+    { key: 'body_site_text', label: 'field.bodySite' },
     {
       key: 'clinical_status',
-      label: 'Status',
+      label: 'field.status',
       options: [
         'active',
         'recurrence',
@@ -45,19 +46,19 @@ const EDIT_FIELDS: Partial<Record<FactKind, EditField[]>> = {
         'not_stated',
       ],
     },
-    { key: 'onset', label: 'Onset (YYYY[-MM[-DD]])' },
+    { key: 'onset', label: 'field.onset' },
   ],
   patient_name: [
-    { key: 'text', label: 'Full name' },
-    { key: 'family', label: 'Family name' },
+    { key: 'text', label: 'field.fullName' },
+    { key: 'family', label: 'field.familyName' },
   ],
   patient_identifier: [
-    { key: 'value', label: 'Identifier' },
-    { key: 'type_text', label: 'Label' },
+    { key: 'value', label: 'field.identifier' },
+    { key: 'type_text', label: 'field.label' },
   ],
-  patient_birth_date: [{ key: 'value', label: 'Birth date (YYYY-MM-DD)' }],
+  patient_birth_date: [{ key: 'value', label: 'field.birthDate' }],
   patient_gender: [
-    { key: 'value', label: 'Gender', options: ['male', 'female', 'other', 'unknown'] },
+    { key: 'value', label: 'field.gender', options: ['male', 'female', 'other', 'unknown'] },
   ],
 }
 

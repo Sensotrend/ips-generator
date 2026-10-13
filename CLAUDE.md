@@ -23,12 +23,20 @@ and phased task list. Work on the current phase, tick completed tasks, and note 
   pipeline step in `backend/app/llm/models.py` (see PLAN.md §8.1); never hardcode a model id elsewhere.
   Tooling: uv, ruff, mypy, pytest.
 - Frontend: React + TypeScript + Vite + `vite-plugin-pwa`, TanStack Query.
+- Frontend languages: English, Finnish, Swedish (`frontend/src/locales/{en,fi,sv}.ts`, helpers in
+  `frontend/src/lib/i18n.ts`). No user-visible string is hardcoded in a component: add it to `en.ts`
+  and to `fi.ts` and `sv.ts`, and use `t(...)`. **Whenever you change the frontend, check the
+  translations:** new or reworded English text needs matching Finnish and Swedish, and removed text
+  must be removed from all three catalogues. `lib/i18n.test.ts` checks the keys and placeholders but
+  not the wording, so re-read the fi/sv text you touched.
 - Local services: `docker compose -f infra/docker-compose.yml up`.
 - Prompts live as versioned files in `backend/app/llm/prompts/`; bump the version when changing one.
 
 ## Definition of done for pipeline changes
 - Unit tests pass (`pytest`), mappers covered by tests.
 - Generated Bundles validate against the IPS IG in Matchbox with no errors.
+- Frontend changes: `npm run typecheck`, `npm run lint`, `npm test` pass, and translations are checked
+  (see Stack & conventions).
 - Run `evals/run_evals.py` for extraction/prompt changes and record results in `evals/RESULTS.md`.
 
 ## Git workflow (parallel chats and agents)

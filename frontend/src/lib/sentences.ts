@@ -1,65 +1,68 @@
 import type { Draft, Fact } from '../api/types'
-import { factTitle } from './labels'
+import { translate, translateEnum } from './i18n'
+import { factTitle, sectionTitle } from './labels'
 
 const str = (value: unknown): string => (typeof value === 'string' ? value : '')
+const free = (value: unknown): string => {
+  const text = str(value)
+  return text === 'not_stated' ? '' : text
+}
 const known = (value: unknown): string => {
   const text = str(value)
-  return text && text !== 'not_stated' ? text.replace(/_/g, ' ') : ''
+  return text && text !== 'not_stated' ? translateEnum(text) : ''
 }
-
-const DERIVED = 'It was worked out from your personal identity code, not stated in the document.'
 
 /**
  * Plain-language sentence for a fact, built deterministically from its fields (no LLM, so it can
- * only say what the extraction says).
+ * only say what the extraction says). Optional parts are separate messages so every language can
+ * word them its own way.
  */
 export function factSentence(fact: Fact): string {
   const v = fact.value
   const title = factTitle(fact)
+  const derived = fact.derived ? ` ${translate('sentence.derived')}` : ''
+  const status = (value: unknown) => {
+    const text = known(value)
+    return text ? translate('sentence.status', { status: text }) : ''
+  }
   switch (fact.kind) {
     case 'patient_name':
-      return `Your name is ${title}.`
+      return translate('sentence.name', { title })
     case 'patient_birth_date':
-      return `Your date of birth is ${title}.${fact.derived ? ` ${DERIVED}` : ''}`
+      return translate('sentence.birthDate', { title }) + derived
     case 'patient_gender':
-      return `Your sex is recorded as ${title}.${fact.derived ? ` ${DERIVED}` : ''}`
+      return translate('sentence.gender', { title }) + derived
     case 'patient_identifier':
-      return `The document gives this identifier for you: ${title}.`
+      return translate('sentence.identifier', { title })
     case 'allergy': {
       const reactions = (v.reactions ?? [])
         .flatMap((r: { manifestations: string[] }) => r.manifestations)
         .join(', ')
-      const status = known(v.clinical_status)
-      return (
-        `The document says you have an allergy or intolerance to ${title}` +
-        (reactions ? `, with the reaction: ${reactions}` : '') +
-        (status ? ` (${status})` : '') +
-        '.'
-      )
+      return translate('sentence.allergy', {
+        title,
+        reactions: reactions ? translate('sentence.allergy.reactions', { reactions }) : '',
+        status: status(v.clinical_status),
+      })
     }
     case 'medication': {
-      const dosage = known(v.dosage?.text)
-      const status = known(v.status)
-      return (
-        `The document lists the medication ${title}` +
-        (dosage ? `, taken as: ${dosage}` : '') +
-        (status ? ` (${status})` : '') +
-        '.'
-      )
+      const dosage = free(v.dosage?.text)
+      return translate('sentence.medication', {
+        title,
+        dosage: dosage ? translate('sentence.medication.dosage', { dosage }) : '',
+        status: status(v.status),
+      })
     }
     case 'condition': {
-      const status = known(v.clinical_status)
-      const onset = known(v.onset)
-      return (
-        `The document lists the health condition ${title}` +
-        (onset ? `, starting ${onset}` : '') +
-        (status ? ` (${status})` : '') +
-        '.'
-      )
+      const onset = free(v.onset)
+      return translate('sentence.condition', {
+        title,
+        onset: onset ? translate('sentence.condition.onset', { onset }) : '',
+        status: status(v.clinical_status),
+      })
     }
     case 'no_known_allergy_statement':
     case 'section_none_known':
-      return `The document states that nothing is known here: “${fact.source?.quote ?? title}”.`
+      return translate('sentence.noneKnown', { quote: fact.source?.quote ?? title })
   }
 }
 
@@ -77,13 +80,13 @@ export function patientSteps(draft: Draft): Step[] {
     ...(patient.birth_date ? [patient.birth_date] : []),
     ...(patient.gender ? [patient.gender] : []),
     ...patient.identifiers,
-  ].map((fact) => ({ heading: 'About you', fact }))
+  ].map((fact) => ({ heading: translate('patient.about'), fact }))
   const sections = draft.sections.flatMap((section) =>
     [
       ...(section.statement ? [section.statement] : []),
       ...section.items,
       ...section.scoped_statements,
-    ].map((fact) => ({ heading: section.title, fact })),
+    ].map((fact) => ({ heading: sectionTitle(section), fact })),
   )
   return [...about, ...sections]
 }
@@ -92,5 +95,5 @@ export function patientSteps(draft: Draft): Step[] {
 export function silentSections(draft: Draft): string[] {
   return draft.sections
     .filter((s) => s.effective_kind === 'no_information' && s.items.length === 0)
-    .map((s) => s.title)
+    .map(sectionTitle)
 }

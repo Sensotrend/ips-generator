@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { api } from '../api/client'
 import type { SourceRef } from '../api/types'
 import { locateQuote } from '../lib/highlight'
+import { useT } from '../lib/i18n'
 
 GlobalWorkerOptions.workerSrc = workerUrl
 
@@ -18,8 +19,9 @@ interface Props {
  * are highlighted. The PDF is fetched into memory only (no caching; the API is NetworkOnly).
  */
 export default function PdfSourceViewer({ url, pageCount, focus }: Props) {
+  const { t } = useT()
   const [pdf, setPdf] = useState<PDFDocumentProxy | null>(null)
-  const [error, setError] = useState<string | null>(null)
+  const [error, setError] = useState<'pdf' | 'page' | null>(null)
   const [page, setPage] = useState(focus?.page ?? 1)
   const [lastFocus, setLastFocus] = useState(focus)
   const [found, setFound] = useState<boolean | null>(null)
@@ -44,7 +46,7 @@ export default function PdfSourceViewer({ url, pageCount, focus }: Props) {
       .then((doc) => {
         if (!cancelled) setPdf(doc)
       })
-      .catch(() => !cancelled && setError('The PDF could not be displayed.'))
+      .catch(() => !cancelled && setError('pdf'))
     return () => {
       cancelled = true
       void (task as ReturnType<typeof getDocument> | null)?.destroy()
@@ -91,39 +93,40 @@ export default function PdfSourceViewer({ url, pageCount, focus }: Props) {
       } else {
         setFound(null)
       }
-    })().catch(() => !cancelled && setError('The page could not be rendered.'))
+    })().catch(() => !cancelled && setError('page'))
     return () => {
       cancelled = true
       textLayer?.cancel()
     }
   }, [pdf, page, focus])
 
-  if (error) return <p className="note note-warning">{error}</p>
+  if (error)
+    return (
+      <p className="note note-warning">
+        {t(error === 'pdf' ? 'source.pdfFailed' : 'source.pageFailed')}
+      </p>
+    )
   return (
     <div className="source-pdf">
-      <nav className="pager" aria-label="Pages">
+      <nav className="pager" aria-label={t('source.pages')}>
         <button type="button" disabled={page <= 1} onClick={() => setPage(page - 1)}>
-          Previous
+          {t('source.previous')}
         </button>
-        <span>
-          Page {page} / {pdf?.numPages ?? pageCount}
-        </span>
+        <span>{t('source.page', { page, total: pdf?.numPages ?? pageCount })}</span>
         <button
           type="button"
           disabled={page >= (pdf?.numPages ?? pageCount)}
           onClick={() => setPage(page + 1)}
         >
-          Next
+          {t('source.next')}
         </button>
       </nav>
-      {found === false && (
-        <p className="note note-warning">The quote could not be highlighted on this page.</p>
-      )}
+      {found === false && <p className="note note-warning">{t('source.notHighlighted')}</p>}
       <div className="pdf-page" ref={wrapRef}>
         <canvas ref={canvasRef} />
         <div className="textLayer" ref={layerRef} />
       </div>
-      {!pdf && <p className="muted">Loading PDF…</p>}
+      {!pdf && <p className="muted">{t('source.loadingPdf')}</p>}
     </div>
   )
 }

@@ -1,13 +1,14 @@
 import type { JobEvent } from '../api/types'
+import type { TKey } from './i18n'
 
-export const STEPS: { key: string; label: string }[] = [
-  { key: 'ingest', label: 'Read document' },
-  { key: 'extract', label: 'Extract facts' },
-  { key: 'ground', label: 'Check quotes against the source' },
-  { key: 'derive', label: 'Derive from identity code' },
-  { key: 'terminology', label: 'Code terminology' },
-  { key: 'assemble', label: 'Build FHIR IPS' },
-  { key: 'validate', label: 'Validate against the IPS IG' },
+export const STEPS: { key: string; label: TKey }[] = [
+  { key: 'ingest', label: 'step.ingest' },
+  { key: 'extract', label: 'step.extract' },
+  { key: 'ground', label: 'step.ground' },
+  { key: 'derive', label: 'step.derive' },
+  { key: 'terminology', label: 'step.terminology' },
+  { key: 'assemble', label: 'step.assemble' },
+  { key: 'validate', label: 'step.validate' },
 ]
 
 export function stepStatus(events: JobEvent[], step: string): string {

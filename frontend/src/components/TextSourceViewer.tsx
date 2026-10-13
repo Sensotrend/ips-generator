@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { Segment, Source, SourceRef } from '../api/types'
 import { locateQuote, type PartRange } from '../lib/highlight'
+import { useT } from '../lib/i18n'
 
 function renderText(text: string, range: PartRange | undefined) {
   if (!range) return text
@@ -15,6 +16,7 @@ function renderText(text: string, range: PartRange | undefined) {
 
 /** Plaintext / CSV / JSON source: one row per segment, the quote highlighted. */
 export function TextSourceViewer({ source, focus }: { source: Source; focus: SourceRef | null }) {
+  const { t } = useT()
   const pages = useMemo(() => {
     const byPage = new Map<number, Segment[]>()
     for (const segment of source.segments) {
@@ -51,24 +53,22 @@ export function TextSourceViewer({ source, focus }: { source: Source; focus: Sou
   return (
     <div className="source-text" ref={container}>
       {pageNumbers.length > 1 && (
-        <nav className="pager" aria-label="Pages">
+        <nav className="pager" aria-label={t('source.pages')}>
           <button type="button" disabled={page <= pageNumbers[0]} onClick={() => setPage(page - 1)}>
-            Previous
+            {t('source.previous')}
           </button>
-          <span>
-            Page {page} / {pageNumbers[pageNumbers.length - 1]}
-          </span>
+          <span>{t('source.page', { page, total: pageNumbers[pageNumbers.length - 1] })}</span>
           <button
             type="button"
             disabled={page >= pageNumbers[pageNumbers.length - 1]}
             onClick={() => setPage(page + 1)}
           >
-            Next
+            {t('source.next')}
           </button>
         </nav>
       )}
       {focus && focus.page === page && !ranges && (
-        <p className="note note-warning">The quote was not found verbatim on this page.</p>
+        <p className="note note-warning">{t('source.notFoundVerbatim')}</p>
       )}
       <ol className="segments">
         {segments.map((segment, index) => {
@@ -76,7 +76,9 @@ export function TextSourceViewer({ source, focus }: { source: Source; focus: Sou
           const isFocus = !ranges && focus?.page === page && index === preferPart
           return (
             <li key={`${segment.locator}-${index}`} className={isFocus ? 'seg-focus' : undefined}>
-              <span className="seg-loc">{segment.locator ?? `page ${segment.page}`}</span>
+              <span className="seg-loc">
+                {segment.locator ?? t('source.locatorPage', { page: segment.page })}
+              </span>
               <span className="seg-text">{renderText(segment.text, range)}</span>
             </li>
           )

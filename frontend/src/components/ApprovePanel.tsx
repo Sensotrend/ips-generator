@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { ApiError, downloadIps } from '../api/client'
 import type { Blocker, ReviewerRole, ValidationSummary } from '../api/types'
+import { translate, useT } from '../lib/i18n'
 
 interface Props {
   jobId: string
@@ -15,12 +16,11 @@ interface Props {
 
 function describe(error: unknown): string {
   if (error instanceof ApiError) {
-    if (error.code === 'validation_failed')
-      return 'The IPS Bundle did not pass validation, so it was not approved.'
-    if (error.code === 'version_conflict') return 'The draft changed meanwhile. Reload and retry.'
+    if (error.code === 'validation_failed') return translate('approve.error.validation')
+    if (error.code === 'version_conflict') return translate('approve.error.conflict')
     return error.message
   }
-  return 'Approval failed.'
+  return translate('approve.error.generic')
 }
 
 export function ApprovePanel({
@@ -33,16 +33,17 @@ export function ApprovePanel({
   role,
   onApprove,
 }: Props) {
+  const { t } = useT()
   const [downloadError, setDownloadError] = useState(false)
 
   if (approved) {
     return (
-      <section className="approve approved" aria-label="Approval">
-        <h2>Approved</h2>
-        <p>The IPS is final and attested by the reviewer.</p>
+      <section className="approve approved" aria-label={t('approve.label')}>
+        <h2>{t('approve.done')}</h2>
+        <p>{t('approve.done.text')}</p>
         {validation && (
           <p className="muted">
-            Validation: {validation.errors} errors, {validation.warnings} warnings.
+            {t('approve.validation', { errors: validation.errors, warnings: validation.warnings })}
           </p>
         )}
         <button
@@ -53,27 +54,25 @@ export function ApprovePanel({
             downloadIps(jobId).catch(() => setDownloadError(true))
           }}
         >
-          Download IPS (FHIR JSON)
+          {t('approve.download')}
         </button>
-        {downloadError && <p className="note note-warning">Download failed.</p>}
+        {downloadError && <p className="note note-warning">{t('approve.downloadFailed')}</p>}
       </section>
     )
   }
 
   return (
-    <section className="approve" aria-label="Approval">
-      <h2>Approve</h2>
+    <section className="approve" aria-label={t('approve.label')}>
+      <h2>{t('approve.title')}</h2>
       {blockers.length > 0 && (
-        <ul className="blockers" aria-label="Approval blocked">
+        <ul className="blockers" aria-label={t('approve.blocked')}>
           {blockers.map((blocker) => (
-            <li key={`${blocker.code}-${blocker.path}`}>{blocker.message}</li>
+            <li key={`${blocker.code}-${blocker.path}`}>{t(`blocker.${blocker.code}`)}</li>
           ))}
         </ul>
       )}
       <p className="muted">
-        {role === 'patient'
-          ? 'By approving, you confirm as the patient that this summary is correct.'
-          : 'By approving, you attest this summary as a clinician.'}
+        {t(role === 'patient' ? 'approve.note.patient' : 'approve.note.clinician')}
       </p>
       <button
         type="button"
@@ -81,7 +80,7 @@ export function ApprovePanel({
         disabled={busy || blockers.length > 0}
         onClick={() => onApprove(role)}
       >
-        {role === 'patient' ? 'Approve my summary' : 'Approve IPS'}
+        {t(role === 'patient' ? 'approve.button.patient' : 'approve.button.clinician')}
       </button>
       {error !== null && error !== undefined && (
         <p className="note note-warning" role="alert">

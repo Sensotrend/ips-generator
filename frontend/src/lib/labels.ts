@@ -1,18 +1,12 @@
-import type { Fact, FlagCode } from '../api/types'
+import type { Fact, FlagCode, Section } from '../api/types'
+import { en } from '../locales/en'
+import { translate, translateEnum, type TKey } from './i18n'
 
-export const FLAG_LABELS: Record<FlagCode, string> = {
-  relocated: 'Quote found elsewhere (location corrected)',
-  fuzzy_match: 'Quote is not verbatim (fuzzy match)',
-  section_unverified: 'Section could not be verified against the source',
-  printed_code_not_in_quote: 'Printed code was not in the quote (removed)',
-  derived_from_identity_code: 'Derived from the personal identity code',
-  identity_code_conflict: 'Identity code disagrees with the stated value',
-  identity_code_ambiguous: 'Several different identity codes',
-  assumed_status: 'Status not stated, assumed active',
-  low_confidence: 'Low extraction confidence',
-  edited: 'Edited by reviewer',
-  other: 'Needs attention',
-}
+export const flagLabel = (flag: FlagCode): string => translate(`flag.${flag}`)
+
+/** Section heading in the interface language; the server's title if the key is unknown. */
+export const sectionTitle = (section: Section): string =>
+  `section.${section.key}` in en ? translate(`section.${section.key}` as TKey) : section.title
 
 /** Flags that need the reviewer's attention (others are informational). */
 export const WARNING_FLAGS = new Set<FlagCode>([
@@ -44,48 +38,51 @@ export function factTitle(fact: Fact): string {
     case 'patient_birth_date':
       return str(fact.derived?.value) || str(v.value)
     case 'patient_gender':
-      return str(fact.derived?.value) || str(v.value)
+      return translateEnum(str(fact.derived?.value) || str(v.value))
     case 'no_known_allergy_statement':
     case 'section_none_known':
-      return fact.source?.quote ?? 'None known'
+      return fact.source?.quote ?? translate('fact.noneKnown')
   }
 }
 
 export function factDetails(fact: Fact): [string, string][] {
   const v = fact.value
   const out: [string, string][] = []
-  const add = (label: string, value: unknown) => {
+  // `free` values are document text; the others are backend enums, shown in the interface language.
+  const add = (label: TKey, value: unknown, free = false) => {
     const text = str(value)
-    if (text && text !== 'not_stated') out.push([label, text.replace(/_/g, ' ')])
+    if (text && text !== 'not_stated')
+      out.push([translate(label), free ? text : translateEnum(text)])
   }
   switch (fact.kind) {
     case 'allergy':
-      add('status', v.clinical_status)
-      add('category', v.category)
-      add('criticality', v.criticality)
+      add('detail.status', v.clinical_status)
+      add('detail.category', v.category)
+      add('detail.criticality', v.criticality)
       add(
-        'reactions',
+        'detail.reactions',
         (v.reactions ?? [])
           .flatMap((r: { manifestations: string[] }) => r.manifestations)
           .join(', '),
+        true,
       )
-      add('onset', v.onset)
+      add('detail.onset', v.onset, true)
       break
     case 'medication':
-      add('dosage', v.dosage?.text)
-      add('form', v.dose_form_text)
-      add('status', v.status)
-      add('reason', v.reason_text)
+      add('detail.dosage', v.dosage?.text, true)
+      add('detail.form', v.dose_form_text, true)
+      add('detail.status', v.status)
+      add('detail.reason', v.reason_text, true)
       break
     case 'condition':
-      add('status', v.clinical_status)
-      add('verification', v.verification_status)
-      add('onset', v.onset)
-      add('resolved', v.abatement)
+      add('detail.status', v.clinical_status)
+      add('detail.verification', v.verification_status)
+      add('detail.onset', v.onset, true)
+      add('detail.resolved', v.abatement, true)
       break
     case 'no_known_allergy_statement':
     case 'section_none_known':
-      add('scope', v.scope)
+      add('detail.scope', v.scope)
       break
     default:
       break

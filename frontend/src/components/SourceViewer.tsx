@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react'
 import { useSource } from '../api/hooks'
 import type { SourceRef } from '../api/types'
+import { useT } from '../lib/i18n'
 import { TextSourceViewer } from './TextSourceViewer'
 
 // pdf.js is large: load it only when a PDF is reviewed.
@@ -8,29 +9,30 @@ const PdfSourceViewer = lazy(() => import('./PdfSourceViewer'))
 
 export function SourceViewer({ jobId, focus }: { jobId: string; focus: SourceRef | null }) {
   const source = useSource(jobId, true)
-  if (source.isPending) return <p className="muted">Loading source…</p>
-  if (source.isError) return <p className="note note-warning">The source could not be loaded.</p>
+  const { t } = useT()
+  if (source.isPending) return <p className="muted">{t('source.loading')}</p>
+  if (source.isError) return <p className="note note-warning">{t('source.loadFailed')}</p>
   const data = source.data
   return (
-    <section className="source" aria-label="Source document">
+    <section className="source" aria-label={t('source.label')}>
       <header className="source-head">
-        <h2>Source</h2>
+        <h2>{t('source.title')}</h2>
         {focus ? (
           <span className="muted">
-            p. {focus.page}
+            {t('fact.page', { page: focus.page })}
             {focus.locator ? `, ${focus.locator}` : ''}
           </span>
         ) : (
-          <span className="muted">Select a fact to see its quote</span>
+          <span className="muted">{t('source.select')}</span>
         )}
       </header>
       {data.pages_without_text.length > 0 && (
         <p className="note note-warning">
-          Pages without a text layer (not extracted): {data.pages_without_text.join(', ')}
+          {t('source.noTextLayer', { pages: data.pages_without_text.join(', ') })}
         </p>
       )}
       {data.original_url ? (
-        <Suspense fallback={<p className="muted">Loading PDF viewer…</p>}>
+        <Suspense fallback={<p className="muted">{t('source.loadingPdfViewer')}</p>}>
           <PdfSourceViewer url={data.original_url} pageCount={data.page_count} focus={focus} />
         </Suspense>
       ) : (

@@ -1,17 +1,13 @@
 import { useState } from 'react'
 import { ApiError } from '../api/client'
 import { useApprove, useDraft, useUpdateDraft } from '../api/hooks'
-import type { Draft, Fact, ReviewAction, ReviewerRole, Section, SourceRef } from '../api/types'
+import type { Draft, Fact, ReviewAction, ReviewerRole, SourceRef } from '../api/types'
+import { languageName, useT } from '../lib/i18n'
+import { sectionTitle } from '../lib/labels'
 import { ApprovePanel } from './ApprovePanel'
 import { FactCard } from './FactCard'
 import { FlagChips } from './FlagChips'
 import { SourceViewer } from './SourceViewer'
-
-const KIND_LABEL: Record<Section['kind'], string> = {
-  items_found: 'entries',
-  none_known: 'none known',
-  no_information: 'no information',
-}
 
 interface ListProps {
   draft: Draft
@@ -42,6 +38,7 @@ function FactList({ facts, ...props }: ListProps & { facts: Fact[] }) {
 
 export function SectionsList(props: ListProps) {
   const { draft } = props
+  const { t } = useT()
   const patient = draft.patient
   const patientFacts = [
     ...patient.names,
@@ -53,19 +50,21 @@ export function SectionsList(props: ListProps) {
     <div className="sections">
       <section className="section" aria-labelledby="sec-patient">
         <header>
-          <h2 id="sec-patient">Patient</h2>
+          <h2 id="sec-patient">{t('section.patient')}</h2>
         </header>
         <FlagChips flags={patient.flags} />
-        {patientFacts.length === 0 && <p className="muted">No patient details found.</p>}
+        {patientFacts.length === 0 && <p className="muted">{t('section.noPatientDetails')}</p>}
         <FactList facts={patientFacts} {...props} />
       </section>
       {draft.sections.map((section) => (
         <section key={section.key} className="section" aria-labelledby={`sec-${section.key}`}>
           <header>
-            <h2 id={`sec-${section.key}`}>{section.title}</h2>
-            <span className="badge">{KIND_LABEL[section.kind]}</span>
+            <h2 id={`sec-${section.key}`}>{sectionTitle(section)}</h2>
+            <span className="badge">{t(`section.kind.${section.kind}`)}</span>
             {section.effective_kind !== section.kind && (
-              <span className="badge badge-warn">→ {KIND_LABEL[section.effective_kind]}</span>
+              <span className="badge badge-warn">
+                → {t(`section.kind.${section.effective_kind}`)}
+              </span>
             )}
           </header>
           <FlagChips flags={section.flags} />
@@ -73,12 +72,12 @@ export function SectionsList(props: ListProps) {
           <FactList facts={section.items} {...props} />
           {section.scoped_statements.length > 0 && (
             <>
-              <h3>Statements</h3>
+              <h3>{t('section.statements')}</h3>
               <FactList facts={section.scoped_statements} {...props} />
             </>
           )}
           {section.kind === 'no_information' && section.items.length === 0 && (
-            <p className="muted">The document says nothing about this section.</p>
+            <p className="muted">{t('section.silent')}</p>
           )}
         </section>
       ))}
@@ -87,14 +86,15 @@ export function SectionsList(props: ListProps) {
 }
 
 export function ReviewScreen({ jobId, role }: { jobId: string; role: ReviewerRole }) {
+  const { t } = useT()
   const draft = useDraft(jobId, true)
   const update = useUpdateDraft(jobId)
   const approve = useApprove(jobId)
   const [selected, setSelected] = useState<{ path: string; source: SourceRef | null } | null>(null)
   const [tab, setTab] = useState<'facts' | 'source'>('facts')
 
-  if (draft.isPending) return <p className="muted">Loading draft…</p>
-  if (draft.isError) return <p className="note note-warning">The draft could not be loaded.</p>
+  if (draft.isPending) return <p className="muted">{t('review.loading')}</p>
+  if (draft.isError) return <p className="note note-warning">{t('review.loadFailed')}</p>
   const data = draft.data
   const readOnly = data.status === 'approved'
   const busy = update.isPending || approve.isPending
@@ -104,21 +104,28 @@ export function ReviewScreen({ jobId, role }: { jobId: string; role: ReviewerRol
     <div className="review" data-tab={tab}>
       <div className="review-head">
         <p className="muted">
-          Language: {data.document_language} · draft v{data.version}
+          {t('review.meta', {
+            language: languageName(data.document_language),
+            version: data.version,
+          })}
           {data.validation &&
-            ` · pipeline validation: ${data.validation.passed ? 'passed' : 'failed'} (${data.validation.errors} errors)`}
-          {data.validation_error && ' · validator unavailable'}
+            t('review.validation', {
+              result: t(
+                data.validation.passed ? 'review.validation.passed' : 'review.validation.failed',
+              ),
+              errors: data.validation.errors,
+            })}
+          {data.validation_error && t('review.validatorUnavailable')}
         </p>
         {data.dropped_paths.length > 0 && (
           <p className="note note-warning">
-            {data.dropped_paths.length} extracted fact(s) were dropped: their quote was not found in
-            the document.
+            {t('review.dropped', { count: data.dropped_paths.length })}
           </p>
         )}
         {updateError && (
           <p className="note note-warning" role="alert">
             {updateError.code === 'version_conflict'
-              ? 'The draft changed meanwhile; it has been reloaded.'
+              ? t('review.versionConflict')
               : updateError.message}
           </p>
         )}
@@ -129,7 +136,7 @@ export function ReviewScreen({ jobId, role }: { jobId: string; role: ReviewerRol
             aria-selected={tab === 'facts'}
             onClick={() => setTab('facts')}
           >
-            Facts
+            {t('review.tab.facts')}
           </button>
           <button
             type="button"
@@ -137,7 +144,7 @@ export function ReviewScreen({ jobId, role }: { jobId: string; role: ReviewerRol
             aria-selected={tab === 'source'}
             onClick={() => setTab('source')}
           >
-            Source
+            {t('review.tab.source')}
           </button>
         </div>
       </div>
@@ -177,7 +184,7 @@ export function ReviewScreen({ jobId, role }: { jobId: string; role: ReviewerRol
         </div>
         <div className="pane pane-source">
           <button type="button" className="back" onClick={() => setTab('facts')}>
-            ← Back to facts
+            {t('review.backToFacts')}
           </button>
           <SourceViewer jobId={jobId} focus={selected?.source ?? null} />
         </div>

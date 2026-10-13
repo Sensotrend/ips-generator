@@ -3,19 +3,14 @@ import { ApiError } from '../api/client'
 import { useApprove, useDraft, useUpdateDraft } from '../api/hooks'
 import type { FactValue, ReviewAction } from '../api/types'
 import { editableFields, getIn, setIn } from '../lib/edit'
-import { FLAG_LABELS, WARNING_FLAGS } from '../lib/labels'
+import { translateEnum, useT } from '../lib/i18n'
+import { flagLabel, WARNING_FLAGS } from '../lib/labels'
 import { factSentence, patientSteps, silentSections } from '../lib/sentences'
 import { ApprovePanel } from './ApprovePanel'
 
-const DECISION_TEXT = {
-  pending: 'Not answered yet',
-  accepted: 'You said this is right',
-  edited: 'You changed this',
-  rejected: 'You said this is not right',
-} as const
-
 /** Conversational review for patients: one fact at a time, then a summary to approve. */
 export function PatientReview({ jobId }: { jobId: string }) {
+  const { t } = useT()
   const draft = useDraft(jobId, true)
   const update = useUpdateDraft(jobId)
   const approve = useApprove(jobId)
@@ -23,8 +18,8 @@ export function PatientReview({ jobId }: { jobId: string }) {
   const [editing, setEditing] = useState<FactValue | null>(null)
   const [allergyStatus, setAllergyStatus] = useState<'active' | 'inactive' | 'resolved'>('active')
 
-  if (draft.isPending) return <p className="muted">Loading your summary…</p>
-  if (draft.isError) return <p className="note note-warning">Your summary could not be loaded.</p>
+  if (draft.isPending) return <p className="muted">{t('patient.loading')}</p>
+  if (draft.isError) return <p className="note note-warning">{t('patient.loadFailed')}</p>
   const data = draft.data
   const steps = patientSteps(data)
   const approved = data.status === 'approved'
@@ -48,9 +43,7 @@ export function PatientReview({ jobId }: { jobId: string }) {
 
   const errorNote = updateError && (
     <p className="note note-warning" role="alert">
-      {updateError.code === 'version_conflict'
-        ? 'The summary changed meanwhile and has been reloaded. Please answer again.'
-        : updateError.message}
+      {updateError.code === 'version_conflict' ? t('patient.versionConflict') : updateError.message}
     </p>
   )
 
@@ -65,23 +58,27 @@ export function PatientReview({ jobId }: { jobId: string }) {
     }
     return (
       <div className="patient-review">
-        <section className="chat-card" aria-label="Your summary">
-          <h2>{approved ? 'Your summary is approved' : 'Your summary is ready'}</h2>
+        <section className="chat-card" aria-label={t('patient.summary.label')}>
+          <h2>{t(approved ? 'patient.summary.approved' : 'patient.summary.ready')}</h2>
           {steps.length === 0 ? (
-            <p>We did not find anything in the document to put in your summary.</p>
+            <p>{t('patient.summary.empty')}</p>
           ) : (
             <p>
-              You went through {steps.length} item{steps.length === 1 ? '' : 's'}: {counts.right}{' '}
-              confirmed, {counts.changed} changed, {counts.wrong} removed
-              {counts.open > 0 ? `, ${counts.open} not answered` : ''}.
+              {t('patient.summary.counts', {
+                count: steps.length,
+                right: counts.right,
+                changed: counts.changed,
+                wrong: counts.wrong,
+                open: counts.open > 0 ? t('patient.summary.open', { open: counts.open }) : '',
+              })}
             </p>
           )}
           {silent.length > 0 && (
-            <p className="muted">The document said nothing about: {silent.join(', ')}.</p>
+            <p className="muted">{t('patient.summary.silent', { sections: silent.join(', ') })}</p>
           )}
           {!approved && (
             <button type="button" onClick={() => setIndex(Math.max(steps.length - 1, 0))}>
-              ← Go back
+              {t('patient.goBack')}
             </button>
           )}
         </section>
@@ -118,37 +115,39 @@ export function PatientReview({ jobId }: { jobId: string }) {
   return (
     <div className="patient-review">
       <p className="muted" aria-live="polite">
-        Step {index + 1} of {steps.length} · {heading}
+        {t('patient.step', { step: index + 1, total: steps.length, heading })}
       </p>
       <section className="chat-card" aria-label={heading}>
         <p className="chat-sentence">{factSentence(fact)}</p>
         {fact.source && (
           <p className="fact-source">
-            <span className="muted">The document says:</span> <q>{fact.source.quote}</q>
+            <span className="muted">{t('patient.documentSays')}</span> <q>{fact.source.quote}</q>
           </p>
         )}
         {warnings.length > 0 && (
           <ul className="notes">
             {warnings.map((flag) => (
               <li key={flag} className="note note-warning">
-                {FLAG_LABELS[flag]}
+                {flagLabel(flag)}
               </li>
             ))}
           </ul>
         )}
-        {fact.decision !== 'pending' && <p className="muted">{DECISION_TEXT[fact.decision]}.</p>}
+        {fact.decision !== 'pending' && (
+          <p className="muted">{t(`patient.decision.${fact.decision}`)}.</p>
+        )}
         {fact.needs_confirmation && fact.kind === 'allergy' && (
           <label className="inline-field">
-            The document does not say if this allergy is still current. Is it:{' '}
+            {t('patient.allergyStatus')}{' '}
             <select
               value={allergyStatus}
               onChange={(event) =>
                 setAllergyStatus(event.target.value as 'active' | 'inactive' | 'resolved')
               }
             >
-              <option value="active">still active</option>
-              <option value="inactive">not active</option>
-              <option value="resolved">resolved</option>
+              <option value="active">{t('patient.status.active')}</option>
+              <option value="inactive">{t('patient.status.inactive')}</option>
+              <option value="resolved">{t('patient.status.resolved')}</option>
             </select>
           </label>
         )}
@@ -162,7 +161,7 @@ export function PatientReview({ jobId }: { jobId: string }) {
           >
             {fields.map((field) => (
               <label key={field.key}>
-                {field.label}
+                {t(field.label)}
                 {field.options ? (
                   <select
                     value={getIn(editing, field.key)}
@@ -170,7 +169,7 @@ export function PatientReview({ jobId }: { jobId: string }) {
                   >
                     {field.options.map((option) => (
                       <option key={option} value={option}>
-                        {option.replace(/_/g, ' ')}
+                        {translateEnum(option)}
                       </option>
                     ))}
                   </select>
@@ -184,10 +183,10 @@ export function PatientReview({ jobId }: { jobId: string }) {
             ))}
             <div className="actions">
               <button type="submit" className="primary" disabled={busy}>
-                Save change
+                {t('patient.save')}
               </button>
               <button type="button" onClick={() => setEditing(null)}>
-                Cancel
+                {t('fact.cancel')}
               </button>
             </div>
           </form>
@@ -199,11 +198,11 @@ export function PatientReview({ jobId }: { jobId: string }) {
               disabled={busy}
               onClick={() => send(confirm())}
             >
-              Yes, that is right
+              {t('patient.yes')}
             </button>
             {fields.length > 0 && (
               <button type="button" disabled={busy} onClick={() => setEditing(fact.value)}>
-                Change it
+                {t('patient.change')}
               </button>
             )}
             <button
@@ -212,7 +211,7 @@ export function PatientReview({ jobId }: { jobId: string }) {
               disabled={busy}
               onClick={() => send([{ action: 'reject', path: fact.path }])}
             >
-              No, leave it out
+              {t('patient.no')}
             </button>
           </div>
         )}
@@ -227,7 +226,7 @@ export function PatientReview({ jobId }: { jobId: string }) {
             setIndex(index - 1)
           }}
         >
-          ← Back
+          {t('patient.back')}
         </button>
         <button
           type="button"
@@ -237,7 +236,7 @@ export function PatientReview({ jobId }: { jobId: string }) {
             setIndex(index + 1)
           }}
         >
-          Skip for now
+          {t('patient.skip')}
         </button>
       </div>
     </div>

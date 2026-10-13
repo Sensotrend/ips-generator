@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import type { Fact, FactValue, ReviewAction } from '../api/types'
 import { editableFields, getIn, setIn } from '../lib/edit'
+import { translateEnum, useT } from '../lib/i18n'
 import { factDetails, factTitle } from '../lib/labels'
 import { FlagChips } from './FlagChips'
 
@@ -14,6 +15,7 @@ interface Props {
 }
 
 export function FactCard({ fact, selected, readOnly, busy, onSelect, onActions }: Props) {
+  const { t } = useT()
   const [draft, setDraft] = useState<FactValue | null>(null)
   const [allergyStatus, setAllergyStatus] = useState<'active' | 'inactive' | 'resolved'>('active')
   const fields = editableFields(fact)
@@ -26,9 +28,11 @@ export function FactCard({ fact, selected, readOnly, busy, onSelect, onActions }
       aria-label={factTitle(fact)}
     >
       <button type="button" className="fact-main" onClick={() => onSelect(fact)}>
-        <span className="fact-title">{factTitle(fact) || '(empty)'}</span>
-        <span className={`decision decision-${fact.decision}`}>{fact.decision}</span>
-        {derivedOnly && <span className="badge">derived</span>}
+        <span className="fact-title">{factTitle(fact) || t('fact.empty')}</span>
+        <span className={`decision decision-${fact.decision}`}>
+          {t(`decision.${fact.decision}`)}
+        </span>
+        {derivedOnly && <span className="badge">{t('fact.derived')}</span>}
       </button>
       {factDetails(fact).length > 0 && (
         <dl className="fact-details">
@@ -43,7 +47,7 @@ export function FactCard({ fact, selected, readOnly, busy, onSelect, onActions }
       {fact.source && (
         <p className="fact-source">
           <span className="muted">
-            p. {fact.source.page}
+            {t('fact.page', { page: fact.source.page })}
             {fact.source.locator ? `, ${fact.source.locator}` : ''}:
           </span>{' '}
           <q>{fact.source.quote}</q>
@@ -60,23 +64,23 @@ export function FactCard({ fact, selected, readOnly, busy, onSelect, onActions }
         </ul>
       )}
       {fact.needs_confirmation && !readOnly && (
-        <div className="confirm-row" role="group" aria-label="Confirmation needed">
+        <div className="confirm-row" role="group" aria-label={t('fact.confirmationNeeded')}>
           {fact.kind === 'allergy' ? (
             <label>
-              Clinical status{' '}
+              {t('fact.clinicalStatus')}{' '}
               <select
                 value={allergyStatus}
                 onChange={(event) =>
                   setAllergyStatus(event.target.value as 'active' | 'inactive' | 'resolved')
                 }
               >
-                <option value="active">active</option>
-                <option value="inactive">inactive</option>
-                <option value="resolved">resolved</option>
+                <option value="active">{translateEnum('active')}</option>
+                <option value="inactive">{translateEnum('inactive')}</option>
+                <option value="resolved">{translateEnum('resolved')}</option>
               </select>
             </label>
           ) : (
-            <span>Confirm the derived value.</span>
+            <span>{t('fact.confirmDerived')}</span>
           )}
           <button
             type="button"
@@ -90,7 +94,7 @@ export function FactCard({ fact, selected, readOnly, busy, onSelect, onActions }
               ])
             }
           >
-            Confirm
+            {t('fact.confirm')}
           </button>
         </div>
       )}
@@ -105,7 +109,7 @@ export function FactCard({ fact, selected, readOnly, busy, onSelect, onActions }
         >
           {fields.map((field) => (
             <label key={field.key}>
-              {field.label}
+              {t(field.label)}
               {field.options ? (
                 <select
                   value={getIn(draft, field.key)}
@@ -113,7 +117,7 @@ export function FactCard({ fact, selected, readOnly, busy, onSelect, onActions }
                 >
                   {field.options.map((option) => (
                     <option key={option} value={option}>
-                      {option.replace(/_/g, ' ')}
+                      {translateEnum(option)}
                     </option>
                   ))}
                 </select>
@@ -127,10 +131,10 @@ export function FactCard({ fact, selected, readOnly, busy, onSelect, onActions }
           ))}
           <div className="actions">
             <button type="submit" className="primary" disabled={busy}>
-              Save
+              {t('fact.save')}
             </button>
             <button type="button" onClick={() => setDraft(null)}>
-              Cancel
+              {t('fact.cancel')}
             </button>
           </div>
         </form>
@@ -142,11 +146,11 @@ export function FactCard({ fact, selected, readOnly, busy, onSelect, onActions }
             disabled={busy || fact.decision === 'accepted'}
             onClick={() => onActions([{ action: 'accept', path: fact.path }])}
           >
-            Accept
+            {t('fact.accept')}
           </button>
           {fields.length > 0 && (
             <button type="button" disabled={busy} onClick={() => setDraft(fact.value)}>
-              Edit
+              {t('fact.edit')}
             </button>
           )}
           <button
@@ -155,7 +159,7 @@ export function FactCard({ fact, selected, readOnly, busy, onSelect, onActions }
             disabled={busy || rejected}
             onClick={() => onActions([{ action: 'reject', path: fact.path }])}
           >
-            Reject
+            {t('fact.reject')}
           </button>
           {fact.decision !== 'pending' && (
             <button
@@ -163,7 +167,7 @@ export function FactCard({ fact, selected, readOnly, busy, onSelect, onActions }
               disabled={busy}
               onClick={() => onActions([{ action: 'reset', path: fact.path }])}
             >
-              Undo
+              {t('fact.undo')}
             </button>
           )}
         </div>
