@@ -14,8 +14,13 @@ from uuid import NAMESPACE_URL, UUID, uuid5
 
 from app import __version__
 from app.fhir.common import MappedResource, urn_uuid
-from app.fhir.models import CodeableConcept, Device, DeviceName, DeviceVersion
+from app.fhir.models import Annotation, CodeableConcept, Device, DeviceName, DeviceVersion
 from app.fhir.narrative import NarrativeLine, line_narrative
+
+AI_NOTE = (
+    "Artificial intelligence (a large language model) extracts the facts from the source "
+    "document; FHIR resources and codes are built by deterministic software."
+)
 
 
 @dataclass(frozen=True, slots=True)
@@ -40,6 +45,7 @@ def map_pipeline_device(pipeline: PipelineInfo, *, schema_version: str) -> Mappe
             )
         ),
         status="active",
+        note=[Annotation(text=AI_NOTE)],
         device_name=[DeviceName(name=pipeline.name, type="model-name")],
         version=[
             DeviceVersion(type=CodeableConcept(text="software"), value=pipeline.version),

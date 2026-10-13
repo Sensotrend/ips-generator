@@ -30,6 +30,7 @@ LOINC: Final = "http://loinc.org"
 SNOMED_CT: Final = "http://snomed.info/sct"
 LIST_EMPTY_REASON: Final = "http://terminology.hl7.org/CodeSystem/list-empty-reason"
 V3_ACT_CLASS: Final = "http://terminology.hl7.org/CodeSystem/v3-ActClass"
+V3_OBSERVATION_VALUE: Final = "http://terminology.hl7.org/CodeSystem/v3-ObservationValue"
 
 
 @dataclass(frozen=True, slots=True)
@@ -48,6 +49,10 @@ COMPOSITION_TYPE: Final = FixedCode(LOINC, "60591-5", "Patient summary Document"
 
 CARE_PROVISIONING_EVENT: Final = FixedCode(V3_ACT_CLASS, "PCPR", "care provision")
 """``Composition.event:careProvisioningEvent.code`` pattern."""
+
+AI_ASSERTED: Final = FixedCode(V3_OBSERVATION_VALUE, "AIAST", "Artificial Intelligence asserted")
+"""``meta.security`` label on the Composition: AI took part in producing the document. Not an IPS
+code: it is the resource-level label of the HL7 *AI Transparency on FHIR* IG."""
 
 
 # --- Section codes (Composition.section:<slice>.code patterns) ------------------------------

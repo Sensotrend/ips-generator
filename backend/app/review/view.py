@@ -3,11 +3,13 @@
 from __future__ import annotations
 
 import datetime as dt
+from dataclasses import dataclass
 from typing import Any, Literal
 from uuid import UUID
 
 from pydantic import BaseModel
 
+from app.fhir.device import PipelineInfo
 from app.pipeline.assemble import AssemblyNote, AssemblyResult, assemble
 from app.review.draft import (
     SECTION_KEYS,
@@ -22,6 +24,7 @@ from app.review.draft import (
 )
 from app.schemas.api import (
     Decision,
+    DocumentInfoOut,
     DraftOut,
     FactOut,
     FlagCode,
@@ -34,7 +37,7 @@ from app.schemas.api import (
 )
 from app.schemas.intermediate import AllergyClinicalStatus, AllergyItem, Confidence
 
-__all__ = ["assemble_effective", "build_draft_view"]
+__all__ = ["ApprovedInfo", "assemble_effective", "build_draft_view"]
 
 _TITLES: dict[SectionKey, str] = {
     "allergies": "Allergies and intolerances",
@@ -44,6 +47,12 @@ _TITLES: dict[SectionKey, str] = {
 }
 _FLAG_VALUES = {f.value for f in FlagCode}
 SectionKind = Literal["items_found", "none_known", "no_information"]
+
+
+@dataclass(frozen=True, slots=True)
+class ApprovedInfo:
+    at: dt.datetime
+    attester_mode: Literal["personal", "professional"]
 
 
 def assemble_effective(state: DraftState, *, now: dt.datetime) -> AssemblyResult:
@@ -126,6 +135,8 @@ def build_draft_view(
     version: int,
     status: JobStatus,
     now: dt.datetime,
+    created_at: dt.datetime | None = None,
+    approved: ApprovedInfo | None = None,
 ) -> DraftOut:
     effective = effective_enriched(state)
     assembly = assemble(effective.enriched, now=now)
@@ -219,10 +230,19 @@ def build_draft_view(
                 )
             )
 
+    pipeline = PipelineInfo()
     return DraftOut(
         job_id=job_id,
         version=version,
         status=status,
+        document=DocumentInfoOut(
+            software=pipeline.name,
+            software_version=pipeline.version,
+            ai_assisted=True,
+            created_at=created_at or now,
+            approved_at=approved.at if approved else None,
+            attester_mode=approved.attester_mode if approved else None,
+        ),
         document_language=state.current.document_language,
         patient=patient,
         sections=sections,

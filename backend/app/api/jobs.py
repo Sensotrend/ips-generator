@@ -27,7 +27,7 @@ from app.pipeline.run import summarise_validation
 from app.pipeline.validate import MatchboxError
 from app.review.approve import attest_bundle, attester_mode
 from app.review.draft import DraftState, ReviewError, apply_actions, approval_blockers
-from app.review.view import assemble_effective, build_draft_view
+from app.review.view import ApprovedInfo, assemble_effective, build_draft_view
 from app.schemas.api import (
     TERMINAL_JOB_EVENTS,
     ApprovalOut,
@@ -136,12 +136,20 @@ def _resolve_media_type(data: bytes, content_type: str | None, filename: str | N
 
 def _view(services: Services, job: Job, draft: Draft) -> DraftOut:
     state = DraftState.model_validate(draft.state)
+    approved = None
+    if job.status == JobStatus.APPROVED:
+        with services.session() as session:
+            row = session.get(ApprovedBundle, job.id)
+        if row is not None:
+            approved = ApprovedInfo(at=row.approved_at, attester_mode=row.attester_mode)  # type: ignore[arg-type]
     return build_draft_view(
         state,
         job_id=job.id,
         version=draft.version,
         status=JobStatus(job.status),
         now=services.now(),
+        created_at=job.created_at,
+        approved=approved,
     )
 
 

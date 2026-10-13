@@ -57,6 +57,14 @@ export function draft(overrides: Partial<Draft> = {}): Draft {
     version: 1,
     status: 'review',
     document_language: 'fi',
+    document: {
+      software: 'IPS Generator extraction pipeline',
+      software_version: '0.1.0',
+      ai_assisted: true,
+      created_at: '2026-10-13T09:30:00Z',
+      approved_at: null,
+      attester_mode: null,
+    },
     patient: { names: [name], identifiers: [], birth_date: null, gender: null, flags: [] },
     sections: [
       {

@@ -290,6 +290,19 @@ def test_approve_clinician_and_download(client: TestClient) -> None:
         assert "review_ready" in "".join(stream.iter_text())
 
 
+def test_draft_document_metadata_before_and_after_approval(client: TestClient) -> None:
+    job_id = _job_id(client, TXT_CASE)
+    document = _draft(client, job_id)["document"]
+    assert document["ai_assisted"] is True
+    assert document["software"] and document["software_version"]
+    assert document["created_at"]
+    assert document["approved_at"] is None and document["attester_mode"] is None
+    _approve(client, job_id, 1, role="patient")
+    document = _draft(client, job_id)["document"]
+    assert document["approved_at"] is not None
+    assert document["attester_mode"] == "personal"
+
+
 def test_approve_as_patient_attests_personal(client: TestClient) -> None:
     job_id = _job_id(client, TXT_CASE)
     approval = _approve(client, job_id, 1, role="patient").json()

@@ -211,11 +211,25 @@ class Blocker(BaseModel):
     message: str
 
 
+class DocumentInfoOut(BaseModel):
+    """Metadata of the summary as a document: shown on screen and in the printout."""
+
+    software: str
+    software_version: str
+    ai_assisted: bool
+    """Always true: the extraction step is an LLM (also in the Bundle: Composition AIAST label)."""
+    created_at: dt.datetime
+    approved_at: dt.datetime | None
+    attester_mode: Literal["personal", "professional"] | None
+    """Who attested the approved summary: the patient or a clinician; ``None`` until approved."""
+
+
 class DraftOut(BaseModel):
     job_id: UUID
     version: int
     status: JobStatus
     document_language: str
+    document: DocumentInfoOut
     patient: PatientOut
     sections: list[SectionOut]
     notes: list[NoteOut]

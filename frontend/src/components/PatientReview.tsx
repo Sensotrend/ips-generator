@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { ApiError } from '../api/client'
 import { useApprove, useDraft, useSource, useUpdateDraft } from '../api/hooks'
 import type { ReviewAction } from '../api/types'
+import { DocumentInfo } from './DocumentInfo'
 import { useT } from '../lib/i18n'
 import { reviewGroups } from '../lib/sentences'
 import { ApprovePanel } from './ApprovePanel'
@@ -9,7 +10,7 @@ import { FactContent, PatientFactBox, SectionTables } from './PatientFactBox'
 
 /** Review for patients: one IPS section at a time, then the whole summary to approve. */
 export function PatientReview({ jobId }: { jobId: string }) {
-  const { t } = useT()
+  const { t, locale } = useT()
   const draft = useDraft(jobId, true)
   const update = useUpdateDraft(jobId)
   const approve = useApprove(jobId)
@@ -58,7 +59,7 @@ export function PatientReview({ jobId }: { jobId: string }) {
     const hasFacts = steps.length > 0
     return (
       <div className="patient-review">
-        <section className="chat-card" aria-label={t('patient.summary.label')}>
+        <section className="chat-card no-print" aria-label={t('patient.summary.label')}>
           <h2>{t(approved ? 'patient.summary.approved' : 'patient.summary.ready')}</h2>
           {!hasFacts && <p>{t('patient.summary.empty')}</p>}
           {!approved && (
@@ -66,7 +67,14 @@ export function PatientReview({ jobId }: { jobId: string }) {
               {t('patient.goBack')}
             </button>
           )}
+          {approved && (
+            <button type="button" onClick={() => window.print()}>
+              {t('print.button')}
+            </button>
+          )}
         </section>
+        <h1 className="print-only">{t('print.title')}</h1>
+        <DocumentInfo info={data.document} locale={locale} />
         {groups.map((group) => {
           // Only facts the patient has answered "yes" to (or changed) go into the summary.
           const facts = group.facts.filter(

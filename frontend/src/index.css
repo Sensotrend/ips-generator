@@ -782,3 +782,76 @@ mark {
   color: var(--muted);
   white-space: nowrap;
 }
+
+.print-only {
+  display: none;
+}
+
+.document-info {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.15rem 1rem;
+  margin: 0.5rem 0 1rem;
+  font-size: 0.9rem;
+}
+
+.document-info dt {
+  color: var(--muted);
+}
+
+.document-info dd {
+  margin: 0;
+}
+
+@media print {
+  @page {
+    size: portrait;
+    margin: 10mm;
+  }
+
+  :root {
+    font-size: 11pt;
+    line-height: 1.4;
+  }
+
+  body,
+  :root {
+    background: #fff;
+  }
+
+  .app-header,
+  .no-print,
+  .approve,
+  button,
+  .actions {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block;
+  }
+
+  main {
+    padding: 0;
+    max-width: none;
+  }
+
+  .chat-card {
+    border: 0;
+    border-bottom: 1px solid var(--line);
+    border-radius: 0;
+    padding: 0.4rem 0;
+    margin: 0 0 0.5rem;
+    break-inside: avoid;
+  }
+
+  h1,
+  h2,
+  h3 {
+    break-after: avoid;
+  }
+
+  .document-info {
+    margin: 0 0 0.75rem;
+  }
+}

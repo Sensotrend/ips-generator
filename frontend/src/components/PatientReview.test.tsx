@@ -77,6 +77,24 @@ describe('PatientReview', () => {
     })
   })
 
+  it('shows the document metadata, including AI use and the attester, on the approved summary', async () => {
+    const base = draft()
+    base.status = 'approved'
+    base.document = {
+      ...base.document,
+      approved_at: '2026-10-14T10:00:00Z',
+      attester_mode: 'personal',
+    }
+    stubApi(vi.fn(), base)
+    renderReview()
+    expect(
+      await screen.findByRole('heading', { name: 'International Patient Summary' }),
+    ).toBeInTheDocument()
+    expect(screen.getByText(/Patient attested/)).toBeInTheDocument()
+    expect(screen.getByText('Artificial intelligence')).toBeInTheDocument()
+    expect(screen.getByText('IPS Generator extraction pipeline 0.1.0')).toBeInTheDocument()
+  })
+
   it('ends on the whole summary with only approved facts and a notice for unreviewed ones', async () => {
     const base = draft()
     base.patient.names[0] = { ...base.patient.names[0], decision: 'accepted' }

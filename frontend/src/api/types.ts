@@ -140,11 +140,22 @@ export interface ValidationSummary {
   issues: { severity: string; message_id: string | null; path: string }[]
 }
 
+/** The summary as a document: who made it, when, and who attested it. */
+export interface DocumentInfo {
+  software: string
+  software_version: string
+  ai_assisted: boolean
+  created_at: string
+  approved_at: string | null
+  attester_mode: 'personal' | 'professional' | null
+}
+
 export interface Draft {
   job_id: string
   version: number
   status: JobStatus
   document_language: string
+  document: DocumentInfo
   patient: Patient
   sections: Section[]
   notes: Note[]

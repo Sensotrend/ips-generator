@@ -61,6 +61,20 @@ def test_composition_draft_authored_by_device() -> None:
     assert {v["value"] for v in device["version"]} == {PipelineInfo().version, "1.1.0"}
 
 
+def test_ai_use_is_declared_on_composition_and_device() -> None:
+    fhir = assemble(build(), now=NOW).bundle.to_fhir()
+    composition = fhir["entry"][0]["resource"]
+    assert composition["meta"]["security"] == [
+        {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationValue",
+            "code": "AIAST",
+            "display": "Artificial Intelligence asserted",
+        }
+    ]
+    assert "artificial intelligence" in composition["text"]["div"]
+    assert "large language model" in fhir["entry"][2]["resource"]["note"][0]["text"]
+
+
 def test_every_section_has_narrative_and_entries_or_empty_reason() -> None:
     for name, enriched in all_variants().items():
         bundle = assemble(enriched, now=NOW).bundle.to_fhir()
