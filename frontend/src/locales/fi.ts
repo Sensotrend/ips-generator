@@ -158,7 +158,7 @@ export const fi: Messages = {
   'field.condition': 'Sairaus tai tila',
   'field.bodySite': 'Kehon alue',
   'field.onset': 'Alkamisajankohta (VVVV[-KK[-PP]])',
-  'field.fullName': 'Koko nimi',
+  'field.givenName': 'Etunimet',
   'field.familyName': 'Sukunimi',
   'field.identifier': 'Tunniste',
   'field.label': 'Nimike',

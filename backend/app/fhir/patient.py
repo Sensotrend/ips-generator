@@ -18,8 +18,9 @@
   (``birth_date_derived`` / ``gender_derived``, PHI-free) and in the Patient narrative ("derived
   from personal identity code"). Phase 5's ``Provenance`` is where it can go machine-readably.
 * ``identifier``: value as written, the document's label in ``type.text`` and the issuer in
-  ``assigner.display``. **No ``system``**: the schema keeps the system as text only and a URI
-  must never be invented.
+  ``assigner.display``. ``system`` is set only for a valid Finnish personal identity code (HETU,
+  recognised by ``app.pipeline.derive``): the fixed OID constant ``HETU_IDENTIFIER_SYSTEM``.
+  Otherwise no ``system``: the schema keeps it as text only and a URI must never be invented.
 """
 
 from __future__ import annotations
@@ -34,7 +35,7 @@ from app.fhir.common import (
     data_absent,
     urn_uuid,
 )
-from app.fhir.constants import PROFILE_PATIENT
+from app.fhir.constants import HETU_IDENTIFIER_SYSTEM, PROFILE_PATIENT
 from app.fhir.models import (
     CodeableConcept,
     HumanName,
@@ -45,6 +46,7 @@ from app.fhir.models import (
     Reference,
 )
 from app.fhir.narrative import NarrativeLine, line_narrative
+from app.pipeline.derive import is_finnish_identity_code
 from app.schemas.intermediate import AdministrativeGender, PatientDerivations, PatientExtraction
 
 PATH = "patient"
@@ -122,6 +124,7 @@ def map_patient(
     identifiers = [
         Identifier(
             type=CodeableConcept(text=i.type_text) if i.type_text else None,
+            system=HETU_IDENTIFIER_SYSTEM if is_finnish_identity_code(i) else None,
             value=i.value,
             assigner=Reference(display=i.issuer_text) if i.issuer_text else None,
         )

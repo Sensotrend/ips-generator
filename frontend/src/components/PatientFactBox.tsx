@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import type { Fact, FactValue, ReviewAction, Source } from '../api/types'
-import { editableFields, getIn, setIn } from '../lib/edit'
+import { editableFields, finalizeEdit, getIn, setIn } from '../lib/edit'
 import { translateEnum, useT } from '../lib/i18n'
 import { factRows, factTables, factTitle, flagLabel, WARNING_FLAGS } from '../lib/labels'
 import { factSentence } from '../lib/sentences'
@@ -156,7 +156,9 @@ export function PatientFactBox({
           className="edit-form"
           onSubmit={(event) => {
             event.preventDefault()
-            onSend([{ action: 'edit', path: fact.path, value: editing }], () => setEditing(null))
+            onSend([{ action: 'edit', path: fact.path, value: finalizeEdit(fact, editing) }], () =>
+              setEditing(null),
+            )
           }}
         >
           {fields.map((field) => (

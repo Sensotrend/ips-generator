@@ -5,6 +5,8 @@ interface EditField {
   key: string
   label: TKey
   options?: string[]
+  /** A list of words in the data (e.g. given names), shown and typed as one space-separated string. */
+  words?: boolean
 }
 
 const STATUS = ['active', 'inactive', 'resolved', 'not_stated']
@@ -49,7 +51,7 @@ const EDIT_FIELDS: Partial<Record<FactKind, EditField[]>> = {
     { key: 'onset', label: 'field.onset' },
   ],
   patient_name: [
-    { key: 'text', label: 'field.fullName' },
+    { key: 'given', label: 'field.givenName', words: true },
     { key: 'family', label: 'field.familyName' },
   ],
   patient_identifier: [
@@ -67,6 +69,7 @@ export function getIn(value: FactValue, path: string): string {
   for (const key of path.split('.')) {
     node = node !== null && typeof node === 'object' ? (node as FactValue)[key] : undefined
   }
+  if (Array.isArray(node)) return node.join(' ')
   return typeof node === 'string' ? node : ''
 }
 
@@ -75,8 +78,23 @@ export function setIn(value: FactValue, path: string, next: string): FactValue {
   const keys = path.split('.')
   let node = copy
   for (const key of keys.slice(0, -1)) node = node[key]
-  node[keys[keys.length - 1]] = next
+  const last = keys[keys.length - 1]
+  // A word list keeps empty entries while typing so that a trailing space survives;
+  // `finalizeEdit` drops them on save.
+  node[last] = Array.isArray(node[last]) ? next.split(' ') : next
   return copy
+}
+
+/** The value to send when an edit is saved: a changed name gets its full text rebuilt from the parts. */
+export function finalizeEdit(fact: Fact, value: FactValue): FactValue {
+  if (fact.kind !== 'patient_name') return value
+  const given = ((value.given as string[] | undefined) ?? []).filter((word) => word.trim() !== '')
+  const family = typeof value.family === 'string' ? value.family.trim() : ''
+  const text = [...given, family].filter(Boolean).join(' ')
+  const changed =
+    given.join(' ') !== ((fact.value.given as string[] | undefined) ?? []).join(' ') ||
+    family !== (typeof fact.value.family === 'string' ? fact.value.family : '')
+  return { ...value, given, family, text: changed && text ? text : value.text }
 }
 
 export function editableFields(fact: Fact): EditField[] {

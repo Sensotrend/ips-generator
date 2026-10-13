@@ -160,7 +160,7 @@ export const sv: Messages = {
   'field.condition': 'Sjukdom eller tillstånd',
   'field.bodySite': 'Kroppsdel',
   'field.onset': 'Debut (ÅÅÅÅ[-MM[-DD]])',
-  'field.fullName': 'Fullständigt namn',
+  'field.givenName': 'Förnamn',
   'field.familyName': 'Efternamn',
   'field.identifier': 'Identifierare',
   'field.label': 'Beteckning',

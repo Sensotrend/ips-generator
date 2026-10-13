@@ -89,6 +89,7 @@ __all__ = [
     "apply_derivations",
     "check_character",
     "derive_patient_facts",
+    "is_finnish_identity_code",
     "parse_hetu",
 ]
 
@@ -231,6 +232,12 @@ def _recognise(
     if parsed is None or normalise(parsed.code) not in normalise(identifier.source_quote):
         return None
     return parsed, recognised_by
+
+
+def is_finnish_identity_code(identifier: PatientIdentifier) -> bool:
+    """Whether the identifier is a valid Finnish personal identity code (same test as the
+    derivation: foreign-labelled codes and values missing from the source quote do not count)."""
+    return _recognise(identifier) is not None
 
 
 def derive_patient_facts(patient: PatientExtraction) -> PatientDerivationResult:

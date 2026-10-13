@@ -1,9 +1,9 @@
-"""Patient mapper: names, identifiers without invented systems, missing birth date / name."""
+"""Patient mapper: names, identifiers (HETU OID system only for a valid HETU), absent data."""
 
 from uuid import UUID
 
 from app.fhir.common import NoteCode
-from app.fhir.constants import DATA_ABSENT_REASON_URL, PROFILE_PATIENT
+from app.fhir.constants import DATA_ABSENT_REASON_URL, HETU_IDENTIFIER_SYSTEM, PROFILE_PATIENT
 from app.fhir.patient import map_patient
 from tests.assembly_cases import (
     build,
@@ -29,11 +29,31 @@ def test_patient_from_fixture() -> None:
     assert fhir["gender"] == "male"
 
 
-def test_identifier_has_label_but_no_system() -> None:
+def test_valid_hetu_identifier_gets_the_hetu_oid_system() -> None:
     mapped, _ = map_patient(build().patient, resource_id=PID)
+    assert HETU_IDENTIFIER_SYSTEM == "urn:oid:1.2.246.21"
     assert mapped.resource.to_fhir()["identifier"] == [
-        {"type": {"text": "Henkilötunnus"}, "value": "150372-9477"}
+        {
+            "type": {"text": "Henkilötunnus"},
+            "system": HETU_IDENTIFIER_SYSTEM,
+            "value": "150372-9477",
+        }
     ]
+
+
+def test_identifier_that_is_not_a_valid_hetu_gets_no_system() -> None:
+    patient = build().patient
+    patient.identifiers[0].value = "150372-9478"  # wrong check character
+    patient.identifiers[0].source_quote = "Henkilötunnus: 150372-9478"
+    mapped, _ = map_patient(patient, resource_id=PID)
+    assert "system" not in mapped.resource.to_fhir()["identifier"][0]
+
+
+def test_foreign_labelled_identifier_gets_no_system() -> None:
+    patient = build().patient
+    patient.identifiers[0].type_text = "Personnummer (Sweden)"
+    mapped, _ = map_patient(patient, resource_id=PID)
+    assert "system" not in mapped.resource.to_fhir()["identifier"][0]
 
 
 def test_identifier_issuer_becomes_assigner_display() -> None:
@@ -42,7 +62,6 @@ def test_identifier_issuer_becomes_assigner_display() -> None:
     mapped, _ = map_patient(patient, resource_id=PID)
     identifier = mapped.resource.to_fhir()["identifier"][0]
     assert identifier["assigner"] == {"display": "Digi- ja väestötietovirasto"}
-    assert "system" not in identifier
 
 
 def test_missing_birth_date_is_data_absent_with_warning() -> None:

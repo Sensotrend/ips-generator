@@ -1,6 +1,6 @@
 import { useState, type MouseEvent } from 'react'
 import type { Fact, FactKind, FactValue, ReviewAction } from '../api/types'
-import { editableFields, getIn, setIn } from '../lib/edit'
+import { editableFields, finalizeEdit, getIn, setIn } from '../lib/edit'
 import { translateEnum, useT, type TKey } from '../lib/i18n'
 import { factTitle } from '../lib/labels'
 import { FlagChips } from './FlagChips'
@@ -288,7 +288,9 @@ export function FactTable({ facts, selected, readOnly, busy, onSelect, onActions
                             className="primary"
                             disabled={busy}
                             onClick={() => {
-                              onActions([{ action: 'edit', path: fact.path, value: editing.value }])
+                              onActions([
+                                { action: 'edit', path: fact.path, value: finalizeEdit(fact, editing.value) },
+                              ])
                               setEditing(null)
                             }}
                           >

@@ -162,7 +162,7 @@ export const en = {
   'field.condition': 'Condition',
   'field.bodySite': 'Body site',
   'field.onset': 'Onset (YYYY[-MM[-DD]])',
-  'field.fullName': 'Full name',
+  'field.givenName': 'Given name(s)',
   'field.familyName': 'Family name',
   'field.identifier': 'Identifier',
   'field.label': 'Label',

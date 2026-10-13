@@ -176,6 +176,10 @@ CONDITION_VERIFICATION_STATUS: Final = _status_codes(
 DATA_ABSENT_REASON_URL: Final = "http://hl7.org/fhir/StructureDefinition/data-absent-reason"
 """FHIR core extension; value from CodeSystem data-absent-reason (e.g. ``unknown``)."""
 DATA_ABSENT_UNKNOWN: Final = "unknown"
+HETU_IDENTIFIER_SYSTEM: Final = "urn:oid:1.2.246.21"
+"""Identifier system of the Finnish personal identity code (henkilötunnus, HETU): OID 1.2.246.21.
+Emitted only for an identifier that ``app.pipeline.derive.is_finnish_identity_code`` recognises
+(valid syntax, date and check character), never taken from the document."""
 URI_IDENTIFIER_SYSTEM: Final = "urn:ietf:rfc:3986"
 """Identifier system for identifiers whose value is a URI (FHIR R4 Identifier, e.g. a document
 ``Bundle.identifier`` with value ``urn:uuid:...``)."""
