@@ -950,3 +950,62 @@ mark {
     margin: 0 0 0.75rem;
   }
 }
+
+/* Patient review polish */
+.doc-title {
+  margin: 0.5rem 0 0.25rem;
+  font-size: 1.6rem;
+  line-height: 1.2;
+}
+
+.doc-title-english {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.patient-review h2,
+.patient-review section {
+  scroll-margin-top: 0.75rem;
+}
+
+button.chosen {
+  font-weight: 600;
+}
+
+button.primary.chosen {
+  background: var(--ok);
+  border-color: var(--ok);
+  color: #fff;
+}
+
+button.danger.chosen {
+  background: var(--danger);
+  border-color: var(--danger);
+  color: #fff;
+}
+
+.source-toggle {
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-transform: inherit;
+  letter-spacing: inherit;
+  cursor: pointer;
+}
+
+.source-toggle:hover:not(:disabled) {
+  background: none;
+  text-decoration: underline;
+}
+
+.fact-completed {
+  background: #f4f5f6;
+  border-style: dashed;
+  color: #46505a;
+}

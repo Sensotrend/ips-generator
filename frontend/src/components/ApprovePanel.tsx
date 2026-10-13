@@ -13,6 +13,8 @@ interface Props {
   validation: ValidationSummary | null
   role: ReviewerRole
   onApprove: (role: ReviewerRole) => void
+  /** Adds a Print button next to Download when given. */
+  onPrint?: () => void
   /** Shows the page that can resolve the blocker; no link when omitted. */
   onShowBlocker?: (blocker: Blocker) => void
 }
@@ -35,6 +37,7 @@ export function ApprovePanel({
   validation,
   role,
   onApprove,
+  onPrint,
   onShowBlocker,
 }: Props) {
   const { t } = useT()
@@ -60,6 +63,11 @@ export function ApprovePanel({
         >
           {t('approve.download')}
         </button>
+        {onPrint && (
+          <button type="button" onClick={onPrint}>
+            {t('print.button')}
+          </button>
+        )}
         {downloadError && <p className="note note-warning">{t('approve.downloadFailed')}</p>}
         <WalletOffer jobId={jobId} />
       </section>

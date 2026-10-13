@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { ApiError } from '../api/client'
 import { useApprove, useDraft, useSource, useUpdateDraft } from '../api/hooks'
 import type { ReviewAction } from '../api/types'
@@ -18,6 +18,16 @@ export function PatientReview({ jobId }: { jobId: string }) {
   const [index, setIndex] = useState(0)
   // Once the summary was seen, a "Summary →" shortcut spares the walk through the later sections.
   const [seenSummary, setSeenSummary] = useState(false)
+  // Moving to another section scrolls back up to its first item.
+  const sectionTop = useRef<HTMLElement | null>(null)
+  const firstRender = useRef(true)
+  useEffect(() => {
+    if (firstRender.current) {
+      firstRender.current = false
+      return
+    }
+    sectionTop.current?.scrollIntoView?.({ block: 'start' })
+  }, [index])
 
   if (draft.isPending) return <p className="muted">{t('patient.loading')}</p>
   if (draft.isError) return <p className="note note-warning">{t('patient.loadFailed')}</p>
@@ -59,7 +69,13 @@ export function PatientReview({ jobId }: { jobId: string }) {
     const hasFacts = steps.length > 0
     return (
       <div className="patient-review">
-        <section className="chat-card no-print" aria-label={t('patient.summary.label')}>
+        <section
+          className="chat-card no-print"
+          aria-label={t('patient.summary.label')}
+          ref={(el) => {
+            sectionTop.current = el
+          }}
+        >
           <h2>{t(approved ? 'patient.summary.approved' : 'patient.summary.ready')}</h2>
           {!hasFacts && <p>{t('patient.summary.empty')}</p>}
           {!approved && (
@@ -67,13 +83,11 @@ export function PatientReview({ jobId }: { jobId: string }) {
               {t('patient.goBack')}
             </button>
           )}
-          {approved && (
-            <button type="button" onClick={() => window.print()}>
-              {t('print.button')}
-            </button>
-          )}
         </section>
-        <h1 className="print-only">{t('print.title')}</h1>
+        <h1 className="doc-title">
+          {t('doc.title')}
+          {locale !== 'en' && <span className="doc-title-english">{t('doc.titleEnglish')}</span>}
+        </h1>
         <DocumentInfo info={data.document} locale={locale} />
         {groups.map((group) => {
           // Only facts the patient has answered "yes" to (or changed) go into the summary.
@@ -126,6 +140,7 @@ export function PatientReview({ jobId }: { jobId: string }) {
         <ApprovePanel
           jobId={jobId}
           approved={approved}
+          onPrint={() => window.print()}
           blockers={data.blockers}
           busy={busy}
           error={approve.error}
@@ -147,7 +162,13 @@ export function PatientReview({ jobId }: { jobId: string }) {
       <p className="muted" aria-live="polite">
         {t('patient.step', { step: index + 1, total: steps.length, heading: group.heading })}
       </p>
-      <h2>{group.heading}</h2>
+      <h2
+        ref={(el) => {
+          sectionTop.current = el
+        }}
+      >
+        {group.heading}
+      </h2>
       <p className="section-intro">{t(group.intro)}</p>
       {group.facts.map((fact) => (
         <PatientFactBox

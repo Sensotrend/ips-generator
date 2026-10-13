@@ -66,6 +66,52 @@ export function factSentence(fact: Fact): string {
   }
 }
 
+const COMPLETED_STATUSES = new Set([
+  'completed',
+  'stopped',
+  'not_taken',
+  'inactive',
+  'remission',
+  'resolved',
+])
+
+/** Past item: an end date, or a status that says it no longer applies. */
+export function isCompleted(fact: Fact): boolean {
+  const v = fact.value
+  switch (fact.kind) {
+    case 'medication':
+      return COMPLETED_STATUSES.has(str(v.status)) || str(v.effective_end) !== ''
+    case 'condition':
+      return COMPLETED_STATUSES.has(str(v.clinical_status)) || str(v.abatement) !== ''
+    case 'allergy':
+      return COMPLETED_STATUSES.has(str(v.clinical_status))
+    default:
+      return false
+  }
+}
+
+/** The date an item started (partial dates `YYYY`, `YYYY-MM` sort correctly as text). */
+const startDate = (fact: Fact): string =>
+  str(fact.kind === 'medication' ? fact.value.effective_start : fact.value.onset)
+
+/**
+ * Items with a date: current ones first, completed ones after; newest first within each; items
+ * without a date keep their document order at the end of their group.
+ */
+export function sortByDate(facts: Fact[]): Fact[] {
+  const rank = (fact: Fact) => (isCompleted(fact) ? 1 : 0)
+  return facts
+    .map((fact, order) => ({ fact, order }))
+    .sort((a, b) => {
+      const byState = rank(a.fact) - rank(b.fact)
+      if (byState !== 0) return byState
+      const [da, db] = [startDate(a.fact), startDate(b.fact)]
+      if (da !== db) return da === '' ? 1 : db === '' ? -1 : da < db ? 1 : -1
+      return a.order - b.order
+    })
+    .map(({ fact }) => fact)
+}
+
 export interface ReviewGroup {
   /** `patient` or the section key. */
   key: string
@@ -98,7 +144,7 @@ export function reviewGroups(draft: Draft): ReviewGroup[] {
     intro: `section.intro.${section.key}` as TKey,
     facts: [
       ...(section.statement ? [section.statement] : []),
-      ...section.items,
+      ...sortByDate(section.items),
       ...section.scoped_statements,
     ],
     silent: section.effective_kind === 'no_information' && section.items.length === 0,

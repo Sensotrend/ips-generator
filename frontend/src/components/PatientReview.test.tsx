@@ -39,8 +39,25 @@ describe('PatientReview', () => {
     expect(screen.getByText(/Step 1 of 2/)).toBeInTheDocument()
     expect(screen.getByText('Goes into your summary')).toBeInTheDocument()
     expect(screen.getByText('Your name is TESTINEN, Aino.')).toBeInTheDocument()
-    expect(screen.getByText('Source in the document · line 1')).toBeInTheDocument()
+    // The source quote stays hidden until the source line is clicked.
+    expect(screen.queryByText('TESTINEN, Aino', { selector: 'q' })).not.toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: /Source in the document · line 1/ }))
     expect(screen.getByText('TESTINEN, Aino', { selector: 'q' })).toBeInTheDocument()
+  })
+
+  it('marks the chosen answer on the button', async () => {
+    const base = draft()
+    base.patient.names[0] = { ...base.patient.names[0], decision: 'accepted' }
+    stubApi(vi.fn(), base)
+    renderReview()
+    expect(await screen.findByRole('button', { name: /Yes, that is right/ })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    )
+    expect(screen.getByRole('button', { name: /No, leave it out/ })).toHaveAttribute(
+      'aria-pressed',
+      'false',
+    )
   })
 
   it('sends the answer, stays on the section, and moves on with Next', async () => {
@@ -90,6 +107,8 @@ describe('PatientReview', () => {
     expect(
       await screen.findByRole('heading', { name: 'International Patient Summary' }),
     ).toBeInTheDocument()
+    // Print sits with Download in the approval box.
+    expect(screen.getByRole('button', { name: 'Print' })).toBeInTheDocument()
     expect(screen.getByText(/Patient attested/)).toBeInTheDocument()
     expect(screen.getByText('Artificial intelligence')).toBeInTheDocument()
     expect(screen.getByText('IPS Generator extraction pipeline 0.1.0')).toBeInTheDocument()

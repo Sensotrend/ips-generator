@@ -92,9 +92,9 @@ def test_every_section_has_narrative_and_entries_or_empty_reason() -> None:
 def test_section_order() -> None:
     sections = assemble(past_illness(), now=NOW).bundle.to_fhir()["entry"][0]["resource"]["section"]
     assert [s["code"]["coding"][0]["code"] for s in sections] == [
+        "11450-4",
         "48765-2",
         "10160-0",
-        "11450-4",
         SECTION_PAST_PROBLEMS.code,
     ]
 

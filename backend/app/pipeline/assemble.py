@@ -145,10 +145,13 @@ def assemble(
     )
     device = map_pipeline_device(pipeline, schema_version=enriched.schema_version)
     ctx = MappingContext(patient=reference(patient.full_url), new_id=ids)
+    # IPS order: Problem List, Allergies, Medication Summary, then History of Past Illness.
+    problem_sections = map_problem_sections(enriched.problems, ctx)
     sections: list[SectionResult] = [
+        problem_sections[0],
         map_allergy_section(enriched.allergies, ctx),
         map_medication_section(enriched.medications, ctx),
-        *map_problem_sections(enriched.problems, ctx),
+        *problem_sections[1:],
     ]
     for result in sections:
         notes += result.notes

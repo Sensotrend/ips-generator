@@ -69,7 +69,9 @@ __all__ = [
     "new_draft",
 ]
 
-SECTION_KEYS: Final = ("allergies", "medications", "problems")
+# IPS section order: Problem List, Allergies and Intolerances, Medication Summary (History of
+# Past Illness, a Problem List split-off, follows them).
+SECTION_KEYS: Final = ("problems", "allergies", "medications")
 _PROVENANCE_FIELDS: Final = ("source_quote", "page", "locator")
 _PATH_PART: Final = re.compile(r"^([a-z_]+)(?:\[(\d+)\])?$")
 

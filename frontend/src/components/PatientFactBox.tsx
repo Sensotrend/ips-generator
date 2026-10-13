@@ -3,7 +3,7 @@ import type { Fact, FactValue, ReviewAction, Source } from '../api/types'
 import { editableFields, finalizeEdit, getIn, setIn } from '../lib/edit'
 import { translateEnum, useT } from '../lib/i18n'
 import { factRows, factTables, factTitle, flagLabel, WARNING_FLAGS } from '../lib/labels'
-import { factSentence } from '../lib/sentences'
+import { factSentence, isCompleted } from '../lib/sentences'
 import { sourceExcerpt } from '../lib/sourceExcerpt'
 
 /**
@@ -78,8 +78,10 @@ export function PatientFactBox({
 }) {
   const { t } = useT()
   const [editing, setEditing] = useState<FactValue | null>(null)
+  const [showSource, setShowSource] = useState(false)
   const [allergyStatus, setAllergyStatus] = useState<'active' | 'inactive' | 'resolved'>('active')
   const fields = editableFields(fact)
+  const accepted = fact.decision === 'accepted' || fact.decision === 'edited'
   const warnings = fact.flags.filter((flag) => WARNING_FLAGS.has(flag))
   const excerpt = fact.source ? sourceExcerpt(source, fact.source) : null
 
@@ -97,7 +99,13 @@ export function PatientFactBox({
 
   return (
     <section
-      className={`chat-card${fact.decision === 'rejected' ? ' fact-rejected' : ''}`}
+      className={[
+        'chat-card',
+        fact.decision === 'rejected' ? 'fact-rejected' : '',
+        isCompleted(fact) ? 'fact-completed' : '',
+      ]
+        .filter(Boolean)
+        .join(' ')}
       aria-label={factTitle(fact)}
     >
       <FactContent facts={[fact]} />
@@ -107,21 +115,29 @@ export function PatientFactBox({
       {excerpt && fact.source && (
         <>
           <h3 className="box-label">
-            {t('patient.box.source')} · {excerpt.location}
+            <button
+              type="button"
+              className="source-toggle"
+              aria-expanded={showSource}
+              onClick={() => setShowSource(!showSource)}
+            >
+              {showSource ? '▾' : '▸'} {t('patient.box.source')} · {excerpt.location}
+            </button>
           </h3>
-          {excerpt.record ? (
-            <ul className="source-record">
-              {excerpt.record.map((line, index) => (
-                <li key={index} className={line.focus ? 'seg-focus' : undefined}>
-                  {line.text}
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="fact-source">
-              <q>{fact.source.quote}</q>
-            </p>
-          )}
+          {showSource &&
+            (excerpt.record ? (
+              <ul className="source-record">
+                {excerpt.record.map((line, index) => (
+                  <li key={index} className={line.focus ? 'seg-focus' : undefined}>
+                    {line.text}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="fact-source">
+                <q>{fact.source.quote}</q>
+              </p>
+            ))}
         </>
       )}
       {warnings.length > 0 && (
@@ -132,9 +148,6 @@ export function PatientFactBox({
             </li>
           ))}
         </ul>
-      )}
-      {fact.decision !== 'pending' && (
-        <p className="muted">{t(`patient.decision.${fact.decision}`)}.</p>
       )}
       {fact.needs_confirmation && fact.kind === 'allergy' && (
         <label className="inline-field">
@@ -196,10 +209,12 @@ export function PatientFactBox({
         <div className="actions">
           <button
             type="button"
-            className="primary"
+            className={`primary${accepted ? ' chosen' : ''}`}
+            aria-pressed={accepted}
             disabled={busy}
             onClick={() => onSend(confirm(), () => undefined)}
           >
+            {accepted && '✓ '}
             {t('patient.yes')}
           </button>
           {fields.length > 0 && (
@@ -209,10 +224,12 @@ export function PatientFactBox({
           )}
           <button
             type="button"
-            className="danger"
+            className={`danger${fact.decision === 'rejected' ? ' chosen' : ''}`}
+            aria-pressed={fact.decision === 'rejected'}
             disabled={busy}
             onClick={() => onSend([{ action: 'reject', path: fact.path }], () => undefined)}
           >
+            {fact.decision === 'rejected' && '✓ '}
             {t('patient.no')}
           </button>
         </div>

@@ -168,7 +168,7 @@ def _section(draft: dict[str, Any], key: str) -> dict[str, Any]:
 def test_draft_view_sections_and_flags(client: TestClient) -> None:
     draft = _draft(client, _job_id(client, TXT_CASE))
     keys = [s["key"] for s in draft["sections"]]
-    assert keys[:3] == ["allergies", "medications", "problems"]
+    assert keys[:3] == ["problems", "allergies", "medications"]
     assert "past_illness" in keys  # D-8: "Keuhkokuume 2019, parantunut"
     allergy = _section(draft, "allergies")["items"][0]
     assert allergy["source"]["locator"] == "line 27"

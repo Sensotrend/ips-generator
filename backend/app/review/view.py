@@ -169,6 +169,7 @@ def build_draft_view(
     )
 
     sections: list[SectionOut] = []
+    past_section: SectionOut | None = None
     for key in SECTION_KEYS:
         section = getattr(state.current, key)
         effective_section = getattr(effective.enriched, key)
@@ -213,22 +214,22 @@ def build_draft_view(
             )
         )
         if past:
-            sections.append(
-                SectionOut(
-                    key="past_illness",
-                    title=_TITLES["past_illness"],
-                    kind="items_found",
-                    effective_kind=(
-                        "no_information"
-                        if all(i.decision is Decision.REJECTED for i in past)
-                        else "items_found"
-                    ),
-                    statement=None,
-                    items=past,
-                    scoped_statements=[],
-                    flags=[],
-                )
+            past_section = SectionOut(
+                key="past_illness",
+                title=_TITLES["past_illness"],
+                kind="items_found",
+                effective_kind=(
+                    "no_information"
+                    if all(i.decision is Decision.REJECTED for i in past)
+                    else "items_found"
+                ),
+                statement=None,
+                items=past,
+                scoped_statements=[],
+                flags=[],
             )
+    if past_section is not None:
+        sections.append(past_section)
 
     pipeline = PipelineInfo()
     return DraftOut(

@@ -251,6 +251,7 @@ PLAN.md  CLAUDE.md  README.md
     (`window.print()`) covers it; no server-side PDF.
 - [ ] OIDC login (Keycloak dev realm) `[opus]`
   - Deviation (2026-10-13): patient name, birth date and sex show a field label in the fact box and summary. The final summary lists only facts the patient answered yes to (or changed); a section with unanswered facts shows a notice that they are left out. Backend export still includes pending facts if the patient approves with unanswered items — not changed here.
+  - Deviation (2026-10-13): patient review polish. The chosen answer is shown on the button itself (green "✓ Yes", red "✓ No", `aria-pressed`) instead of a text line; the source quote is collapsed behind the "Source in the document" line; "Next" scrolls to the top of the section; items are sorted current-first, newest start first, completed ones after (dimmed, dashed box; `lib/sentences.ts`); Print moved into the approval box beside Download; the title is on screen too, localized with the English name as a small subtitle (no parentheses).
   - **Deferred:** dev-only fixed reviewer behind `APP_ENV=development` (`get_current_user` is the OIDC slot);
     the API refuses to start outside development.
 
