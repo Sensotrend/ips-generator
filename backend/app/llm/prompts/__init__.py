@@ -15,11 +15,20 @@ from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
 
-__all__ = ["EXTRACT_PROMPT_VERSION", "Prompt", "load_extract_prompt", "load_prompt"]
+__all__ = [
+    "EXTRACT_PROMPT_VERSION",
+    "TERMINOLOGY_PROMPT_VERSION",
+    "Prompt",
+    "load_extract_prompt",
+    "load_prompt",
+    "load_terminology_prompt",
+]
 
 PROMPTS_DIR = Path(__file__).parent
 EXTRACT_PROMPT_VERSION = "v4"
 """Current extraction prompt; bump together with ``SCHEMA_VERSION`` when the schema changes."""
+TERMINOLOGY_PROMPT_VERSION = "v1"
+"""Current terminology-coding prompt (pipeline step 5, `app.pipeline.terminology`)."""
 
 _NAME_RE = re.compile(r"^[a-z][a-z0-9_]*$")
 _VERSION_RE = re.compile(r"^v\d+$")
@@ -57,3 +66,8 @@ def load_prompt(name: str, version: str) -> Prompt:
 def load_extract_prompt() -> Prompt:
     """The system prompt of pipeline step 3 (extraction)."""
     return load_prompt("extract", EXTRACT_PROMPT_VERSION)
+
+
+def load_terminology_prompt() -> Prompt:
+    """The system prompt of pipeline step 5 (terminology tool loop)."""
+    return load_prompt("terminology", TERMINOLOGY_PROMPT_VERSION)
