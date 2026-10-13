@@ -10,6 +10,7 @@ HL7 v2, CDA) and produce a **valid International Patient Summary (IPS)** FHIR R4
 document Bundle, reviewed and approved by a human, via a mobile-friendly PWA.
 
 ### Non-goals (for now)
+
 - Autonomous clinical decision-making — every output is human-reviewed.
 - Writing back into an EHR (later phase, via SMART on FHIR).
 - Offline storage of patient data on devices.
@@ -17,7 +18,7 @@ document Bundle, reviewed and approved by a human, via a mobile-friendly PWA.
 
 ## 2. Architecture
 
-```
+```text
 PWA (React + Vite + vite-plugin-pwa)
   upload / camera → progress (SSE) → review & edit → approve → export
         │  HTTPS + OIDC
@@ -39,7 +40,7 @@ Storage: object storage (originals, encrypted) · Postgres (jobs, drafts, audit)
 ## 3. Key decisions (and why)
 
 | # | Decision | Rationale |
-|---|----------|-----------|
+| --- | ---------- | ----------- |
 | D1 | LLM fills a **flat intermediate schema**, never raw FHIR | Raw FHIR is too large to constrain; LLM breaks references/cardinality. Mapper is testable. |
 | D2 | Codes come **only** from terminology-server lookups | Prevents hallucinated codes. Keep `original_text`; omit code if uncertain. |
 | D3 | Every extracted fact carries `source_quote` + `page` | Enables UI highlighting and deterministic grounding checks. |
@@ -64,7 +65,7 @@ Storage: object storage (originals, encrypted) · Postgres (jobs, drafts, audit)
 
 ## 5. Proposed repo layout
 
-```
+```text
 /backend
   app/api/            FastAPI routes (jobs, review, export, sse)
   app/pipeline/       ingest.py, classify.py, extract.py, ground.py, terminology.py,
@@ -87,6 +88,7 @@ PLAN.md  CLAUDE.md  README.md
 > to switch to (`/model`) before starting it. See §8.2 for what the tags mean.
 
 ### Phase 0 — Scaffolding
+
 - [x] Repo layout as above; `pyproject.toml` (uv), ruff, mypy, pytest `[sonnet]`
   - Backend is a uv app (`package = false`), Python 3.12; mypy `strict` + pydantic plugin; tests split into
     `tests/unit`, `tests/integration`, `tests/fixtures` (pytest `--import-mode=importlib`). `GET /health` only.
@@ -111,6 +113,7 @@ PLAN.md  CLAUDE.md  README.md
 **Done when:** `docker compose up` starts all services; `pytest` and `npm test` pass; Matchbox validates a sample IPS Bundle from the IG examples.
 
 ### Phase 1 — Evals + core extraction (plaintext, JSON, CSV, text-layer PDF → required sections)
+
 - [x] Build eval dataset: 20+ synthetic docs (discharge summaries, prescriptions, lab reports, referral letters; FI/SV/EN) as plaintext, JSON, CSV and text-layer PDF, with gold intermediate JSON derived from the Synthea record each doc is rendered from `[opus]`
   - 26 hand-authored synthetic cases (fi 12, sv 6, en 6, mixed 2; txt 10, json 5, csv 4, pdf 7) in
     `evals/dataset/`, reproducible via `_build/build.py`. Synthea not used (deviation from D-3 proposal): hand-
@@ -196,6 +199,7 @@ PLAN.md  CLAUDE.md  README.md
 **Done when:** ≥90% of eval docs produce validator-clean Bundles (no errors); per-section recall baseline recorded.
 
 ### Phase 2 — Terminology & repair
+
 - [x] `terminology.py`: tools `search_snomed`, `search_loinc`, `search_medication` (ATC) via FHIR `ValueSet/$expand` / `CodeSystem/$lookup` `[opus]`
   - Done 2026-10-13 as `app/terminology/` (client, scopes, tools) + `app/pipeline/terminology.py` (`code_enriched`).
     tx.fhir.org: SNOMED International (English only, so search terms must be English), LOINC, ATC
@@ -217,6 +221,7 @@ PLAN.md  CLAUDE.md  README.md
 **Done when:** code accuracy measured; no hallucinated codes (every code exists in terminology server); repair loop reduces validator errors on eval set.
 
 ### Phase 3 — API + PWA MVP
+
 - [x] API: `POST /jobs` (upload), `GET /jobs/{id}`, `GET /jobs/{id}/events` (SSE), `GET/PUT /jobs/{id}/draft`, `POST /jobs/{id}/approve`, `GET /jobs/{id}/ips` `[sonnet]`
   - Done 2026-10-13 under `/api/…` (`app/api/jobs.py`); plus `GET /api/jobs/{id}/source[/original]`. Errors carry
     no PHI; all `/api/` responses `no-store`. Drafts are versioned (stale PUT → 409).
@@ -252,6 +257,7 @@ PLAN.md  CLAUDE.md  README.md
 **Done when:** a user can upload a PDF on a phone, watch progress, review with source highlights, approve, and download a valid IPS Bundle.
 
 ### Phase 4 — More inputs & quality
+
 - [ ] Scanned PDFs, images/photos (multi-page capture): local OCR at ingest; DOCX, HL7 v2, CDA (deterministic parsers where structured) `[opus]`
 - [x] LUVN database dump: per-patient JSON of the table rows + deterministic parser (no LLM) `[opus]`
   - 2026-10-13. `app/sources/luvn/`: `dump.py` (LUVN JSONL tables → SQLite → one dump per patient; each table is a
@@ -271,6 +277,7 @@ PLAN.md  CLAUDE.md  README.md
 - [ ] Prompt caching for system prompt + schema; Batch API path for bulk backfills `[sonnet]`
 
 ### Phase 5 — Production hardening
+
 - [ ] `Provenance` resource on every approved Bundle (pipeline Device as author, model id actually used, prompt version, reviewer as attester) `[sonnet]`
 - [ ] Append-only audit log of all LLM calls and user actions `[opus]`
 - [ ] EU data residency for LLM (provider per §7.1 D-5), DPA, retention policy `[opus]`
@@ -279,6 +286,7 @@ PLAN.md  CLAUDE.md  README.md
 - [ ] Regulatory assessment: EU MDR (SaMD?), EU AI Act, DPIA `[fable]`
 
 ## 7. Open questions
+
 - Target jurisdictions/profiles beyond base IPS (EU EPS? Finnish national profiles?)
 - Hosting / LLM data-residency choice: see §7.1 D-5
 - SNOMED CT licensing for target countries; Finnish medication codes (VNR/ATC) mapping
@@ -288,7 +296,7 @@ PLAN.md  CLAUDE.md  README.md
 ### 7.1 Decisions
 
 | # | Decision | Status |
-|---|---|---|
+| --- | --- | --- |
 | D-1 | Codes fixed by the IPS IG (section LOINC codes, "no known …" codes) are allowed as **named constants in `app/fhir/` only**. All other codes come from terminology lookups; the LLM never outputs codes. | Decided 2026-10-07 |
 | D-2 | Phase 1 inputs are **plaintext, JSON, CSV and text-layer PDFs**, grounded against their own text. Scans/photos and OCR come in Phase 4. | Decided 2026-10-07 |
 | D-3 | Eval matching: **deterministic normalised matching first, LLM judge only for leftovers**. Other approaches if the need arises. Gold derived from Synthea records (proposal, not yet confirmed). | Decided 2026-10-07 |
@@ -304,12 +312,14 @@ PLAN.md  CLAUDE.md  README.md
 | D-13 | The PWA uses the **LUVN look and feel** (palette, Verdana type, 0.5rem radii, gray header, 4px focus rings) for a possible LUVN-run front end, defined as CSS custom properties in `frontend/src/index.css`. No LUVN logo, icons or photos. | Decided 2026-10-13 |
 
 Still open, before the phase that needs them:
+
 - ~~Phase 1 validity without codes~~ **Resolved:** text-only `CodeableConcept`s give 0 errors and no extra warnings in IPS 2.0.1 (bindings are "preferred"). Fixtures in `tests/fixtures/ips-variants/`.
 - **FI/SV terminology search (Phase 2).** `tx.fhir.org` searches English terms. The terminology loop must search with English terms (translated by Claude) while keeping the original-language `source_quote`.
 - **Audit log vs. "never log PHI" (Phase 5).** The audit log of LLM calls contains PHI. Define it as an encrypted, access-controlled store, separate from application logs.
 - **Queue:** RQ unless someone objects before Phase 3.
 
 ### 7.2 D-5: hosting, cost and capability (as of 2026-10-07)
+
 - **Anthropic API:** list prices (§8.1). `inference_geo` offers only `global` or `us` (+10%), and workspace data storage is US-only. **No EU inference option**, so it is fine for synthetic-data development, but likely unsuitable for real Finnish/EU PHI.
 - **Amazon Bedrock / Google Vertex, EU regional endpoint:** **+10%** over their global endpoints; base prices set by AWS/Google. Missing compared with the Anthropic API: Anthropic's Message Batches API (50% off; use the platform's own batch offering instead), server-side refusal `fallbacks` (use the SDK's client-side fallback middleware), Files API, `inference_geo`.
 - **Cost scale:** the region premium is about 10%. Model choice per step is a 2–40× lever, so it matters far more.
@@ -318,11 +328,12 @@ Still open, before the phase that needs them:
 ## 8. Model selection
 
 ### 8.1 Runtime: which model each pipeline step calls
+
 Set in `app/llm/models.py`. Start every step on the **Start** model; move to **Try** only after evals show
 no regression (Phase 2 task). Prices are per 1M tokens, input/output.
 
 | Step | Start | Effort | Try (cheaper) | Why |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | 2. Classify & route | `claude-sonnet-5-5` | `low` | `claude-haiku-5-5` | Short output, easy task. |
 | 3. Extraction | `claude-opus-5-5` | `high` | `claude-sonnet-5-5` @ `high` | Core quality driver; long multilingual documents. |
 | 5. Terminology tool loop | `claude-sonnet-5-5` | `medium` | `claude-haiku-5-5` | Picks among server candidates; many calls per doc. |
@@ -340,6 +351,7 @@ Rough, unmeasured estimate for extraction on Opus 5.5 @ `high`: about $0.30–0.
 (no zero-data-retention), which conflicts with PHI handling. At most, a one-off eval ceiling on synthetic data.
 
 API notes for implementers (current models):
+
 - Opus 5.5 **defaults to `effort: medium`**; always set `output_config.effort` explicitly. Thinking can't be disabled; lower effort instead.
 - Forced `tool_choice` (`any`/`tool`) returns 400 on Opus 5.5 / Sonnet 5.5; use `auto` + `strict: true` tools (as planned).
 - PDF **citations are incompatible with structured outputs**, so `source_quote` must stay a schema field checked by `ground.py`.
@@ -349,10 +361,11 @@ API notes for implementers (current models):
 - Data residency: see §7.2 (`inference_geo` has no EU option; EU means a Bedrock/Vertex EU regional endpoint).
 
 ### 8.2 Development: which Claude Code model to use per task
+
 Switch with `/model` before starting a task. Tags in §6:
 
 | Tag | Model | Use for |
-|---|---|---|
+| --- | --- | --- |
 | `[sonnet]` | Sonnet 5.5 | Scaffolding, CRUD endpoints, config, CI, tasks that copy an existing pattern. |
 | `[opus]` | Opus 5.5 (default) | Most feature work: pipeline steps, LLM integration, PWA review UI, security-sensitive code. |
 | `[fable]` | Fable 5.1 | Few high-leverage design tasks where mistakes spread: intermediate schema, multi-doc merge, regulatory analysis. Synthetic data only in prompts. |
