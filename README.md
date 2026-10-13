@@ -126,18 +126,37 @@ cd frontend && VITE_API_PROXY=http://localhost:8010 npm run dev   # open the pri
 
 ### Option B: API and worker as local processes
 
+Terminal 1:
+
 ```sh
-POSTGRES_PORT=5433 docker compose -f infra/docker-compose.yml up -d   # postgres, redis, minio, matchbox
+# start postgres, redis, minio, matchbox
+POSTGRES_PORT=5433 docker compose -f infra/docker-compose.yml up -d
 
 cd backend
 export APP_ENV=development EXTRACTOR=replay \
   DATABASE_URL=postgresql://ips:ips-dev-password@localhost:5433/ips \
   S3_ACCESS_KEY=ips-dev-access S3_SECRET_KEY=ips-dev-secret-key
+# migrate
 uv run alembic upgrade head
-uv run uvicorn app.main:app --reload --port 8010          # terminal 1
-uv run python -m app.worker --simple                      # terminal 2 (--simple: no fork; needed on macOS)
+# start API
+uv run uvicorn app.main:app --reload --port 8010
+```
 
-cd frontend && VITE_API_PROXY=http://localhost:8010 npm run dev   # terminal 3
+Terminal 2:
+
+```sh
+cd backend
+export APP_ENV=development EXTRACTOR=replay \
+  DATABASE_URL=postgresql://ips:ips-dev-password@localhost:5433/ips \
+  S3_ACCESS_KEY=ips-dev-access S3_SECRET_KEY=ips-dev-secret-key
+# start worker (--simple: no fork; needed on macOS)
+uv run python -m app.worker --simple
+```
+
+Terminal 3:
+
+```sh
+cd frontend && VITE_API_PROXY=http://localhost:8010 npm run dev
 ```
 
 Without Matchbox running, set `VALIDATE_WITH_MATCHBOX=false` (approval then skips validation).
