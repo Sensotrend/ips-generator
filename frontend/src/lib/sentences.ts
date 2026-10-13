@@ -1,5 +1,5 @@
 import type { Draft, Fact } from '../api/types'
-import { translate, translateEnum } from './i18n'
+import { translate, translateEnum, type TKey } from './i18n'
 import { factTitle, sectionTitle } from './labels'
 
 const str = (value: unknown): string => (typeof value === 'string' ? value : '')
@@ -66,34 +66,42 @@ export function factSentence(fact: Fact): string {
   }
 }
 
-export interface Step {
-  /** Section heading shown above the sentence. */
+export interface ReviewGroup {
+  /** `patient` or the section key. */
+  key: string
   heading: string
-  fact: Fact
+  /** Why the section exists, from the IPS standard (message key). */
+  intro: TKey
+  facts: Fact[]
+  /** The document said nothing about this section. */
+  silent: boolean
 }
 
-/** The facts a patient walks through, in order: about you, then each section. */
-export function patientSteps(draft: Draft): Step[] {
+/** Facts about the patient, then one group per IPS section, in IPS order. */
+export function reviewGroups(draft: Draft): ReviewGroup[] {
   const patient = draft.patient
-  const about = [
-    ...patient.names,
-    ...(patient.birth_date ? [patient.birth_date] : []),
-    ...(patient.gender ? [patient.gender] : []),
-    ...patient.identifiers,
-  ].map((fact) => ({ heading: translate('patient.about'), fact }))
-  const sections = draft.sections.flatMap((section) =>
-    [
+  const about: ReviewGroup = {
+    key: 'patient',
+    heading: translate('patient.about'),
+    intro: 'section.intro.patient',
+    facts: [
+      ...patient.names,
+      ...(patient.birth_date ? [patient.birth_date] : []),
+      ...(patient.gender ? [patient.gender] : []),
+      ...patient.identifiers,
+    ],
+    silent: false,
+  }
+  const sections = draft.sections.map((section) => ({
+    key: section.key,
+    heading: sectionTitle(section),
+    intro: `section.intro.${section.key}` as TKey,
+    facts: [
       ...(section.statement ? [section.statement] : []),
       ...section.items,
       ...section.scoped_statements,
-    ].map((fact) => ({ heading: sectionTitle(section), fact })),
-  )
-  return [...about, ...sections]
-}
-
-/** Sections the document said nothing about: shown on the summary page, not as steps. */
-export function silentSections(draft: Draft): string[] {
-  return draft.sections
-    .filter((s) => s.effective_kind === 'no_information' && s.items.length === 0)
-    .map(sectionTitle)
+    ],
+    silent: section.effective_kind === 'no_information' && section.items.length === 0,
+  }))
+  return [about, ...sections]
 }

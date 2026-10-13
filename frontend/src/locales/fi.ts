@@ -229,16 +229,9 @@ export const fi: Messages = {
   'patient.summary.approved': 'Yhteenvetosi on hyväksytty',
   'patient.summary.ready': 'Yhteenvetosi on valmis',
   'patient.summary.empty': 'Asiakirjasta ei löytynyt mitään yhteenvetoosi vietävää.',
-  'patient.summary.counts_one':
-    'Kävit läpi {count} kohdan: {right} vahvistettu, {changed} muutettu, {wrong} poistettu{open}.',
-  'patient.summary.counts_other':
-    'Kävit läpi {count} kohtaa: {right} vahvistettu, {changed} muutettu, {wrong} poistettu{open}.',
-  'patient.summary.open': ', {open} ilman vastausta',
-  'patient.summary.silent': 'Asiakirjassa ei sanottu mitään näistä: {sections}.',
   'patient.goBack': '← Palaa takaisin',
   'patient.step': 'Vaihe {step}/{total} · {heading}',
   'patient.about': 'Tietosi',
-  'patient.documentSays': 'Asiakirjassa lukee:',
   'patient.allergyStatus':
     'Asiakirjassa ei kerrota, onko tämä allergia edelleen voimassa. Onko se:',
   'patient.status.active': 'edelleen voimassa',
@@ -249,7 +242,6 @@ export const fi: Messages = {
   'patient.change': 'Muuta',
   'patient.no': 'Ei, jätä pois',
   'patient.back': '← Takaisin',
-  'patient.skip': 'Ohita toistaiseksi',
 
   'sentence.name': 'Nimesi on {title}.',
   'sentence.birthDate': 'Syntymäaikasi on {title}.',
@@ -265,4 +257,21 @@ export const fi: Messages = {
   'sentence.condition.onset': ', alkanut {onset}',
   'sentence.status': ' ({status})',
   'sentence.noneKnown': 'Asiakirjan mukaan tästä ei ole tietoa: ”{quote}”.',
+
+  'section.intro.patient':
+    'Kenestä yhteenveto kertoo. Nimesi, syntymäaikasi, sukupuolesi ja tunnisteesi auttavat lukijaa varmistumaan, että yhteenveto on sinun.',
+  'section.intro.allergies':
+    'Hoitosi kannalta merkittävät allergiat ja intoleranssit: mikä ne aiheuttaa ja millaisen reaktion, jotta kukaan ei anna sinulle haitallista ainetta.',
+  'section.intro.medications':
+    'Käyttämäsi lääkkeet siltä osin kuin ne ovat nyt hoitosi kannalta tärkeitä, jotta uusi lääkäri tai apteekki näkee, mitä jo käytät.',
+  'section.intro.problems':
+    'Terveysongelmat ja sairaudet, jotka ovat tällä hetkellä voimassa tai seurannassa.',
+  'section.intro.past_illness':
+    'Aiemmin sairastamasi sairaudet ja tilat, jotka eivät enää ole voimassa mutta voivat edelleen olla hoitosi kannalta tärkeitä.',
+  'source.line': 'rivi {n}',
+  'source.row': 'rivi {n}',
+  'patient.box.fact': 'Tulee yhteenvetoosi',
+  'patient.box.meaning': 'Mitä se tarkoittaa',
+  'patient.box.source': 'Lähde asiakirjassa',
+  'patient.next': 'Seuraava osio →',
 }

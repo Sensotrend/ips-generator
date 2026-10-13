@@ -232,16 +232,9 @@ export const en = {
   'patient.summary.approved': 'Your summary is approved',
   'patient.summary.ready': 'Your summary is ready',
   'patient.summary.empty': 'We did not find anything in the document to put in your summary.',
-  'patient.summary.counts_one':
-    'You went through {count} item: {right} confirmed, {changed} changed, {wrong} removed{open}.',
-  'patient.summary.counts_other':
-    'You went through {count} items: {right} confirmed, {changed} changed, {wrong} removed{open}.',
-  'patient.summary.open': ', {open} not answered',
-  'patient.summary.silent': 'The document said nothing about: {sections}.',
   'patient.goBack': '← Go back',
   'patient.step': 'Step {step} of {total} · {heading}',
   'patient.about': 'About you',
-  'patient.documentSays': 'The document says:',
   'patient.allergyStatus': 'The document does not say if this allergy is still current. Is it:',
   'patient.status.active': 'still active',
   'patient.status.inactive': 'not active',
@@ -251,7 +244,6 @@ export const en = {
   'patient.change': 'Change it',
   'patient.no': 'No, leave it out',
   'patient.back': '← Back',
-  'patient.skip': 'Skip for now',
 
   'sentence.name': 'Your name is {title}.',
   'sentence.birthDate': 'Your date of birth is {title}.',
@@ -268,6 +260,23 @@ export const en = {
   'sentence.condition.onset': ', starting {onset}',
   'sentence.status': ' ({status})',
   'sentence.noneKnown': 'The document states that nothing is known here: “{quote}”.',
+
+  'section.intro.patient':
+    'Who the summary is about. Your name, date of birth, sex and identifiers let anyone who reads it be sure it is yours.',
+  'section.intro.allergies':
+    'Allergies and intolerances that matter for your care: what causes them and what kind of reaction they give, so that nobody gives you something that harms you.',
+  'section.intro.medications':
+    'The medicines you use, as far as they matter for your care now, so that a new doctor or pharmacist sees what you are already taking.',
+  'section.intro.problems':
+    'Health problems and conditions that are currently active or being followed up.',
+  'section.intro.past_illness':
+    'Illnesses and conditions you had in the past that are no longer active but can still matter for your care.',
+  'source.line': 'line {n}',
+  'source.row': 'row {n}',
+  'patient.box.fact': 'Goes into your summary',
+  'patient.box.meaning': 'What it means',
+  'patient.box.source': 'Source in the document',
+  'patient.next': 'Next section →',
 } as const
 
 export type MessageKey = keyof typeof en

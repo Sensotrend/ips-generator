@@ -232,16 +232,9 @@ export const sv: Messages = {
   'patient.summary.approved': 'Din sammanfattning är godkänd',
   'patient.summary.ready': 'Din sammanfattning är klar',
   'patient.summary.empty': 'Vi hittade inget i dokumentet att ta med i din sammanfattning.',
-  'patient.summary.counts_one':
-    'Du gick igenom {count} post: {right} bekräftad, {changed} ändrad, {wrong} borttagen{open}.',
-  'patient.summary.counts_other':
-    'Du gick igenom {count} poster: {right} bekräftade, {changed} ändrade, {wrong} borttagna{open}.',
-  'patient.summary.open': ', {open} obesvarade',
-  'patient.summary.silent': 'Dokumentet sa ingenting om: {sections}.',
   'patient.goBack': '← Gå tillbaka',
   'patient.step': 'Steg {step} av {total} · {heading}',
   'patient.about': 'Om dig',
-  'patient.documentSays': 'Dokumentet säger:',
   'patient.allergyStatus': 'Dokumentet säger inte om den här allergin fortfarande gäller. Är den:',
   'patient.status.active': 'fortfarande aktiv',
   'patient.status.inactive': 'inte aktiv',
@@ -251,7 +244,6 @@ export const sv: Messages = {
   'patient.change': 'Ändra',
   'patient.no': 'Nej, lämna bort det',
   'patient.back': '← Tillbaka',
-  'patient.skip': 'Hoppa över för nu',
 
   'sentence.name': 'Ditt namn är {title}.',
   'sentence.birthDate': 'Ditt födelsedatum är {title}.',
@@ -268,4 +260,20 @@ export const sv: Messages = {
   'sentence.condition.onset': ', med debut {onset}',
   'sentence.status': ' ({status})',
   'sentence.noneKnown': 'Enligt dokumentet finns inga kända uppgifter här: ”{quote}”.',
+
+  'section.intro.patient':
+    'Vem sammanfattningen gäller. Ditt namn, din födelsedag, ditt kön och dina identifierare gör att läsaren kan vara säker på att den är din.',
+  'section.intro.allergies':
+    'Allergier och intoleranser som är viktiga för din vård: vad som orsakar dem och vilken reaktion de ger, så att ingen ger dig något som skadar dig.',
+  'section.intro.medications':
+    'De läkemedel du använder, i den mån de är viktiga för din vård nu, så att en ny läkare eller apotekare ser vad du redan tar.',
+  'section.intro.problems': 'Hälsoproblem och sjukdomar som är aktuella eller följs upp just nu.',
+  'section.intro.past_illness':
+    'Sjukdomar och tillstånd du haft tidigare som inte längre är aktuella men fortfarande kan vara viktiga för din vård.',
+  'source.line': 'rad {n}',
+  'source.row': 'rad {n}',
+  'patient.box.fact': 'Tas med i din sammanfattning',
+  'patient.box.meaning': 'Vad det betyder',
+  'patient.box.source': 'Källa i dokumentet',
+  'patient.next': 'Nästa avsnitt →',
 }

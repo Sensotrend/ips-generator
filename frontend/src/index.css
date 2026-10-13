@@ -680,3 +680,56 @@ mark {
     animation: none;
   }
 }
+
+.box-label {
+  margin: 0.9rem 0 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+.box-label:first-child {
+  margin-top: 0;
+}
+
+.chat-card .fact-title {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.chat-card .chat-sentence {
+  font-size: 1rem;
+  margin: 0;
+}
+
+.section-intro {
+  margin: 0 0 0.75rem;
+  color: var(--muted);
+}
+
+.source-record {
+  list-style: none;
+  margin: 0;
+  padding: 0.4rem 0.6rem;
+  font-family: ui-monospace, monospace;
+  font-size: 0.8rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow-wrap: anywhere;
+}
+
+.source-record .seg-focus {
+  background: #fff3b0;
+}
+
+.summary-facts {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.summary-facts li + li {
+  margin-top: 0.6rem;
+}
