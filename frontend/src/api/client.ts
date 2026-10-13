@@ -59,6 +59,9 @@ export const api = {
     request<Draft>(`/api/jobs/${id}/draft`, json('PUT', { version, actions })),
   approve: (id: string, version: number, role: ReviewerRole) =>
     request<Approval>(`/api/jobs/${id}/approve`, json('POST', { version, role })),
+  /** Asks the API (which asks the credential issuer) for a wallet credential-offer URL. */
+  walletOffer: (id: string) =>
+    request<{ url: string }>(`/api/jobs/${id}/wallet-offer`, { method: 'POST' }),
   getSource: (id: string) => request<Source>(`/api/jobs/${id}/source`),
   async getBinary(url: string): Promise<ArrayBuffer> {
     const response = await fetch(url, { cache: 'no-store' })

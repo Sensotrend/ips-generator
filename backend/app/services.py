@@ -9,6 +9,7 @@ from dataclasses import dataclass, field
 from typing import Any
 from uuid import UUID
 
+import httpx
 from sqlalchemy import func, select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session, sessionmaker
@@ -57,6 +58,8 @@ class Services:
     hooks: PipelineHooks = field(default_factory=PipelineHooks)
     validator: Validator | None = None
     queue: JobQueue | None = None
+    wallet_transport: httpx.BaseTransport | None = None
+    """Test seam for the wallet issuer HTTP client; ``None`` = real network."""
     _extractor: Extractor | None = None
 
     def session(self) -> Session:

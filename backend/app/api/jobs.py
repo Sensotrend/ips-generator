@@ -45,6 +45,7 @@ from app.schemas.api import (
     SourceOut,
 )
 from app.services import Services
+from app.wallet import WalletError, request_credential_offer
 
 logger = logging.getLogger(__name__)
 
@@ -481,6 +482,31 @@ def approve(
         validation=validation,
         ips_url=f"/api/jobs/{job_id}/ips",
     )
+
+
+@router.post("/jobs/{job_id}/wallet-offer")
+def create_wallet_offer(job_id: UUID, services: ServicesDep, user: CurrentUserDep) -> JSONResponse:
+    """Send the approved Bundle to the credential issuer and return the wallet offer URL.
+
+    The Bundle leaves our system here, so this is a separate, explicit user action (and audited).
+    """
+    with services.session() as session:
+        job = _load_job(session, job_id, user)
+        approved = session.get(ApprovedBundle, job.id)
+        if approved is None:
+            raise ApiError(409, "not_approved", "The draft has not been approved yet.")
+        bundle = approved.bundle
+    if not services.settings.wallet_issuer_url:
+        raise ApiError(503, "wallet_unavailable", "Wallet export is not configured.")
+    try:
+        url = request_credential_offer(bundle, services.settings, services.wallet_transport)
+    except WalletError as exc:
+        logger.warning("wallet offer failed for job %s: %s", job_id, exc)
+        raise ApiError(502, "wallet_failed", str(exc)) from exc
+    with services.session() as session:
+        services.audit(session, actor=user.id, action="ips.wallet_offer", job_id=job_id)
+        session.commit()
+    return JSONResponse({"url": url}, headers={"Cache-Control": "no-store"})
 
 
 @router.get("/jobs/{job_id}/ips", response_class=JSONResponse)

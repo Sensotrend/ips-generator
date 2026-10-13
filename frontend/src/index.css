@@ -462,6 +462,19 @@ main {
   border-color: var(--ok);
 }
 
+.wallet-offer {
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--line);
+}
+
+.wallet-offer img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  background: #fff;
+}
+
 .blockers {
   color: var(--warn-fg);
   background: var(--warn-bg);

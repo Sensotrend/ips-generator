@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { ApiError, downloadIps } from '../api/client'
 import type { Blocker, ReviewerRole, ValidationSummary } from '../api/types'
 import { translate, useT } from '../lib/i18n'
+import { WalletOffer } from './WalletOffer'
 
 interface Props {
   jobId: string
@@ -60,6 +61,7 @@ export function ApprovePanel({
           {t('approve.download')}
         </button>
         {downloadError && <p className="note note-warning">{t('approve.downloadFailed')}</p>}
+        <WalletOffer jobId={jobId} />
       </section>
     )
   }

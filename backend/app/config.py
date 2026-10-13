@@ -104,6 +104,13 @@ class Settings(BaseSettings):
     run_jobs_inline: bool = False
     """Run pipeline jobs in the API process instead of RQ (tests / single-process dev only)."""
 
+    # ---- Wallet export ("store in a digital wallet") ---------------------------------------
+    wallet_issuer_url: str = "https://ips.digicredential.eu/issue"
+    """Credential issuer that turns an IPS Bundle into an OpenID4VCI credential offer. The default
+    is the public demo service of Findynet (not for real patient data: set your own issuer before
+    Phase 5). Empty string disables the wallet export."""
+    wallet_issuer_timeout_s: float = 30.0
+
     @property
     def is_development(self) -> bool:
         return self.app_env.strip().lower() == "development"

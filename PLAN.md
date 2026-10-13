@@ -236,6 +236,14 @@ PLAN.md  CLAUDE.md  README.md
   - Build runs `scripts/check-sw.mjs`: only the app shell is precached and `/api/` is NetworkOnly.
 - [x] Role-first flow: the app first asks patient or clinician (self-declared, kept in `sessionStorage`, not auth). Clinician gets the compact review screen; patient gets a one-question-at-a-time review with deterministic plain-language sentences (`lib/sentences.ts`) and a summary step to approve. The role chosen at the start is the attester type (the role radio in `ApprovePanel` is gone). Styling is a placeholder until the LUVN look and feel lands. Multi-document upload is not part of this (D-12). `[opus]`
   - Deviation (2026-10-13): the patient review is now one page per IPS section (about you, allergies, medications, …) with a short explainer and all of the section's fact boxes stacked. Each box has three parts: the fact (what goes into the IPS), what it means (the plain-language sentence) and the source (line number for text, whole object for JSON, whole row for CSV, page for PDF; `lib/sourceExcerpt.ts`). The final step shows the whole summary, facts only, every section included. The section explainers (`section.intro.*`) are paraphrased, patient-friendly versions of the IPS section purposes, not verbatim IPS text — check them against the IG.
+- [x] After approval: store the IPS as FHIR JSON or in a digital wallet (QR code) `[opus]`
+  - `POST /api/jobs/{id}/wallet-offer` sends the approved Bundle to the issuer in `WALLET_ISSUER_URL`
+    (default: the Findynet demo `https://ips.digicredential.eu/issue`, body `{content: "<bundle JSON string>",
+    protocol: "OPENID4VCI_FINAL1"}` → `{url}`) and returns the OpenID4VCI offer URL; the PWA renders it as a QR code
+    (`qrcode`). The API makes the call because the issuer sends no CORS headers. The call is audited
+    (`ips.wallet_offer`). The default demo issuer is run by us (Findynet) but check that before real patient data
+    (Phase 5): the Bundle leaves our API. PDF: the existing Print button
+    (`window.print()`) covers it; no server-side PDF.
 - [ ] OIDC login (Keycloak dev realm) `[opus]`
   - Deviation (2026-10-13): patient name, birth date and sex show a field label in the fact box and summary. The final summary lists only facts the patient answered yes to (or changed); a section with unanswered facts shows a notice that they are left out. Backend export still includes pending facts if the patient approves with unanswered items — not changed here.
   - **Deferred:** dev-only fixed reviewer behind `APP_ENV=development` (`get_current_user` is the OIDC slot);
