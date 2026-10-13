@@ -186,11 +186,7 @@ export function ReviewScreen({ jobId, role }: { jobId: string; role: ReviewerRol
           <button type="button" className="back" onClick={() => setTab('facts')}>
             {t('review.backToFacts')}
           </button>
-          <SourceViewer
-            jobId={jobId}
-            focus={selected?.source ?? null}
-            noSource={selected !== null && selected.source === null}
-          />
+          <SourceViewer jobId={jobId} focus={selected?.source ?? null} />
         </div>
       </div>
     </div>

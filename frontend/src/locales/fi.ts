@@ -241,7 +241,6 @@ export const fi: Messages = {
   'source.loading': 'Ladataan lähdettä…',
   'source.loadFailed': 'Lähdettä ei voitu ladata.',
   'source.select': 'Napsauta tietoa tai sen lainausta nähdäksesi sen lähteessä',
-  'source.none': 'Tietoon ei ole liitetty kohtaa lähteestä',
   'source.mode': 'Näkymä',
   'source.mode.rows': 'Rivit',
   'source.mode.json': 'JSON',

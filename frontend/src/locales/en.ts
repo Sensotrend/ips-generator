@@ -244,7 +244,6 @@ export const en = {
   'source.loading': 'Loading source…',
   'source.loadFailed': 'The source could not be loaded.',
   'source.select': 'Click a fact or its quote to see it in the source',
-  'source.none': 'No place in the source is linked to this fact',
   'source.mode': 'View',
   'source.mode.rows': 'Rows',
   'source.mode.json': 'JSON',
