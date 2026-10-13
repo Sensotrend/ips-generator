@@ -5,7 +5,7 @@ import type { ReviewAction } from '../api/types'
 import { useT } from '../lib/i18n'
 import { reviewGroups } from '../lib/sentences'
 import { ApprovePanel } from './ApprovePanel'
-import { FactContent, PatientFactBox } from './PatientFactBox'
+import { FactContent, PatientFactBox, SectionTables } from './PatientFactBox'
 
 /** Review for patients: one IPS section at a time, then the whole summary to approve. */
 export function PatientReview({ jobId }: { jobId: string }) {
@@ -15,6 +15,8 @@ export function PatientReview({ jobId }: { jobId: string }) {
   const approve = useApprove(jobId)
   const source = useSource(jobId, true)
   const [index, setIndex] = useState(0)
+  // Once the summary was seen, a "Summary →" shortcut spares the walk through the later sections.
+  const [seenSummary, setSeenSummary] = useState(false)
 
   if (draft.isPending) return <p className="muted">{t('patient.loading')}</p>
   if (draft.isError) return <p className="note note-warning">{t('patient.loadFailed')}</p>
@@ -24,6 +26,13 @@ export function PatientReview({ jobId }: { jobId: string }) {
   const approved = data.status === 'approved'
   const busy = update.isPending || approve.isPending
   const onSummary = approved || index >= steps.length
+  const backToStep = (stepIndex: number) => {
+    setSeenSummary(true)
+    setIndex(stepIndex)
+  }
+  /** The page whose facts the path belongs to (`patient.birth_date`, `allergies.items[0]`). */
+  const stepOfPath = (path: string | null) =>
+    steps.findIndex((s) => s.key === (path ?? '').split(/[.[]/)[0])
   const updateError = update.error instanceof ApiError ? update.error : null
 
   const send = (actions: ReviewAction[], done: () => void) => {
@@ -53,28 +62,54 @@ export function PatientReview({ jobId }: { jobId: string }) {
           <h2>{t(approved ? 'patient.summary.approved' : 'patient.summary.ready')}</h2>
           {!hasFacts && <p>{t('patient.summary.empty')}</p>}
           {!approved && (
-            <button type="button" onClick={() => setIndex(Math.max(steps.length - 1, 0))}>
+            <button type="button" onClick={() => backToStep(Math.max(steps.length - 1, 0))}>
               {t('patient.goBack')}
             </button>
           )}
         </section>
         {groups.map((group) => {
-          const facts = group.facts.filter((fact) => fact.decision !== 'rejected')
+          // Only facts the patient has answered "yes" to (or changed) go into the summary.
+          const facts = group.facts.filter(
+            (fact) => fact.decision === 'accepted' || fact.decision === 'edited',
+          )
+          const unreviewed = group.facts.filter((fact) => fact.decision === 'pending').length
+          const stepIndex = steps.indexOf(group)
           return (
             <section key={group.key} className="chat-card" aria-label={group.heading}>
               <h3>{group.heading}</h3>
+              {unreviewed > 0 && (
+                <p className="note note-warning" role="alert">
+                  {t('patient.summary.unreviewed', { count: unreviewed })}{' '}
+                  {!approved && stepIndex >= 0 && (
+                    <button
+                      type="button"
+                      className="link-button"
+                      onClick={() => backToStep(stepIndex)}
+                    >
+                      {t('patient.summary.reviewSection')}
+                    </button>
+                  )}
+                </p>
+              )}
               {facts.length === 0 ? (
                 <p className="muted">
-                  {t(group.key === 'patient' ? 'section.noPatientDetails' : 'section.silent')}
+                  {t(
+                    group.facts.length > 0
+                      ? 'patient.summary.noneApproved'
+                      : group.key === 'patient'
+                        ? 'section.noPatientDetails'
+                        : 'section.silent',
+                  )}
                 </p>
               ) : (
-                <ul className="summary-facts">
-                  {facts.map((fact) => (
-                    <li key={fact.path}>
-                      <FactContent fact={fact} />
-                    </li>
-                  ))}
-                </ul>
+                // The patient's facts are different fields of one record; the rest are lists.
+                <div className="summary-facts">
+                  {group.key === 'patient' ? (
+                    <FactContent facts={facts} />
+                  ) : (
+                    <SectionTables facts={facts} />
+                  )}
+                </div>
               )}
             </section>
           )
@@ -89,6 +124,10 @@ export function PatientReview({ jobId }: { jobId: string }) {
           validation={approve.data?.validation ?? null}
           role="patient"
           onApprove={(role) => approve.mutate({ version: data.version, role })}
+          onShowBlocker={(blocker) => {
+            const step = stepOfPath(blocker.path)
+            if (step >= 0) backToStep(step)
+          }}
         />
       </div>
     )
@@ -124,6 +163,11 @@ export function PatientReview({ jobId }: { jobId: string }) {
         >
           {t('patient.next')}
         </button>
+        {seenSummary && (
+          <button type="button" disabled={busy} onClick={() => setIndex(steps.length)}>
+            {t('patient.toSummary')}
+          </button>
+        )}
       </div>
     </div>
   )

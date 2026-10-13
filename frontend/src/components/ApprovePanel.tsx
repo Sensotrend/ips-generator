@@ -12,6 +12,8 @@ interface Props {
   validation: ValidationSummary | null
   role: ReviewerRole
   onApprove: (role: ReviewerRole) => void
+  /** Shows the page that can resolve the blocker; no link when omitted. */
+  onShowBlocker?: (blocker: Blocker) => void
 }
 
 function describe(error: unknown): string {
@@ -32,6 +34,7 @@ export function ApprovePanel({
   validation,
   role,
   onApprove,
+  onShowBlocker,
 }: Props) {
   const { t } = useT()
   const [downloadError, setDownloadError] = useState(false)
@@ -67,7 +70,21 @@ export function ApprovePanel({
       {blockers.length > 0 && (
         <ul className="blockers" aria-label={t('approve.blocked')}>
           {blockers.map((blocker) => (
-            <li key={`${blocker.code}-${blocker.path}`}>{t(`blocker.${blocker.code}`)}</li>
+            <li key={`${blocker.code}-${blocker.path}`}>
+              {t(`blocker.${blocker.code}`)}
+              {onShowBlocker && (
+                <>
+                  {' '}
+                  <button
+                    type="button"
+                    className="link-button"
+                    onClick={() => onShowBlocker(blocker)}
+                  >
+                    {t('approve.showBlocker')}
+                  </button>
+                </>
+              )}
+            </li>
           ))}
         </ul>
       )}

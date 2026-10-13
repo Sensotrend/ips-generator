@@ -2,26 +2,60 @@ import { useState } from 'react'
 import type { Fact, FactValue, ReviewAction, Source } from '../api/types'
 import { editableFields, getIn, setIn } from '../lib/edit'
 import { translateEnum, useT } from '../lib/i18n'
-import { factDetails, factTitle, flagLabel, WARNING_FLAGS } from '../lib/labels'
+import { factRows, factTables, factTitle, flagLabel, WARNING_FLAGS } from '../lib/labels'
 import { factSentence } from '../lib/sentences'
 import { sourceExcerpt } from '../lib/sourceExcerpt'
 
-/** What a fact adds to the IPS: its title and detail rows. Shared with the final summary. */
-export function FactContent({ fact }: { fact: Fact }) {
-  const details = factDetails(fact)
+/**
+ * What a fact adds to the IPS, as a table with one row per element, labelled after the IPS
+ * profile. Shared with the final summary.
+ */
+export function FactContent({ facts }: { facts: Fact[] }) {
+  return (
+    <table className="fact-table">
+      <tbody>
+        {facts.flatMap(factRows).map(([label, value], index) => (
+          <tr key={index}>
+            <th scope="row">{label}</th>
+            <td>{value}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  )
+}
+
+/**
+ * A section's facts for the final summary: the labels are the column headings and each fact is
+ * a row (one table per kind of fact, as kinds have different columns).
+ */
+export function SectionTables({ facts }: { facts: Fact[] }) {
   return (
     <>
-      <p className="fact-title">{factTitle(fact)}</p>
-      {details.length > 0 && (
-        <dl className="fact-details">
-          {details.map(([label, value]) => (
-            <div key={label}>
-              <dt>{label}</dt>
-              <dd>{value}</dd>
-            </div>
-          ))}
-        </dl>
-      )}
+      {factTables(facts).map((table) => (
+        <div key={table.columns.join('|')} className="table-scroll">
+          <table className="fact-grid">
+            <thead>
+              <tr>
+                {table.columns.map((column) => (
+                  <th key={column} scope="col">
+                    {column}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {table.rows.map((row) => (
+                <tr key={row.path}>
+                  {row.cells.map((cell, index) => (
+                    <td key={index}>{cell}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ))}
     </>
   )
 }
@@ -66,8 +100,8 @@ export function PatientFactBox({
       className={`chat-card${fact.decision === 'rejected' ? ' fact-rejected' : ''}`}
       aria-label={factTitle(fact)}
     >
-      <h3 className="box-label">{t('patient.box.fact')}</h3>
-      <FactContent fact={fact} />
+      <FactContent facts={[fact]} />
+      <p className="box-note">{t('patient.box.fact')}</p>
       <h3 className="box-label">{t('patient.box.meaning')}</h3>
       <p className="chat-sentence">{factSentence(fact)}</p>
       {excerpt && fact.source && (
