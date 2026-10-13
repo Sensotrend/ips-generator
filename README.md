@@ -4,10 +4,12 @@ Turn arbitrary healthcare documents into a valid **International Patient Summary
 document Bundle conforming to the [HL7 IPS IG](https://hl7.org/fhir/uv/ips/) (`hl7.fhir.uv.ips#2.0.1`).
 A human reviews and approves every result in a mobile-friendly PWA.
 
-> **Status: Phase 1 in progress.** The extraction pipeline (ingest → extract → ground → assemble →
-> validate) and the eval harness exist as a library and CLI. The HTTP API only exposes `GET /health`,
-> and the PWA is a scaffold. Job endpoints, the review UI, terminology coding and the repair loop come
-> in Phases 2–3. See [PLAN.md](PLAN.md) for the roadmap and decisions.
+> **Status: Phases 1–3 in progress.** The extraction pipeline (ingest → extract → ground → assemble →
+> validate), the eval harness, the job API with an RQ worker, and the review PWA (upload → progress →
+> review with source highlights → approve → download) run locally (see [Running locally](#running-locally)).
+> Development only: a fixed dev reviewer (no OIDC yet). Terminology coding runs its free deterministic
+> pass (`TERMINOLOGY_MODE`); the Claude tool loop is built but untested live, and the repair loop is
+> Phase 2. See [PLAN.md](PLAN.md) for the roadmap and decisions.
 
 ## Purpose
 
@@ -33,19 +35,19 @@ These are non-negotiable (see [CLAUDE.md](CLAUDE.md)):
 ## Architecture
 
 ```
-PWA (React + Vite)            upload → progress → review & edit → approve → export     [scaffold]
+PWA (React + Vite)            upload → progress → review & edit → approve → export     [MVP]
         │
-API (FastAPI)                 jobs, SSE status, review, audit                          [/health only]
+API (FastAPI) + RQ worker     jobs, SSE status, review, approval, audit                [MVP, dev auth]
         │
 Pipeline (backend/app/pipeline)
   1. ingest      normalise to located text segments (line / row / JSON path / page)    [done]
   2. classify    document type, language, relevant sections                            [planned]
   3. extract     Claude, structured outputs → intermediate JSON                        [done]
   4. ground      check each source_quote against the source text                       [done]
-  5. terminology Claude tool loop over a FHIR terminology server                       [planned]
+  5. terminology lookups + Claude tool loop over a FHIR terminology server            [deterministic done; LLM loop untested live]
   6. assemble    deterministic mappers → IPS document Bundle                           [done]
   7. validate    Matchbox $validate (IPS IG); targeted repair of the JSON, not FHIR    [validate done]
-  8. review      human approval → Provenance → FHIR server                             [planned]
+  8. review      human approval (Composition.attester) → stored Bundle                [done; Provenance/FHIR server planned]
 ```
 
 | Path | Contents |
@@ -97,6 +99,69 @@ installs the IPS IG and takes several minutes. Wait until it reports healthy
 (`docker compose -f infra/docker-compose.yml ps`). Matchbox listens on `http://localhost:8080` and
 uses `tx.fhir.org` as terminology server, which is for development only.
 
+## Running locally
+
+The whole app (API, worker, PWA) runs locally against the Compose services. **Development only:**
+the API refuses to start unless `APP_ENV=development`, and every request is made as a fixed dev
+reviewer ("Dev Reviewer"); OIDC login is not implemented yet. Without an Anthropic key, use the
+**replay extractor** (`EXTRACTOR=replay`): it returns the gold extraction for any of the eval
+documents in `evals/dataset/*/document.*` (byte-identical uploads only) and fails every other upload
+with "replay extractor has no answer for this document". Synthetic data only.
+
+### Option A: everything in Docker
+
+```sh
+# Ports: if 5432 / 8000 are taken on your machine, pick others.
+POSTGRES_PORT=5433 API_PORT=8010 \
+  docker compose -f infra/docker-compose.yml --profile app up -d --build
+```
+
+The `app` profile adds `api` (runs `alembic upgrade head`, then uvicorn on `API_PORT`) and `worker`
+(RQ, `python -m app.worker`), both with `EXTRACTOR=replay` unless you set `EXTRACTOR=claude` and
+`ANTHROPIC_API_KEY`. Then start the PWA dev server, pointing its `/api` proxy at the API:
+
+```sh
+cd frontend && VITE_API_PROXY=http://localhost:8010 npm run dev   # open the printed URL
+```
+
+### Option B: API and worker as local processes
+
+```sh
+POSTGRES_PORT=5433 docker compose -f infra/docker-compose.yml up -d   # postgres, redis, minio, matchbox
+
+cd backend
+export APP_ENV=development EXTRACTOR=replay \
+  DATABASE_URL=postgresql://ips:ips-dev-password@localhost:5433/ips \
+  S3_ACCESS_KEY=ips-dev-access S3_SECRET_KEY=ips-dev-secret-key
+uv run alembic upgrade head
+uv run uvicorn app.main:app --reload --port 8010          # terminal 1
+uv run python -m app.worker --simple                      # terminal 2 (--simple: no fork; needed on macOS)
+
+cd frontend && VITE_API_PROXY=http://localhost:8010 npm run dev   # terminal 3
+```
+
+Without Matchbox running, set `VALIDATE_WITH_MATCHBOX=false` (approval then skips validation).
+
+### Walk-through
+
+1. Upload e.g. `evals/dataset/fi01_discharge_internal_txt/document.txt`,
+   `evals/dataset/en01_discharge_resp_pdf/document.pdf` or a CSV case. Progress streams over SSE.
+2. Review: tap a fact to see its quote highlighted in the source (line/row/JSON path segments, or
+   the PDF text layer). Accept, edit or reject facts; confirm assumed allergy statuses and values
+   derived from an identity code. Flags show relocated/fuzzy quotes, unverified sections, etc.
+3. Approve as the patient (attester mode `personal`) or as a clinician (`professional`). Approval is
+   blocked until the patient's name and birth date are present and derived values are confirmed,
+   and it requires the attested Bundle to pass Matchbox validation.
+4. Download the approved IPS Bundle (FHIR JSON).
+
+The same flow over plain HTTP: `POST /api/jobs` (multipart `file`), `GET /api/jobs/{id}`,
+`GET /api/jobs/{id}/events` (SSE), `GET /api/jobs/{id}/source[/original]`,
+`GET|PUT /api/jobs/{id}/draft`, `POST /api/jobs/{id}/approve`, `GET /api/jobs/{id}/ips`. OpenAPI docs
+are at `/docs` on the API port.
+
+Stop everything with `docker compose -f infra/docker-compose.yml --profile app down` (volumes are
+kept; add `-v` to wipe them). Originals in MinIO are **not encrypted at rest** in this setup.
+
 ## Build, lint and test
 
 Backend (from `backend/`):
@@ -126,17 +191,11 @@ CI (`.github/workflows/ci.yml`) runs these same checks on every push and pull re
 
 ### Run the API and the PWA
 
-```sh
-cd backend  && uv run uvicorn app.main:app --reload     # http://localhost:8000/health
-cd frontend && npm run dev                              # Vite dev server
-```
+See [Running locally](#running-locally).
 
-Only `/health` exists so far. The upload and review flow arrives in Phase 3.
+### Run the pipeline directly
 
-### Run the pipeline
-
-Until the job API exists, use the pipeline modules directly. For one paid smoke test of extraction on
-a synthetic Finnish discharge summary:
+For one paid smoke test of extraction on a synthetic Finnish discharge summary:
 
 ```sh
 cd backend

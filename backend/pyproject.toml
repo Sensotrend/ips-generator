@@ -4,14 +4,19 @@ version = "0.1.0"
 description = "Healthcare document to International Patient Summary (IPS, FHIR R4) extraction pipeline API"
 requires-python = ">=3.12"
 dependencies = [
+    "alembic>=1.20.0",
     "anthropic>=1.12.0",
+    "boto3>=1.43.112",
     "fastapi>=0.142.2",
     "httpx>=0.28.1",
     "pdfplumber>=0.11.10",
+    "psycopg[binary]>=3.3.6",
     "pydantic>=2",
     "pydantic-settings>=2.15.0",
+    "python-multipart>=0.0.32",
     "redis>=8.1.0",
     "rq>=2.12.0",
+    "sqlalchemy>=2",
     "uvicorn[standard]>=0.54.0",
 ]
 
@@ -26,6 +31,7 @@ dev = [
     "pytest-asyncio>=1.4.0",
     "reportlab>=5.0.1",
     "ruff>=0.16.10",
+    "types-boto3[s3]>=1.43.112",
     "types-reportlab>=5.0.0.20261006",
 ]
 

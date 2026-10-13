@@ -2,7 +2,9 @@
 #   docker compose -f infra/docker-compose.yml up -d
 # Values below are DEV-ONLY defaults; override them via environment variables (see /.env.example),
 # e.g. `docker compose --env-file .env -f infra/docker-compose.yml up -d`.
-# Not yet included (later phases): keycloak (Phase 3 OIDC), api and worker containers (Phase 3).
+# api + worker (Phase 3) are in the "app" profile:
+#   docker compose -f infra/docker-compose.yml --profile app up -d --build
+# Not yet included: keycloak (Phase 3 OIDC, deferred).
 name: ips-generator
 
 services:
@@ -88,6 +90,54 @@ services:
       timeout: 5s
       retries: 10
       start_period: 900s
+
+  # ---- application (profile "app") ------------------------------------------------------
+  # Development only: fixed dev reviewer identity (no OIDC yet) and, by default, the replay
+  # extractor (answers only for eval dataset documents; no LLM calls).
+  api:
+    profiles: ["app"]
+    build:
+      context: ..
+      dockerfile: backend/Dockerfile
+    image: ips-generator-backend:dev
+    command: ["sh", "-c", "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000"]
+    environment: &app-env
+      APP_ENV: development
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      EXTRACTOR: ${EXTRACTOR:-replay}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-ips}:${POSTGRES_PASSWORD:-ips-dev-password}@postgres:5432/${POSTGRES_DB:-ips}
+      REDIS_URL: redis://redis:6379/0
+      S3_ENDPOINT_URL: http://minio:9000
+      S3_ACCESS_KEY: ${S3_ACCESS_KEY:-ips-dev-access}
+      S3_SECRET_KEY: ${S3_SECRET_KEY:-ips-dev-secret-key}
+      S3_BUCKET: ${S3_BUCKET:-ips-documents}
+      MATCHBOX_URL: http://matchbox:8080/matchboxv3/fhir
+      VALIDATE_WITH_MATCHBOX: ${VALIDATE_WITH_MATCHBOX:-true}
+      TERMINOLOGY_MODE: ${TERMINOLOGY_MODE:-deterministic}   # off | deterministic (free tx.fhir.org lookups) | llm (paid)
+    ports:
+      - "${API_PORT:-8000}:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio-init:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+
+  worker:
+    profiles: ["app"]
+    image: ips-generator-backend:dev
+    command: ["python", "-m", "app.worker"]
+    environment: *app-env
+    depends_on:
+      api:
+        condition: service_healthy  # migrations have run
 
 volumes:
   postgres-data:

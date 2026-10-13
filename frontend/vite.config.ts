@@ -2,6 +2,7 @@
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 import { VitePWA } from 'vite-plugin-pwa'
+import { workboxOptions } from './src/pwa/workbox.ts'
 
 export default defineConfig({
   plugins: [
@@ -21,26 +22,14 @@ export default defineConfig({
           { src: 'icon-512.png', sizes: '512x512', type: 'image/png' },
         ],
       },
-      workbox: {
-        // Precache the app shell only (built JS/CSS/HTML/icons).
-        globPatterns: ['**/*.{js,css,html,svg,png,ico,webmanifest}'],
-        // Never serve the SPA shell for API calls.
-        navigateFallbackDenylist: [/^\/api\//],
-        // runtimeCaching: CLAUDE.md forbids caching PHI in the service worker. API responses
-        // may contain PHI, so /api/ is explicitly NetworkOnly. Do not add other runtime caches
-        // for anything that can carry patient data.
-        runtimeCaching: [
-          {
-            urlPattern: ({ url }) => url.pathname.startsWith('/api/'),
-            handler: 'NetworkOnly',
-          },
-        ],
-      },
+      // App shell only; /api/ is NetworkOnly (PHI rule). See src/pwa/workbox.ts.
+      workbox: workboxOptions,
     }),
   ],
   server: {
     proxy: {
-      '/api': 'http://localhost:8000',
+      // The API (uvicorn). Override with VITE_API_PROXY, e.g. http://localhost:8010.
+      '/api': process.env.VITE_API_PROXY ?? 'http://localhost:8000',
     },
   },
   test: {

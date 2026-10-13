@@ -163,8 +163,24 @@ PLAN.md  CLAUDE.md  README.md
   - D-8: resolved/inactive/remission → History of Past Illness; `not_stated` stays in Problem List (unless an
     abatement date is given).
   - Allergy `clinicalStatus` is mandatory in R4, so "not stated" becomes `active` with a warning; the reviewer
-    should confirm it (Phase 3). Missing birthDate → `_birthDate` data-absent-reason (validates).
+    should confirm it (Phase 3). Missing birthDate (neither stated nor derived, D-10) → `_birthDate`
+    data-absent-reason (validates).
   - D-9: printed codes are never emitted, not even in narrative.
+- [x] D-10 `derive.py`: birth date / sex from a valid Finnish personal identity code (HETU), after grounding, before assembly `[opus]`
+  - `app/pipeline/derive.py` (pure, no logging). Results in `EnrichedIps.patient_derived` (marked `derived`, method
+    `fi-hetu`, source identifier path, `recognised_by` label/format); never in the LLM layer. Flags
+    `derived_from_identity_code` (confirm in review), `identity_code_conflict` (stated value kept),
+    `identity_code_ambiguous` (several different codes: nothing derived). A consistent year/month-only stated
+    birth date is completed from the code (`completes_stated`).
+  - HETU verified 2026-10-13 (VNA 128/2010 § 2 as amended by 690/2022; dvv.fi): century signs `+`, `-`/`YXWVU`,
+    `A–F`; mod-31 check; 002–899 issued, odd = male. **Sex only from 002–899**; 900–999 (temporary/test, the
+    dataset's synthetic codes) give a birth date only. The gender-neutral-code bill (HE 132/2022, planned for
+    2027-01-01) lapsed in Feb 2023, so parity still encodes registered sex; `SEX_FROM_PARITY` switches it off if a
+    reform is enacted (such codes could not be told apart by format).
+  - FHIR: plain `birthDate`/`gender` (no standard "derived" marker; no invented extension); info notes
+    `birth_date_derived`/`gender_derived` and the Patient narrative say so; machine-readable trail in Provenance
+    (Phase 5). Evals: `meta.json` `expected_patient` (truth from the HETU's authoring input) and metrics
+    `patient_*_effective` + derived-value accuracy; gold keeps `birth_date: null`.
 - [x] `validate.py`: call Matchbox `$validate` against IPS profile; return structured issues `[sonnet]`
   - **Gotcha:** a Bundle entry that fails its IPS profile doesn't match a slice, and its errors are hidden. The only
     trace is an information issue "does not match any known slice". `ValidationResult.unmatched_bundle_entries`
@@ -179,8 +195,19 @@ PLAN.md  CLAUDE.md  README.md
 **Done when:** ≥90% of eval docs produce validator-clean Bundles (no errors); per-section recall baseline recorded.
 
 ### Phase 2 — Terminology & repair
-- [ ] `terminology.py`: tools `search_snomed`, `search_loinc`, `search_medication` (ATC) via FHIR `ValueSet/$expand` / `CodeSystem/$lookup` `[opus]`
-- [ ] Claude tool loop (strict tools, `tool_choice: auto`) chooses codes from candidates only `[opus]`
+- [x] `terminology.py`: tools `search_snomed`, `search_loinc`, `search_medication` (ATC) via FHIR `ValueSet/$expand` / `CodeSystem/$lookup` `[opus]`
+  - Done 2026-10-13 as `app/terminology/` (client, scopes, tools) + `app/pipeline/terminology.py` (`code_enriched`).
+    tx.fhir.org: SNOMED International (English only, so search terms must be English), LOINC, ATC
+    (`http://www.whocc.no/atc`), ICD-10 WHO, EDQM. IPS ValueSets aren't hosted, so their compose is POSTed inline.
+  - Deterministic pass (no LLM): printed codes looked up and kept as *candidates* (D-9); exact English
+    display matches coded. For FI/SV documents this codes almost nothing without the LLM pass.
+  - Privacy: only `codable_paths` term text is sent; the client rejects identifier/date-like text; httpx URL
+    logging is silenced (it would log search terms).
+  - Not wired into the pipeline yet.
+- [x] Claude tool loop (strict tools, `tool_choice: auto`) chooses codes from candidates only `[opus]`
+  - Sonnet 5.5 @ medium, prompt `terminology_v1`, strict tools, bounded per field/document/turns; chosen codes
+    must have been returned by a tool in that conversation (else rejected). Tested with a fake Claude only;
+    needs one real smoke call. Estimated ≈ $0.10–0.15 per document.
 - [ ] `repair.py`: feed validator issues + offending intermediate item to Claude, patch intermediate JSON, re-map; max 2 loops, then flag `[opus]`
 - [ ] Add sections: Immunizations, Results, Procedures, Medical Devices `[sonnet]` (follow the Phase 1 mapper pattern)
 - [ ] Eval metric: code accuracy vs gold codes `[sonnet]`
@@ -189,18 +216,32 @@ PLAN.md  CLAUDE.md  README.md
 **Done when:** code accuracy measured; no hallucinated codes (every code exists in terminology server); repair loop reduces validator errors on eval set.
 
 ### Phase 3 — API + PWA MVP
-- [ ] API: `POST /jobs` (upload), `GET /jobs/{id}`, `GET /jobs/{id}/events` (SSE), `GET/PUT /jobs/{id}/draft`, `POST /jobs/{id}/approve`, `GET /jobs/{id}/ips` `[sonnet]`
-- [ ] Worker runs pipeline; status events per step `[sonnet]`
-- [ ] PWA: upload (file + mobile camera capture), progress view, review screen (sections list ↔ source viewer with highlighted `source_quote`), edit/accept/reject per item, approve, export JSON `[opus]`
-- [ ] Approval: reviewer recorded as `Composition.attester` (`personal` for a patient, `professional` for a clinician), not as author; approval blocked until Patient name and birth date are present `[opus]`
-- [ ] Manifest, icons, installability; service worker caches app shell only `[opus]` (PHI rule — review carefully)
+- [x] API: `POST /jobs` (upload), `GET /jobs/{id}`, `GET /jobs/{id}/events` (SSE), `GET/PUT /jobs/{id}/draft`, `POST /jobs/{id}/approve`, `GET /jobs/{id}/ips` `[sonnet]`
+  - Done 2026-10-13 under `/api/…` (`app/api/jobs.py`); plus `GET /api/jobs/{id}/source[/original]`. Errors carry
+    no PHI; all `/api/` responses `no-store`. Drafts are versioned (stale PUT → 409).
+- [x] Worker runs pipeline; status events per step `[sonnet]`
+  - RQ worker (`app/worker/`), orchestrator `app/pipeline/run.py`: ingest → extract → ground → derive (D-10) →
+    terminology (`TERMINOLOGY_MODE` off|deterministic|llm; a failure doesn't fail the job) → assemble → validate.
+    Postgres (SQLAlchemy + Alembic; append-only `audit_events` via trigger, not yet tested live), originals in MinIO.
+  - Dev-only `EXTRACTOR=replay` returns eval gold for byte-identical eval documents (no API key needed).
+- [x] PWA: upload (file + mobile camera capture), progress view, review screen (sections list ↔ source viewer with highlighted `source_quote`), edit/accept/reject per item, approve, export JSON `[opus]`
+  - Review screen with source highlighting (line/row/JSON path segments; PDF via pdfjs text layer — unit-tested
+    only, not yet tried in a real browser). Camera capture deferred to Phase 4 (needs OCR).
+  - Verified 2026-10-13 through the API: fi09 (txt), mx02 (pdf), en02 (md) → derive → terminology → review →
+    confirm → approve → download; approved Bundles 0 errors, no unmatched entries; no PHI found in api/worker logs.
+- [x] Approval: reviewer recorded as `Composition.attester` (`personal` for a patient, `professional` for a clinician), not as author; approval blocked until Patient name and birth date are present `[opus]`
+  - Gap: a reviewer can't *add* a missing name or birth date, only edit/confirm existing facts.
+- [x] Manifest, icons, installability; service worker caches app shell only `[opus]` (PHI rule — review carefully)
+  - Build runs `scripts/check-sw.mjs`: only the app shell is precached and `/api/` is NetworkOnly.
 - [ ] OIDC login (Keycloak dev realm) `[opus]`
+  - **Deferred:** dev-only fixed reviewer behind `APP_ENV=development` (`get_current_user` is the OIDC slot);
+    the API refuses to start outside development.
 
 **Done when:** a user can upload a PDF on a phone, watch progress, review with source highlights, approve, and download a valid IPS Bundle.
 
 ### Phase 4 — More inputs & quality
 - [ ] Scanned PDFs, images/photos (multi-page capture): local OCR at ingest; DOCX, HL7 v2, CDA (deterministic parsers where structured) `[opus]`
-- [ ] Multi-document merge into one IPS (dedupe meds/problems across docs) `[fable]`
+- [ ] Multi-document merge into one IPS (dedupe meds/problems across docs; D-11: a "none known" claim contradicted by another document is not asserted and is flagged) `[fable]`
 - [ ] Rendered human-readable IPS view (Composition narrative) `[sonnet]`
 - [ ] Prompt caching for system prompt + schema; Batch API path for bulk backfills `[sonnet]`
 
@@ -232,7 +273,8 @@ PLAN.md  CLAUDE.md  README.md
 | D-7 | Allergies `items_found` may also carry scoped "no known …" statements (e.g. NKDA alongside a food allergy), each quoted. | Decided 2026-10-08 |
 | D-8 | Resolved/inactive conditions go to the optional **History of Past Illness** section; active ones to the Problem List. | Decided 2026-10-08 |
 | D-9 | Codes printed in a document (ICD-10, ATC, …) are captured as text hints only; the terminology step uses them only if the server confirms the code exists and matches the text. | Decided 2026-10-08 |
-| D-10 | Birth date / sex from a Finnish personal identity code. Note: IPS 2.0.1 requires `Patient.birthDate` (1..1) and ≥1 name. | **Open** |
+| D-10 | Birth date and sex are **derived deterministically** from a valid Finnish personal identity code (never by the LLM) when the document doesn't state them, and marked as derived for review. IPS 2.0.1 requires `Patient.birthDate` (1..1). | Decided 2026-10-13 |
+| D-11 | "Allergiat: ei tiedossa" (bare "not known") is `none_known` (scope all) with its source quote when no other document says anything about allergies. If another document suggests allergies (Phase 4 merge), the "none known" claim is not asserted: the section becomes `no_information` and is flagged for review. | Decided 2026-10-13 |
 
 Still open, before the phase that needs them:
 - ~~Phase 1 validity without codes~~ **Resolved:** text-only `CodeableConcept`s give 0 errors and no extra warnings in IPS 2.0.1 (bindings are "preferred"). Fixtures in `tests/fixtures/ips-variants/`.
