@@ -41,6 +41,25 @@ and phased task list. Work on the current phase, tick completed tasks, and note 
   (see Stack & conventions).
 - Run `evals/run_evals.py` for extraction/prompt changes and record results in `evals/RESULTS.md`.
 
+## Reporting what to restart after code changes
+When you finish editing code, end your report with a short "Restart / install" note saying what the user
+must do for the change to take effect (or "nothing needed"). Check each of these against your diff:
+- **New or changed dependencies** (`frontend/package.json`/lockfile → `npm install` in `frontend/`;
+  `backend/pyproject.toml`/`uv.lock` → `uv sync` in `backend/`).
+- **Backend API or worker code** (`backend/app/**`): the API (uvicorn) restarts itself only if run with
+  `--reload`; the worker never auto-reloads, so say it needs a restart. Name the Compose service if it
+  runs in Docker (`docker compose -f infra/docker-compose.yml restart <service>`, or `up --build` if the
+  image or its dependencies changed).
+- **Prompts, model settings, env vars or `.env.example`**: processes read these at start-up, so restart
+  API and worker; new env vars must be added to the user's own `.env`.
+- **Schema or DB migrations**: say whether a migration must be run and whether existing data is affected.
+- **Infra files** (`infra/docker-compose.yml`, Dockerfiles): the affected containers need
+  `up --build` / recreate.
+- **Frontend source**: the Vite dev server hot-reloads; say so. Changes to `vite.config.ts`, PWA/service
+  worker settings or env vars need a dev-server restart, and the browser may need a hard reload or
+  "Unregister service worker" to drop the old cached app.
+Only list what actually applies to the change; do not restart or install anything yourself unless asked.
+
 ## Git workflow (parallel chats and agents)
 Full conventions are in the README, "Git workflow". Rules for Claude:
 - One chat = one worktree = one branch (`<initials>/<topic>`), created from a fresh `origin/main`. Use

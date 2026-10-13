@@ -34,7 +34,7 @@ These are non-negotiable (see [CLAUDE.md](CLAUDE.md)):
 
 ## Architecture
 
-```
+```text
 PWA (React + Vite)            upload → progress → review & edit → approve → export     [MVP]
         │
 API (FastAPI) + RQ worker     jobs, SSE status, review, approval, audit                [MVP, dev auth]
@@ -51,7 +51,7 @@ Pipeline (backend/app/pipeline)
 ```
 
 | Path | Contents |
-|---|---|
+| --- | --- |
 | `backend/app/pipeline/` | Pipeline steps |
 | `backend/app/schemas/` | `intermediate.py` (LLM schema), `source.py` (ingest contract), `api.py` |
 | `backend/app/fhir/` | Own thin Pydantic v2 FHIR R4 models and the per-section mappers |
@@ -258,6 +258,7 @@ Two developers, each with several parallel Claude chats, all pushing to `origin`
 rules are light, but they keep parallel work from colliding.
 
 ### Principles
+
 - `main` is the integration branch and should stay green (ruff, mypy, pytest). There are no required
   approvals and no required PRs: either developer, or any Claude chat acting for them, may land commits on
   `main` directly. Check before landing, not after.
@@ -269,12 +270,15 @@ rules are light, but they keep parallel work from colliding.
   over the working tree and index.
 
 ### Branches and worktrees
+
 - Name branches `<initials>/<topic>`, for example `sr/ground-quotes`.
 - Start from a freshly fetched `origin/main`, with the worktree outside the repo:
+
   ```sh
   git fetch --prune origin
   git worktree add ../ips-generator-wt/<topic> -b <initials>/<topic> origin/main
   ```
+
 - Claude Code chats use `claude --worktree`; subagents that write code use `isolation: "worktree"`.
   Read-only agents (search, review) may share the parent's checkout.
 - Gitignored files do not follow a worktree: copy `.env`, then run `uv sync` and `npm ci`. Parallel
@@ -284,6 +288,7 @@ rules are light, but they keep parallel work from colliding.
   Occasionally run `git fetch --prune` and `git worktree prune`.
 
 ### Fetching and pushing
+
 - **Start of every chat or task:** `git fetch --prune origin`; look at `git log HEAD..origin/main --oneline`;
   rebase if `main` moved.
 - **Look at other branches too**, not only `main`: `git branch -r --no-merged origin/main` (and `gh pr list`
@@ -300,7 +305,9 @@ rules are light, but they keep parallel work from colliding.
 - Never commit `.env`, secrets or real patient data (see [CLAUDE.md](CLAUDE.md)).
 
 ### Review commands (user shorthand)
+
 The user steers each piece of work with three words. Claude acts on them as follows.
+
 - **"test branch"**: run API, worker and PWA from the current worktree so the user can try the change in
   the browser, then reply with the `http://localhost:<port>` link of the PWA. Reuse Compose services
   (postgres, redis, minio, matchbox) that are already running unless the change affects them (new
@@ -320,6 +327,7 @@ The user steers each piece of work with three words. Claude acts on them as foll
 - **After finishing a piece of work**, ask whether the user wants to test, push branch, or approve.
 
 ### Files that conflict often
+
 - `PLAN.md`: tick your task in the same change that completes it and touch only that task's lines.
   Restructure it in a separate small commit and land it quickly.
 - `evals/RESULTS.md`: append entries (date and branch); on conflict keep both.
