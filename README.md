@@ -126,7 +126,7 @@ cd frontend && VITE_API_PROXY=http://localhost:8010 npm run dev   # open the pri
 
 ### Option B: API and worker as local processes
 
-Terminal 1:
+Terminal 1: Docker services + API
 
 ```sh
 # start postgres, redis, minio, matchbox
@@ -142,18 +142,18 @@ uv run alembic upgrade head
 uv run uvicorn app.main:app --reload --port 8010
 ```
 
-Terminal 2:
+Terminal 2: Worker
 
 ```sh
 cd backend
 export APP_ENV=development EXTRACTOR=replay \
   DATABASE_URL=postgresql://ips:ips-dev-password@localhost:5433/ips \
   S3_ACCESS_KEY=ips-dev-access S3_SECRET_KEY=ips-dev-secret-key
-# start worker (--simple: no fork; needed on macOS)
+# start worker, --simple: no fork; needed on macOS
 uv run python -m app.worker --simple
 ```
 
-Terminal 3:
+Terminal 3: Front end
 
 ```sh
 cd frontend && VITE_API_PROXY=http://localhost:8010 npm run dev
