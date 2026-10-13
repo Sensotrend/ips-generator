@@ -245,6 +245,16 @@ PLAN.md  CLAUDE.md  README.md
 
 ### Phase 4 — More inputs & quality
 - [ ] Scanned PDFs, images/photos (multi-page capture): local OCR at ingest; DOCX, HL7 v2, CDA (deterministic parsers where structured) `[opus]`
+- [x] LUVN database dump: per-patient JSON of the table rows + deterministic parser (no LLM) `[opus]`
+  - 2026-10-13. `app/sources/luvn/`: `dump.py` (LUVN JSONL tables → SQLite → one dump per patient; each table is a
+    property of `tables`, original column names), `parse.py` (dump → `IpsExtraction`; quotes and locators come from the
+    ingested JSON leaves, so grounding is `exact`), `icd10_fi.py` (display names for the 30 codes in the data).
+    `StructuredFirstExtractor` routes dumps to the parser and everything else to the configured extractor. CLI:
+    `scripts/luvn_dump.py`; format and how to produce it: `app/sources/luvn/README.md`.
+  - Mapped: patient (birth date, sex, ids; no name in the tables), medications (`laakitys`, ATC as printed-code hint),
+    problems (`diagnoosi`, ICD-10 as printed-code hint). Allergies: `no_information`. Labs, procedures and encounters
+    stay in the dump until the Results/Procedures sections exist. 1,000 sample patients: every quote grounds exactly.
+  - Not validated in Matchbox yet (Docker was unavailable). The HTML IPS reader is a later task.
 - [ ] Multi-document merge into one IPS (future enhancement per D-12: multi-document upload, and merging several IPS summaries; dedupe meds/problems across docs; D-11: a "none known" claim contradicted by another document is not asserted and is flagged) `[fable]`
 - [ ] Rendered human-readable IPS view (Composition narrative) `[sonnet]`
 - [ ] Prompt caching for system prompt + schema; Batch API path for bulk backfills `[sonnet]`

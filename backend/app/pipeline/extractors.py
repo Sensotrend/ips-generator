@@ -1,6 +1,10 @@
 """Extractors used by the API/worker pipeline (`app.pipeline.run`).
 
 * `ClaudeExtractor` calls the real extraction step (`app.pipeline.extract.extract`).
+* `LuvnDumpExtractor` reads a LUVN patient dump (JSON) with the deterministic parser in
+  `app.sources.luvn.parse`: no LLM, no cost. `build_extractor` puts it in front of the configured
+  extractor (`StructuredFirstExtractor`), so a LUVN dump is always parsed and any other document
+  goes on to the configured extractor.
 * `ReplayExtractor` (**development only**) answers with the gold extraction of an eval dataset
   case (``evals/dataset/<case>/document.*`` + ``gold.json``) whose document bytes are
   byte-identical (SHA-256) to the upload. It lets the whole app run end to end without paid API
@@ -12,6 +16,7 @@ Neither logs document content; error messages are fixed strings.
 from __future__ import annotations
 
 import hashlib
+import json
 import logging
 from dataclasses import dataclass
 from pathlib import Path
@@ -21,6 +26,7 @@ from app.config import ExtractorKind, Settings
 from app.llm.client import LlmClient
 from app.schemas.intermediate import IpsExtraction
 from app.schemas.source import IngestedDocument
+from app.sources.luvn.parse import is_luvn_dump, parse_dump
 
 logger = logging.getLogger(__name__)
 
@@ -29,8 +35,10 @@ __all__ = [
     "Extractor",
     "ExtractorConfigError",
     "ExtractorOutput",
+    "LuvnDumpExtractor",
     "ReplayExtractor",
     "ReplayMissError",
+    "StructuredFirstExtractor",
     "build_extractor",
 ]
 
@@ -118,10 +126,48 @@ class ClaudeExtractor:
         )
 
 
+class LuvnDumpExtractor:
+    """Deterministic parser for LUVN patient dumps (no LLM)."""
+
+    name = "luvn-dump"
+    model = "luvn-dump-parser"
+
+    @staticmethod
+    def accepts(data: bytes, doc: IngestedDocument) -> bool:
+        if doc.media_type != "application/json":
+            return False
+        try:
+            return is_luvn_dump(json.loads(data))
+        except ValueError:  # not JSON (cannot happen after ingest), or not UTF-8
+            return False
+
+    def __call__(self, data: bytes, doc: IngestedDocument) -> ExtractorOutput:
+        return ExtractorOutput(
+            extraction=parse_dump(json.loads(data), doc), model=self.model, prompt_version=None
+        )
+
+
+class StructuredFirstExtractor:
+    """Use the deterministic LUVN parser for LUVN dumps, the fallback extractor for the rest."""
+
+    def __init__(self, fallback: Extractor) -> None:
+        self._fallback = fallback
+        self._luvn = LuvnDumpExtractor()
+        self.name = fallback.name
+
+    def __call__(self, data: bytes, doc: IngestedDocument) -> ExtractorOutput:
+        if self._luvn.accepts(data, doc):
+            return self._luvn(data, doc)
+        return self._fallback(data, doc)
+
+
 def build_extractor(settings: Settings) -> Extractor:
-    """The extractor selected by ``EXTRACTOR``. Replay refuses to run outside development."""
+    """The extractor selected by ``EXTRACTOR``, behind the LUVN dump parser.
+
+    Replay refuses to run outside development.
+    """
     if settings.extractor is ExtractorKind.REPLAY:
         if not settings.is_development:
             raise ExtractorConfigError("EXTRACTOR=replay is only allowed with APP_ENV=development")
-        return ReplayExtractor(settings.replay_dataset_dir)
-    return ClaudeExtractor()
+        return StructuredFirstExtractor(ReplayExtractor(settings.replay_dataset_dir))
+    return StructuredFirstExtractor(ClaudeExtractor())
