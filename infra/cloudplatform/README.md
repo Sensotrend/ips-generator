@@ -24,7 +24,10 @@ To deploy: push to `main`, or `gh workflow run deploy.yml -f ref=<branch>`. Depl
 3. **API token.** In the dashboard create an access token (Settings, Access Tokens) with API access.
 4. **GitHub.** Create the Environment `dev` with the secrets `JELASTIC_API_URL` (the platform's API host,
    `https://app.<region domain>`) and `JELASTIC_TOKEN`, and the variable `JELASTIC_ENV_NAME`.
-5. Open the web node's public URL (needs TLS for the service worker; use the Let's Encrypt add-on).
+5. Custom domain: point an A record at the public IP of the `bl` (NGINX load balancer) node, bind the domain
+   to the environment (Settings → Custom Domains), then install the Let's Encrypt add-on on `bl`. The balancer
+   must forward to the `web` node on port 80; if it does not pick it up automatically, add an upstream to
+   `/etc/nginx/conf.d/` on `bl`.
 
 ## Unverified: check these on the platform
 
@@ -33,7 +36,7 @@ To deploy: push to `main`, or `gh workflow run deploy.yml -f ref=<branch>`. Depl
 - API host and the exact method name/parameters of `RedeployContainersByGroup`.
 - Whether `${nodes.<group>.master.intIP}` stays stable after a redeploy (the NGINX upstream and the
   env vars of api/worker use these IPs). If not, switch to the nodes' internal hostnames.
-- How the public domain is mapped to the `web` node (`extip: true` buys a public IP; the shared load
+- Whether the NGINX balancer (`bl`) picks up the Docker `web` node automatically (otherwise set the upstream by hand).
   balancer with the environment domain may be cheaper).
 - Postgres 18 and the MinIO image running as Docker nodes with volumes at the paths given.
 - Cloudlet sizes (1 cloudlet = 128 MiB RAM): Matchbox gets up to 4 GB.

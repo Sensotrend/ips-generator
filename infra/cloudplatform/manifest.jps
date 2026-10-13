@@ -88,6 +88,13 @@ nodes:
     cmd: python -m app.worker
     count: 1
     cloudlets: 16
+  # Public entry point: NGINX load balancer with a public IP. Bind the custom domain and the
+  # Let's Encrypt add-on to this node (see README).
+  - nodeGroup: bl
+    nodeType: nginx
+    count: 1
+    cloudlets: 8
+    extip: true
   - nodeGroup: web
     nodeType: docker
     image: ${settings.ghcrOwnerRepo}-web:${settings.tag}
@@ -97,7 +104,6 @@ nodes:
       password: ${settings.ghcrToken}
     count: 1
     cloudlets: 4
-    extip: true            # public entry point; check how the platform maps the environment domain
 
 globals:
   appEnv:
