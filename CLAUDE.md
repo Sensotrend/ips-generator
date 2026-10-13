@@ -28,7 +28,9 @@ and phased task list. Work on the current phase, tick completed tasks, and note 
   and to `fi.ts` and `sv.ts`, and use `t(...)`. **Whenever you change the frontend, check the
   translations:** new or reworded English text needs matching Finnish and Swedish, and removed text
   must be removed from all three catalogues. `lib/i18n.test.ts` checks the keys and placeholders but
-  not the wording, so re-read the fi/sv text you touched.
+  not the wording, so re-read the fi/sv text you touched. **When you change fi/sv text, end your report
+  with clickable links to `fi.ts` and `sv.ts` in the current worktree** (so the reviewer can read them
+  in context); for small changes also show the new strings as a table (key, EN, FI, SV).
 - Local services: `docker compose -f infra/docker-compose.yml up`.
 - Prompts live as versioned files in `backend/app/llm/prompts/`; bump the version when changing one.
 
