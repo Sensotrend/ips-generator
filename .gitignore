@@ -26,3 +26,6 @@ coverage/
 # Eval run outputs (synthetic data only; keep the directory)
 evals/runs/*
 !evals/runs/.gitkeep
+
+# Generated test data (hackathon dumps; see HACKATHON-TEST-DATA.md)
+/testdata/

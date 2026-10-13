@@ -8,7 +8,8 @@ Run from ``backend/``::
 Filters (all that are given must hold): ``--id <id>`` (repeatable), ``--with-labs``,
 ``--with-procedures``, ``--has-long-term-dx``, ``--active-meds``, ``--min-score N``,
 ``--random-seed S`` (shuffle before ``--limit``). ``--limit N`` stops after N dumps that pass
-every filter. Besides ``<asiakas_id>.json`` per patient, ``manifest.json`` lists the files best
+every filter (the first N, not the best); ``--top N`` ranks all matching patients by score and
+dumps the N best. Besides ``<asiakas_id>.json`` per patient, ``manifest.json`` lists the files best
 first (see ``app.sources.luvn.manifest``). Prints counts and file names only, never row contents.
 """
 
@@ -43,6 +44,7 @@ def _parser() -> argparse.ArgumentParser:
     out.add_argument("--min-score", type=int, default=0)
     out.add_argument("--random-seed", type=int)
     out.add_argument("--limit", "--first", dest="limit", type=int, help="at most N dumps")
+    out.add_argument("--top", type=int, help="the N highest-scoring patients (ranks all first)")
     out.add_argument("--exported-at", type=dt.date.fromisoformat, default=None)
     return parser
 
@@ -70,11 +72,21 @@ def main(argv: list[str] | None = None) -> int:
         filters["min_score"] = args.min_score
     if args.limit:
         filters["limit"] = args.limit
+    if args.top:
+        filters["top"] = args.top
     args.out_dir.mkdir(parents=True, exist_ok=True)
     entries: list[dict[str, Any]] = []
     with sqlite3.connect(args.db) as con:
         candidates = select_patient_ids(con, flt, exported_at=exported_at)
-        for asiakas_id in candidates:
+        wanted = candidates
+        if args.top:  # rank every candidate first, then dump only the best
+            scored = (
+                (summarise(dump_patient(con, i, exported_at=exported_at))["score"], i)
+                for i in candidates
+            )
+            ranked = sorted((-score, i) for score, i in scored if score >= args.min_score)
+            wanted = [i for _, i in ranked[: args.top]]
+        for asiakas_id in wanted:
             if args.limit and len(entries) >= args.limit:
                 break
             dump = dump_patient(con, asiakas_id, exported_at=exported_at)

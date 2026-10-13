@@ -509,3 +509,14 @@ def test_cli_writes_dumps_and_manifest(db: Path, tmp_path: Path) -> None:
     assert main(["dump", str(db), str(tmp_path / "o2"), "--min-score", "99"]) == 1
     assert main(["dump", str(db), str(tmp_path / "o3"), "--limit", "1"]) == 0
     assert len(json.loads((tmp_path / "o3/manifest.json").read_text())["patients"]) == 1
+
+
+def test_cli_top_dumps_the_best_scoring_patients(db: Path, tmp_path: Path) -> None:
+    from scripts.luvn_dump import main
+
+    out = tmp_path / "top"
+    assert main(["dump", str(db), str(out), "--top", "1", "--exported-at", "2026-10-13"]) == 0
+    manifest = json.loads((out / "manifest.json").read_text(encoding="utf-8"))
+    # patient 1 (score 9) outranks patient 2, although patient 2 is not first in --limit order
+    assert [p["asiakas_id"] for p in manifest["patients"]] == ["SYN-ASI-1"]
+    assert manifest["meta"]["filters"]["top"] == 1

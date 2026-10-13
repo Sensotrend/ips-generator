@@ -19,6 +19,8 @@ Run one query per table. `asiakas`, `kontakti`, `diagnoosi`, `laakitys`, `vastau
 medication still active". Tables without rows are `[]`.
 
 ## Try it with the hackathon data
+Step-by-step: [HACKATHON-TEST-DATA.md](../../../../HACKATHON-TEST-DATA.md).
+
 ```sh
 cd backend
 uv run python -m scripts.luvn_dump import <LUVN>/2024-2026/clinical/tables /tmp/luvn.db   # ~2 s
@@ -31,7 +33,7 @@ uv run python -m scripts.luvn_dump dump /tmp/luvn.db /tmp/rich --with-labs --act
 Filters (all that are given must hold): `--id <id>` (repeatable), `--with-labs`, `--with-procedures`,
 `--has-long-term-dx`, `--active-meds` (a medication with no end date, or ending on/after the export date;
 `--exported-at YYYY-MM-DD` sets that date, default today), `--min-score N`, `--random-seed S` (shuffle the
-candidates), `--limit N` (stop after N dumps that pass every filter). The database filters run in SQL;
+candidates), `--limit N` (stop after N dumps that pass every filter; the first N, not the best), `--top N` (rank all matching patients by score and dump the N best). The database filters run in SQL;
 `--min-score` is checked on each dump before it is written.
 
 ### `manifest.json`
