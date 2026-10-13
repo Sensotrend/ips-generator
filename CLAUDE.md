@@ -30,3 +30,20 @@ and phased task list. Work on the current phase, tick completed tasks, and note 
 - Unit tests pass (`pytest`), mappers covered by tests.
 - Generated Bundles validate against the IPS IG in Matchbox with no errors.
 - Run `evals/run_evals.py` for extraction/prompt changes and record results in `evals/RESULTS.md`.
+
+## Git workflow (parallel chats and agents)
+Full conventions are in the README, "Git workflow". Rules for Claude:
+- One chat = one worktree = one branch (`<initials>/<topic>`), created from a fresh `origin/main`. Use
+  `claude --worktree`; subagents that write code use `isolation: "worktree"`. Never work on `main` in a
+  checkout another chat may be using.
+- At the start of a task: `git fetch --prune origin`, check whether `main` moved, and look at
+  `git branch -r --no-merged origin/main` to see what the other developer is doing. Base work on
+  `origin/main` only.
+- Commit and push only when the user asks or the task says so. When pushing is in scope, push the branch
+  at least hourly. Landing on `main` is allowed without a PR: rebase on `origin/main`, run the tests,
+  `git push origin HEAD:main`. Linear history only: no merge commits, never force-push `main`;
+  `--force-with-lease` only on your own branch.
+- Never run `git stash`, `reset --hard`, `clean` or `checkout .` on a tree you did not create, and never
+  delete branches or worktrees you did not create. If you find uncommitted changes you did not make, stop
+  and ask.
+- Subagents leave their work on their own branch and report back; they do not push to `main`.

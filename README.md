@@ -174,6 +174,64 @@ uv run python ../evals/run_evals.py --predictions cached --run ../evals/runs/<ru
 Options, run output and recorded results are in [evals/RESULTS.md](evals/RESULTS.md). The dataset and
 its gold-authoring rules are described in [evals/dataset/README.md](evals/dataset/README.md).
 
+## Git workflow
+
+Two developers, each with several parallel Claude chats, all pushing to `origin`. We move fast, so the
+rules are light, but they keep parallel work from colliding.
+
+### Principles
+- `main` is the integration branch and should stay green (ruff, mypy, pytest). There are no required
+  approvals and no required PRs: either developer, or any Claude chat acting for them, may land commits on
+  `main` directly. Check before landing, not after.
+- **Linear history, rebase only.** Never create merge commits; land work with `git rebase origin/main`
+  followed by a fast-forward push (`git push origin HEAD:main`). If the push is rejected, fetch, rebase
+  and retry. Never force-push `main`.
+- Branches are short-lived and cover one task from `PLAN.md`. Land them within a day or two.
+- **One chat = one worktree = one branch.** Never run two chats in the same checkout; they would fight
+  over the working tree and index.
+
+### Branches and worktrees
+- Name branches `<initials>/<topic>`, for example `sr/ground-quotes`.
+- Start from a freshly fetched `origin/main`, with the worktree outside the repo:
+  ```sh
+  git fetch --prune origin
+  git worktree add ../ips-generator-wt/<topic> -b <initials>/<topic> origin/main
+  ```
+- Claude Code chats use `claude --worktree`; subagents that write code use `isolation: "worktree"`.
+  Read-only agents (search, review) may share the parent's checkout.
+- Gitignored files do not follow a worktree: copy `.env`, then run `uv sync` and `npm ci`. Parallel
+  worktrees must not start the Compose stack twice on the same ports. Start it once and share it, or set
+  `COMPOSE_PROJECT_NAME` and port overrides (see [Running locally](#running-locally)).
+- After landing, remove the worktree and branch: `git worktree remove <path>`, `git branch -d <branch>`.
+  Occasionally run `git fetch --prune` and `git worktree prune`.
+
+### Fetching and pushing
+- **Start of every chat or task:** `git fetch --prune origin`; look at `git log HEAD..origin/main --oneline`;
+  rebase if `main` moved.
+- **Look at other branches too**, not only `main`: `git branch -r --no-merged origin/main` (and `gh pr list`
+  if you use PRs) shows what the other developer is working on, so you avoid overlapping work. Always
+  *base* your work on `origin/main`, never on someone else's unmerged branch.
+- **Push at least hourly.** Push your branch to `origin` after the first commit and at least once an hour
+  while working, plus at the end of every session, so nothing lives only on one laptop. WIP is fine on
+  your own branch (`git push -u origin HEAD`; after a rebase use `--force-with-lease`, on your own
+  branches only).
+- **Land on `main`** when a task is done and checks pass: fetch, rebase onto `origin/main`, run the
+  tests, `git push origin HEAD:main`. Pipeline changes also meet the definition of done below. A PR is
+  optional (use one when you want a second opinion or CI before landing).
+- Commit small, one logical change per commit; the message says why, imperative mood.
+- Never commit `.env`, secrets or real patient data (see [CLAUDE.md](CLAUDE.md)).
+
+### Files that conflict often
+- `PLAN.md`: tick your task in the same change that completes it and touch only that task's lines.
+  Restructure it in a separate small commit and land it quickly.
+- `evals/RESULTS.md`: append entries (date and branch); on conflict keep both.
+- `backend/uv.lock`, `package-lock.json`: don't hand-merge. Take `origin/main`'s version, then rerun
+  `uv lock` or `npm install`. Land dependency changes quickly in their own commit.
+- Prompts in `backend/app/llm/prompts/`: the version bump goes in the same commit as the change; after a
+  rebase conflict, take the next free version number.
+- `backend/app/llm/models.py` and `backend/app/schemas/intermediate.py`: everything depends on them;
+  tell the other developer before changing them.
+
 ## Definition of done for pipeline changes
 
 - `pytest` passes and the mappers are covered by tests.
