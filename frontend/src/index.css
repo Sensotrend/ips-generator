@@ -392,6 +392,43 @@ main {
   overflow-wrap: anywhere;
 }
 
+.fact-source-link {
+  border: 0;
+  padding: 0;
+  background: none;
+  font: inherit;
+  text-align: left;
+  min-height: 0;
+  cursor: pointer;
+}
+
+.fact-source-link:hover q {
+  text-decoration: underline;
+}
+
+.source-mode {
+  display: flex;
+  gap: 0.25rem;
+  margin: 0.5rem 0;
+}
+
+.source-mode button[aria-pressed='true'] {
+  font-weight: 600;
+  background: var(--tint-soft);
+}
+
+.source-json {
+  margin: 0;
+  font-size: 0.8rem;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.source-json .seg-focus {
+  display: block;
+  background: var(--mark);
+}
+
 .chips {
   list-style: none;
   display: flex;

@@ -7,7 +7,16 @@ import { TextSourceViewer } from './TextSourceViewer'
 // pdf.js is large: load it only when a PDF is reviewed.
 const PdfSourceViewer = lazy(() => import('./PdfSourceViewer'))
 
-export function SourceViewer({ jobId, focus }: { jobId: string; focus: SourceRef | null }) {
+export function SourceViewer({
+  jobId,
+  focus,
+  noSource = false,
+}: {
+  jobId: string
+  focus: SourceRef | null
+  /** A fact without a source reference is selected. */
+  noSource?: boolean
+}) {
   const source = useSource(jobId, true)
   const { t } = useT()
   if (source.isPending) return <p className="muted">{t('source.loading')}</p>
@@ -23,7 +32,7 @@ export function SourceViewer({ jobId, focus }: { jobId: string; focus: SourceRef
             {focus.locator ? `, ${focus.locator}` : ''}
           </span>
         ) : (
-          <span className="muted">{t('source.select')}</span>
+          <span className="muted">{t(noSource ? 'source.none' : 'source.select')}</span>
         )}
       </header>
       {data.pages_without_text.length > 0 && (

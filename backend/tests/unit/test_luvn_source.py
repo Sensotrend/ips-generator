@@ -270,7 +270,9 @@ def test_parse_patient(db: Path) -> None:
     extraction, _, _ = _parse(_dump(db, "SYN-ASI-1"))
     p = extraction.patient
     assert extraction.document_language == "fi"
-    assert p.names == []
+    assert [(n.text, n.family, n.given, n.locator) for n in p.names] == [
+        ("SYN-ASI-1", None, [], "$.tables.asiakas[0].asiakas_id")
+    ]
     assert p.birth_date is not None
     assert p.birth_date.value == "1980-05-17"
     assert p.birth_date.locator == "$.tables.asiakas[0].syntymapaiva"

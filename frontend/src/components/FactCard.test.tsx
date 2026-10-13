@@ -37,7 +37,13 @@ describe('FactCard', () => {
       [[{ action: 'accept', path: f.path }]],
       [[{ action: 'reject', path: f.path }]],
     ])
-    fireEvent.click(screen.getByRole('button', { name: /Sulfa-antibiootit/ }))
+    fireEvent.click(screen.getByText('Sulfa-antibiootit'))
+    expect(onSelect).toHaveBeenCalledWith(f)
+  })
+
+  it('selects the fact when its source quote is clicked', () => {
+    const { onSelect, f } = renderCard()
+    fireEvent.click(screen.getByRole('button', { name: /p\. 1, line 3/ }))
     expect(onSelect).toHaveBeenCalledWith(f)
   })
 

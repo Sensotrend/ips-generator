@@ -8,6 +8,7 @@ document content: log lines carry job ids, codes and counts only.
 from __future__ import annotations
 
 import hashlib
+import json
 import logging
 from collections.abc import AsyncIterator
 from typing import Annotated, Any, Final
@@ -312,13 +313,27 @@ def get_source(job_id: UUID, services: ServicesDep, user: CurrentUserDep) -> Sou
             raise ApiError(409, "source_not_ready", "The document has not been processed yet.")
         document: dict[str, Any] = source.document
         is_pdf = job.media_type.startswith(_PDF)
+        json_text = (
+            _json_text(services.store.get(job.object_key))
+            if document["media_type"] == "application/json"
+            else None
+        )
         return SourceOut(
             media_type=document["media_type"],
             page_count=document.get("page_count", 1),
             pages_without_text=list(document.get("pages_without_text", [])),
             segments=[SegmentOut.model_validate(s) for s in document["segments"]],
             original_url=f"/api/jobs/{job_id}/source/original" if is_pdf else None,
+            json_text=json_text,
         )
+
+
+def _json_text(data: bytes) -> str | None:
+    """The uploaded JSON re-serialised compactly (the viewer indents it); None if unreadable."""
+    try:
+        return json.dumps(json.loads(data.decode("utf-8-sig")), ensure_ascii=False)
+    except (ValueError, RecursionError):
+        return None
 
 
 @router.get("/jobs/{job_id}/source/original", response_class=Response)

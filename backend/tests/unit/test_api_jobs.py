@@ -133,6 +133,14 @@ def test_source_segments_and_original(client: TestClient) -> None:
     assert source["media_type"] == "text/plain"
     assert source["original_url"] is None
     assert any(s["locator"] == "line 6" for s in source["segments"])
+    assert source["json_text"] is None
+
+    json_job = _job_id(client, "fi07_ehr_export_json")
+    json_source = client.get(f"/api/jobs/{json_job}/source").json()
+    assert json_source["media_type"] == "application/json"
+    assert json.loads(json_source["json_text"]) == json.loads(
+        dataset_document("fi07_ehr_export_json").read_bytes()
+    )
 
     pdf_job = _job_id(client, PDF_CASE)
     pdf_source = client.get(f"/api/jobs/{pdf_job}/source").json()

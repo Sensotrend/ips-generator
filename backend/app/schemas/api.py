@@ -92,6 +92,8 @@ class SourceOut(BaseModel):
     segments: list[SegmentOut]
     original_url: str | None
     """Download URL of the original file (PDF only: the viewer renders it with pdf.js)."""
+    json_text: str | None = None
+    """JSON documents only: the document re-serialised, for the viewer's raw-JSON mode."""
 
 
 # ---- draft ----------------------------------------------------------------------------------

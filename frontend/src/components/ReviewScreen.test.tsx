@@ -42,7 +42,7 @@ describe('ReviewScreen', () => {
   it('highlights the selected fact quote in the source', async () => {
     stubApi()
     renderReview()
-    fireEvent.click(await screen.findByRole('button', { name: /Sulfa-antibiootit/ }))
+    fireEvent.click(await screen.findByText('Sulfa-antibiootit', { selector: '.fact-title' }))
     const sourcePane = await screen.findByRole('region', { name: 'Source document' })
     const mark = await within(sourcePane).findByText('Sulfa-antibiootit: ihottuma (2009)', {
       selector: 'mark',

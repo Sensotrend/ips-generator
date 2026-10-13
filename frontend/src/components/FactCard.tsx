@@ -46,11 +46,18 @@ export function FactCard({ fact, selected, readOnly, busy, onSelect, onActions }
       )}
       {fact.source && (
         <p className="fact-source">
-          <span className="muted">
-            {t('fact.page', { page: fact.source.page })}
-            {fact.source.locator ? `, ${fact.source.locator}` : ''}:
-          </span>{' '}
-          <q>{fact.source.quote}</q>
+          <button
+            type="button"
+            className="fact-source-link"
+            title={t('fact.showInSource')}
+            onClick={() => onSelect(fact)}
+          >
+            <span className="muted">
+              {t('fact.page', { page: fact.source.page })}
+              {fact.source.locator ? `, ${fact.source.locator}` : ''}:
+            </span>{' '}
+            <q>{fact.source.quote}</q>
+          </button>
         </p>
       )}
       <FlagChips flags={fact.flags} />

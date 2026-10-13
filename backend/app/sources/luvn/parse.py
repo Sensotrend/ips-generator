@@ -4,7 +4,7 @@ Mapping (one rule per field, nothing inferred beyond it):
 
 * ``asiakas`` -> patient: ``syntymapaiva`` birth date, ``sukupuoli`` gender (MIES/NAINEN),
   ``asiakas_id`` and ``henkilotunnus`` identifiers, ``kieli`` document language. The tables hold no
-  name, so ``names`` is empty.
+  name, so ``asiakas_id`` stands in as the patient's name (the clinician can edit it in review).
 * ``laakitys`` -> one medication per row: ``vaikuttava_aine`` name, ``atc_koodi`` printed code
   (hint only, D-9), dates, ``TARVITTAESSA`` = as needed. Active when the end date is not before the
   export date, else completed.
@@ -111,8 +111,20 @@ def _patient(client: dict[str, Any], quote: _Quoter) -> dict[str, Any]:
         else None
     )
     gender = _GENDERS.get(str(client.get("sukupuoli")))
+    names = (
+        [
+            {
+                **quote.at("asiakas", 0, "asiakas_id"),
+                "text": str(client["asiakas_id"]),
+                "family": "",
+                "given": [],
+            }
+        ]
+        if client.get("asiakas_id")
+        else []
+    )
     return {
-        "names": [],
+        "names": names,
         "birth_date": birth_date,
         "gender": {**quote.at("asiakas", 0, "sukupuoli"), "value": gender} if gender else None,
         "identifiers": identifiers,

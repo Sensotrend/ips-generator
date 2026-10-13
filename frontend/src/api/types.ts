@@ -43,6 +43,8 @@ export interface Source {
   pages_without_text: number[]
   segments: Segment[]
   original_url: string | null
+  /** JSON documents: the document as compact JSON, for the raw-JSON view. */
+  json_text?: string | null
 }
 
 export type Decision = 'pending' | 'accepted' | 'edited' | 'rejected'
