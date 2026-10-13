@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import datetime as dt
 import json
+import random
 import re
 import sqlite3
 from collections.abc import Iterator
@@ -29,9 +30,11 @@ __all__ = [
     "DUMP_FORMAT",
     "DUMP_VERSION",
     "TABLES",
+    "PatientFilter",
     "dump_patient",
     "import_tables",
     "patient_ids",
+    "select_patient_ids",
 ]
 
 DUMP_FORMAT: Final = "luvn-clinical-dump"
@@ -157,6 +160,66 @@ def patient_ids(db_path: Path) -> list[str]:
     """All ``asiakas_id`` values, in table order."""
     with sqlite3.connect(db_path) as con:
         return [r[0] for r in con.execute("SELECT asiakas_id FROM asiakas ORDER BY rowid")]
+
+
+@dataclass(frozen=True)
+class PatientFilter:
+    """Which patients to dump. All set conditions must hold (SQL, so it stays cheap)."""
+
+    ids: tuple[str, ...] = ()
+    with_labs: bool = False
+    with_procedures: bool = False
+    has_long_term_dx: bool = False
+    active_meds: bool = False
+    """A medication with no end date or an end date on/after the export date."""
+    random_seed: int | None = None
+    """Shuffle the candidates with this seed (``None`` keeps table order)."""
+
+    def conditions(self) -> list[str]:
+        conds = []
+        if self.with_labs:
+            conds.append(
+                "EXISTS (SELECT 1 FROM vastausarkistohistoria_view v"
+                " WHERE v.asiakas_id = a.asiakas_id)"
+            )
+        if self.with_procedures:
+            conds.append(
+                "EXISTS (SELECT 1 FROM toimenpide t"
+                " JOIN kontakti k ON k.kontakti_id = t.kontakti_id"
+                " WHERE k.asiakas_id = a.asiakas_id)"
+            )
+        if self.has_long_term_dx:
+            conds.append(
+                "EXISTS (SELECT 1 FROM diagnoosi d WHERE d.asiakas_id = a.asiakas_id"
+                " AND d.onko_pitkaaikaisdiagnoosi = 1)"
+            )
+        if self.active_meds:
+            conds.append(
+                "EXISTS (SELECT 1 FROM laakitys l WHERE l.asiakas_id = a.asiakas_id"
+                " AND (l.laakitys_paattymispvm IS NULL OR l.laakitys_paattymispvm >= ?))"
+            )
+        return conds
+
+    def describe(self) -> dict[str, object]:
+        return {k: v for k, v in self.__dict__.items() if v not in (False, None, ())}
+
+
+def select_patient_ids(
+    con: sqlite3.Connection, flt: PatientFilter, *, exported_at: dt.date
+) -> list[str]:
+    """Matching ``asiakas_id`` values in table order (shuffled when ``random_seed`` is set)."""
+    conds = flt.conditions()
+    params: list[object] = [exported_at.isoformat()] if flt.active_meds else []
+    if flt.ids:
+        conds.append(f"a.asiakas_id IN ({', '.join('?' for _ in flt.ids)})")
+        params.extend(flt.ids)
+    where = f" WHERE {' AND '.join(conds)}" if conds else ""
+    # Conditions are fixed strings from `conditions`; values are bound parameters.
+    rows = con.execute(f"SELECT a.asiakas_id FROM asiakas a{where} ORDER BY a.rowid", params)  # noqa: S608
+    ids = [r[0] for r in rows]
+    if flt.random_seed is not None:
+        random.Random(flt.random_seed).shuffle(ids)  # noqa: S311 - sampling, not security
+    return ids
 
 
 def dump_patient(

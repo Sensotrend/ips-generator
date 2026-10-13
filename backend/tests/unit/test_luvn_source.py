@@ -28,7 +28,15 @@ from app.schemas.intermediate import (
     NoInformation,
 )
 from app.schemas.source import IngestedDocument
-from app.sources.luvn.dump import TABLES, dump_patient, import_tables, patient_ids
+from app.sources.luvn.dump import (
+    TABLES,
+    PatientFilter,
+    dump_patient,
+    import_tables,
+    patient_ids,
+    select_patient_ids,
+)
+from app.sources.luvn.manifest import build_manifest, summarise
 from app.sources.luvn.parse import LuvnDumpError, is_luvn_dump, parse_dump
 
 EXPORTED = dt.date(2026, 10, 13)
@@ -401,3 +409,103 @@ def test_pipeline_end_to_end_without_llm(db: Path) -> None:
     assert not result.flags
     assert result.grounding_counts["exact"] > 0
     assert result.grounding_counts["not_found"] == 0
+
+
+# ---- patient filters and manifest -----------------------------------------------------------
+
+
+def _ids(db: Path, **kwargs: Any) -> list[str]:
+    with sqlite3.connect(db) as con:
+        return select_patient_ids(con, PatientFilter(**kwargs), exported_at=EXPORTED)
+
+
+def test_no_filter_selects_everyone(db: Path) -> None:
+    assert _ids(db) == ["SYN-ASI-1", "SYN-ASI-2"]
+
+
+def test_filters_select_on_the_database(db: Path) -> None:
+    assert _ids(db, with_labs=True) == ["SYN-ASI-1", "SYN-ASI-2"]
+    assert _ids(db, has_long_term_dx=True) == ["SYN-ASI-1"]
+    assert _ids(db, with_procedures=True) == ["SYN-ASI-1", "SYN-ASI-2"]
+    # patient 1's medications: one ends 2026-12-31, patient 2's also: both active on the export date
+    assert _ids(db, active_meds=True) == ["SYN-ASI-1", "SYN-ASI-2"]
+    assert _ids(db, has_long_term_dx=True, ids=("SYN-ASI-2",)) == []
+    assert _ids(db, ids=("SYN-ASI-2",)) == ["SYN-ASI-2"]
+
+
+def test_active_meds_respects_the_export_date(db: Path) -> None:
+    with sqlite3.connect(db) as con:
+        later = select_patient_ids(
+            con, PatientFilter(active_meds=True), exported_at=dt.date(2027, 6, 1)
+        )
+    assert later == []
+
+
+def test_random_seed_is_reproducible(db: Path) -> None:
+    assert _ids(db, random_seed=3) == _ids(db, random_seed=3)
+    assert sorted(_ids(db, random_seed=3)) == ["SYN-ASI-1", "SYN-ASI-2"]
+
+
+def test_summary_counts_and_score(db: Path) -> None:
+    s = summarise(_dump(db, "SYN-ASI-1"))
+    assert s["asiakas_id"] == "SYN-ASI-1"
+    assert s["counts"] == {
+        "problems": 3,
+        "long_term_problems": 1,
+        "medications": 2,
+        "active_medications": 1,
+    }
+    assert s["ips_sections"] == ["problems", "medications"]
+    assert s["not_mapped"] == {"lab_results": 1, "procedures": 1, "encounters": 2}
+    assert s["score"] == 3 + 1 + 5
+
+
+def test_summary_agrees_with_the_parser(db: Path) -> None:
+    for asiakas_id in ("SYN-ASI-1", "SYN-ASI-2"):
+        dump = _dump(db, asiakas_id)
+        extraction, _, _ = _parse(dump)
+        counts = summarise(dump)["counts"]
+        assert isinstance(extraction.problems, ItemsFound)
+        assert isinstance(extraction.medications, ItemsFound)
+        assert counts["problems"] == len(extraction.problems.items)
+        assert counts["medications"] == len(extraction.medications.items)
+        active = [m for m in extraction.medications.items if m.status.value == "active"]
+        assert counts["active_medications"] == len(active)
+
+
+def test_summary_of_an_empty_patient(db: Path) -> None:
+    dump = _dump(db, "SYN-ASI-1")
+    dump["tables"]["laakitys"] = []
+    dump["tables"]["diagnoosi"] = []
+    s = summarise(dump)
+    assert s["score"] == 0
+    assert s["ips_sections"] == []
+
+
+def test_manifest_is_sorted_best_first(db: Path) -> None:
+    entries = [{"file": f"{i}.json", **summarise(_dump(db, i))} for i in ("SYN-ASI-2", "SYN-ASI-1")]
+    manifest = build_manifest(entries, exported_at=EXPORTED, filters={"with_labs": True})
+    assert manifest["meta"]["format"] == "luvn-dump-manifest"
+    assert manifest["meta"]["filters"] == {"with_labs": True}
+    scores = [p["score"] for p in manifest["patients"]]
+    assert scores == sorted(scores, reverse=True)
+    assert manifest["patients"][0]["asiakas_id"] == "SYN-ASI-1"
+    # ids and counts only: no row contents
+    assert "1980-05-17" not in json.dumps(manifest)
+
+
+def test_cli_writes_dumps_and_manifest(db: Path, tmp_path: Path) -> None:
+    from scripts.luvn_dump import main
+
+    out = tmp_path / "out"
+    args = ["dump", str(db), str(out), "--has-long-term-dx", "--exported-at", "2026-10-13"]
+    assert main(args) == 0
+    names = sorted(p.name for p in out.iterdir())
+    assert names == ["SYN-ASI-1.json", "manifest.json"]
+    manifest = json.loads((out / "manifest.json").read_text(encoding="utf-8"))
+    assert [p["file"] for p in manifest["patients"]] == ["SYN-ASI-1.json"]
+    assert is_luvn_dump(json.loads((out / "SYN-ASI-1.json").read_text(encoding="utf-8")))
+    # the limit and the minimum score apply after the database filters
+    assert main(["dump", str(db), str(tmp_path / "o2"), "--min-score", "99"]) == 1
+    assert main(["dump", str(db), str(tmp_path / "o3"), "--limit", "1"]) == 0
+    assert len(json.loads((tmp_path / "o3/manifest.json").read_text())["patients"]) == 1

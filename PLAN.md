@@ -255,6 +255,9 @@ PLAN.md  CLAUDE.md  README.md
     problems (`diagnoosi`, ICD-10 as printed-code hint). Allergies: `no_information`. Labs, procedures and encounters
     stay in the dump until the Results/Procedures sections exist. 1,000 sample patients: every quote grounds exactly.
   - Not validated in Matchbox yet (Docker was unavailable). The HTML IPS reader is a later task.
+  - Follow-up (2026-10-13): `dump` takes filters (`--with-labs`, `--active-meds`, `--has-long-term-dx`, `--min-score`, …) and
+    writes `manifest.json` (files best first, counts and an IPS score, no row contents); see the README. Of 15,000
+    patients, 8,401 have an active medication, 4,849 a long-term diagnosis and 3,364 lab results.
 - [ ] Multi-document merge into one IPS (future enhancement per D-12: multi-document upload, and merging several IPS summaries; dedupe meds/problems across docs; D-11: a "none known" claim contradicted by another document is not asserted and is flagged) `[fable]`
 - [ ] Rendered human-readable IPS view (Composition narrative) `[sonnet]`
 - [ ] Prompt caching for system prompt + schema; Batch API path for bulk backfills `[sonnet]`
