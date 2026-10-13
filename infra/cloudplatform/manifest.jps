@@ -32,7 +32,7 @@ settings:
 nodes:
   - nodeGroup: postgres
     nodeType: docker
-    image: postgres:18.6
+    image: postgres:18.6-bookworm
     count: 1
     cloudlets: 16
     env:
@@ -43,7 +43,7 @@ nodes:
       - /var/lib/postgresql
   - nodeGroup: redis
     nodeType: docker
-    image: redis:8.8.3
+    image: redis:8-bookworm
     count: 1
     cloudlets: 8
   - nodeGroup: minio
