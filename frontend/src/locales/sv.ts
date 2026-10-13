@@ -244,7 +244,7 @@ export const sv: Messages = {
   'source.loading': 'Laddar källan…',
   'source.loadFailed': 'Källan kunde inte laddas.',
   'source.select': 'Klicka på en uppgift eller dess citat för att se den i källan',
-  'source.none': 'Uppgiften har inget källcitat',
+  'source.none': 'Ingen plats i källan är kopplad till uppgiften',
   'source.mode': 'Vy',
   'source.mode.rows': 'Rader',
   'source.mode.json': 'JSON',
