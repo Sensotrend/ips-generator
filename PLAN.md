@@ -278,6 +278,7 @@ PLAN.md  CLAUDE.md  README.md
 | D-10 | Birth date and sex are **derived deterministically** from a valid Finnish personal identity code (never by the LLM) when the document doesn't state them, and marked as derived for review. IPS 2.0.1 requires `Patient.birthDate` (1..1). | Decided 2026-10-13 |
 | D-11 | "Allergiat: ei tiedossa" (bare "not known") is `none_known` (scope all) with its source quote when no other document says anything about allergies. If another document suggests allergies (Phase 4 merge), the "none known" claim is not asserted: the section becomes `no_information` and is flagged for review. | Decided 2026-10-13 |
 | D-12 | **One document → one summary** stays the design for now (one job = one document = one IPS). Possible future enhancements, not scheduled: (a) uploading several documents and reviewing them together as one job (needs cross-document dedupe, conflict flagging and a same-patient check); (b) merging several existing IPS summaries into one. Both build on the Phase 4 merge task and D-11. | Decided 2026-10-13 |
+| D-13 | The PWA uses the **LUVN look and feel** (palette, Verdana type, 0.5rem radii, gray header, 4px focus rings) for a possible LUVN-run front end, defined as CSS custom properties in `frontend/src/index.css`. No LUVN logo, icons or photos. | Decided 2026-10-13 |
 
 Still open, before the phase that needs them:
 - ~~Phase 1 validity without codes~~ **Resolved:** text-only `CodeableConcept`s give 0 errors and no extra warnings in IPS 2.0.1 (bindings are "preferred"). Fixtures in `tests/fixtures/ips-variants/`.

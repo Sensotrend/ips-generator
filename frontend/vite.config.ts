@@ -14,7 +14,7 @@ export default defineConfig({
         name: 'IPS Generator',
         short_name: 'IPS Gen',
         description: 'Generate International Patient Summaries from healthcare documents',
-        theme_color: '#1d4e89',
+        theme_color: '#125d91',
         background_color: '#ffffff',
         display: 'standalone',
         icons: [
