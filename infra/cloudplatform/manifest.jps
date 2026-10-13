@@ -68,7 +68,7 @@ nodes:
     cloudlets: 32          # about 4 GB at most; Matchbox needs about 3 GB
     volumes:
       - /database
-  # api, worker and web are configured below, once the other nodes' IPs are known.
+  # api, worker and web get their env vars in onInstall, once the other nodes' IPs are known.
   - nodeGroup: api
     nodeType: docker
     image: ${settings.ghcrOwnerRepo}-backend:${settings.tag}
@@ -78,7 +78,6 @@ nodes:
       password: ${settings.ghcrToken}
     count: 1
     cloudlets: 16
-    startServiceOnCreation: false
   - nodeGroup: worker
     nodeType: docker
     image: ${settings.ghcrOwnerRepo}-backend:${settings.tag}
@@ -89,7 +88,6 @@ nodes:
     cmd: python -m app.worker
     count: 1
     cloudlets: 16
-    startServiceOnCreation: false
   - nodeGroup: web
     nodeType: docker
     image: ${settings.ghcrOwnerRepo}-web:${settings.tag}
@@ -100,7 +98,6 @@ nodes:
     count: 1
     cloudlets: 4
     extip: true            # public entry point; check how the platform maps the environment domain
-    startServiceOnCreation: false
 
 globals:
   appEnv:
@@ -130,4 +127,10 @@ onInstall:
       nodeGroup: web
       vars:
         API_UPSTREAM: ${nodes.api.master.intIP}:8000
-  - start: [api, worker, web]
+  # The three app nodes start with default settings when created; restart them to pick up the env vars.
+  - environment.control.RestartNodes:
+      nodeGroup: api
+  - environment.control.RestartNodes:
+      nodeGroup: worker
+  - environment.control.RestartNodes:
+      nodeGroup: web
