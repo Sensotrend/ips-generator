@@ -103,6 +103,9 @@ FEATURES: dict[str, str] = {
     "birth_date_stated": "Birth date explicitly stated",
     "allergy_reactions": "Allergy with stated reaction(s)",
     "intolerance": "Intolerance (not allergy)",
+    "physio_questionnaire_candidate": "Built to pre-fill the physiotherapy low-back questionnaire",
+    "maternity_questionnaire_candidate": "Built to pre-fill the maternity clinic questionnaire",
+    "non_schema_facts": "Facts for other IPS sections in the text (vital signs, results, vaccinations, procedures, devices, plan of care, pregnancy history, social history, ...); gold ignores them (outside the schema)",
 }
 
 
@@ -352,9 +355,10 @@ def all_cases() -> list[Case]:
     import cases_en
     import cases_fi
     import cases_mixed
+    import cases_questionnaire
     import cases_sv
 
-    cases: list[Case] = [*cases_fi.CASES, *cases_sv.CASES, *cases_en.CASES, *cases_mixed.CASES]
+    cases: list[Case] = [*cases_fi.CASES, *cases_sv.CASES, *cases_en.CASES, *cases_mixed.CASES, *cases_questionnaire.CASES]
     ids = [case.case_id for case in cases]
     duplicates = {i for i in ids if ids.count(i) > 1}
     _require(not duplicates, f"duplicate case ids: {duplicates}")

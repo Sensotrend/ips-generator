@@ -1,0 +1,304 @@
+{
+  "document_language": "fi",
+  "patient": {
+    "names": [
+      {
+        "source_quote": "NIEMINEN-TESTI, Elina Sofia",
+        "page": 1,
+        "locator": "",
+        "text": "NIEMINEN-TESTI, Elina Sofia",
+        "family": "NIEMINEN-TESTI",
+        "given": [
+          "Elina",
+          "Sofia"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "birth_date": {
+      "source_quote": "Syntymäaika: 14.01.1998",
+      "page": 1,
+      "locator": "",
+      "value": "1998-01-14",
+      "confidence": "high"
+    },
+    "gender": {
+      "source_quote": "Sukupuoli: nainen",
+      "page": 1,
+      "locator": "",
+      "value": "female",
+      "confidence": "high"
+    },
+    "identifiers": [
+      {
+        "source_quote": "Henkilötunnus: 140198-9891",
+        "page": 1,
+        "locator": "",
+        "value": "140198-9891",
+        "type_text": "Henkilötunnus",
+        "issuer_text": "",
+        "confidence": "high"
+      }
+    ]
+  },
+  "allergies": {
+    "kind": "items_found",
+    "items": [
+      {
+        "source_quote": "Kala-allergia: nokkosihottuma",
+        "page": 1,
+        "locator": "",
+        "substance_text": "Kala",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "type": "allergy",
+        "category": "food",
+        "criticality": "not_stated",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "onset": "",
+        "reactions": [
+          {
+            "manifestations": [
+              "nokkosihottuma"
+            ],
+            "severity": "not_stated"
+          }
+        ],
+        "note": "",
+        "confidence": "high"
+      }
+    ],
+    "none_known_statements": []
+  },
+  "medications": {
+    "kind": "items_found",
+    "items": [
+      {
+        "source_quote": "Mesalatsiini 500 mg tabl 1 x 3 (ATC A07EC02)",
+        "page": 1,
+        "locator": "",
+        "medication_text": "Mesalatsiini",
+        "printed_code": "A07EC02",
+        "printed_code_system_text": "ATC",
+        "strength_text": "500 mg",
+        "dose_form_text": "tabl",
+        "dosage": {
+          "text": "1 x 3",
+          "dose_value": "1",
+          "dose_unit": "tabl",
+          "frequency": "3",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Atsatiopriini 50 mg tabl 1 x 1 aamulla",
+        "page": 1,
+        "locator": "",
+        "medication_text": "Atsatiopriini",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "50 mg",
+        "dose_form_text": "tabl",
+        "dosage": {
+          "text": "1 x 1 aamulla",
+          "dose_value": "1",
+          "dose_unit": "tabl",
+          "frequency": "1",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Rauta 100 mg tabl 1 x 1",
+        "page": 1,
+        "locator": "",
+        "medication_text": "Rauta",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "100 mg",
+        "dose_form_text": "tabl",
+        "dosage": {
+          "text": "1 x 1",
+          "dose_value": "1",
+          "dose_unit": "tabl",
+          "frequency": "1",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Syanokobalamiini 1 mg inj kerran kuukaudessa (ATC B03BA01)",
+        "page": 1,
+        "locator": "",
+        "medication_text": "Syanokobalamiini",
+        "printed_code": "B03BA01",
+        "printed_code_system_text": "ATC",
+        "strength_text": "1 mg",
+        "dose_form_text": "inj",
+        "dosage": {
+          "text": "kerran kuukaudessa",
+          "dose_value": "",
+          "dose_unit": "",
+          "frequency": "",
+          "period": "",
+          "period_unit": "not_stated",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Foolihappo 0,4 mg tabl 1 x 1 (ATC B03BB01)",
+        "page": 1,
+        "locator": "",
+        "medication_text": "Foolihappo",
+        "printed_code": "B03BB01",
+        "printed_code_system_text": "ATC",
+        "strength_text": "0,4 mg",
+        "dose_form_text": "tabl",
+        "dosage": {
+          "text": "1 x 1",
+          "dose_value": "1",
+          "dose_unit": "tabl",
+          "frequency": "1",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Kolekalsiferoli 20 mikrog tabl 1 x 1 (ATC A11CC05)",
+        "page": 1,
+        "locator": "",
+        "medication_text": "Kolekalsiferoli",
+        "printed_code": "A11CC05",
+        "printed_code_system_text": "ATC",
+        "strength_text": "20 mikrog",
+        "dose_form_text": "tabl",
+        "dosage": {
+          "text": "1 x 1",
+          "dose_value": "1",
+          "dose_unit": "tabl",
+          "frequency": "1",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      }
+    ]
+  },
+  "problems": {
+    "kind": "items_found",
+    "items": [
+      {
+        "source_quote": "Z32.1 Raskaus todettu (rv 11+4)",
+        "page": 1,
+        "locator": "",
+        "condition_text": "Raskaus todettu",
+        "printed_code": "Z32.1",
+        "printed_code_system_text": "",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "severity": "not_stated",
+        "body_site_text": "",
+        "onset": "",
+        "abatement": "",
+        "note": "rv 11+4",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "K50.9 Crohnin tauti, todettu 2018",
+        "page": 1,
+        "locator": "",
+        "condition_text": "Crohnin tauti",
+        "printed_code": "K50.9",
+        "printed_code_system_text": "",
+        "clinical_status": "not_stated",
+        "verification_status": "confirmed",
+        "severity": "not_stated",
+        "body_site_text": "",
+        "onset": "2018",
+        "abatement": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "D50.9 Raudanpuuteanemia",
+        "page": 1,
+        "locator": "",
+        "condition_text": "Raudanpuuteanemia",
+        "printed_code": "D50.9",
+        "printed_code_system_text": "",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "severity": "not_stated",
+        "body_site_text": "",
+        "onset": "",
+        "abatement": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "N39.0 Virtsatieinfektio 2025, parantunut",
+        "page": 1,
+        "locator": "",
+        "condition_text": "Virtsatieinfektio",
+        "printed_code": "N39.0",
+        "printed_code_system_text": "",
+        "clinical_status": "resolved",
+        "verification_status": "not_stated",
+        "severity": "not_stated",
+        "body_site_text": "",
+        "onset": "2025",
+        "abatement": "",
+        "note": "",
+        "confidence": "high"
+      }
+    ]
+  }
+}

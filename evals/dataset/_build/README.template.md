@@ -82,6 +82,11 @@ field descriptions. Where those leave room, these rules decide.
   findings without a written diagnosis, medication indications (these go to `reason_text`),
   and symptoms already explained by a stated (or suspected) diagnosis in the same passage.
   Presenting symptoms with no diagnosis (mx02) are problems.
+- A current pregnancy written as a diagnosis line (Z32.1 "Raskaus todettu") is a problem; pregnancy
+  history, last menstrual period, due date, height, weight, smoking, vaccinations and the contact
+  person in the narrative are not, nor are results, vital signs, devices, alerts, advance
+  directives, functional status, plans of care or the patient's own words (the schema has no place for
+  them; fi13-fi18, sv07-sv08, en07-en08).
 - Medications: every product the patient takes, took recently, or is prescribed now, including
   stopped and paused ones. Not: drugs only described generically ("IV antibiotics"), other
   people's medicines.

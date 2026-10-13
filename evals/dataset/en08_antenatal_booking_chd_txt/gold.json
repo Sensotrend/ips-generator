@@ -1,0 +1,296 @@
+{
+  "document_language": "en",
+  "patient": {
+    "names": [
+      {
+        "source_quote": "WHITFIELD-TEST, Emma Louise",
+        "page": 1,
+        "locator": "line 6",
+        "text": "WHITFIELD-TEST, Emma Louise",
+        "family": "WHITFIELD-TEST",
+        "given": [
+          "Emma",
+          "Louise"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "birth_date": {
+      "source_quote": "DOB: 09.02.1992",
+      "page": 1,
+      "locator": "line 8",
+      "value": "1992-02-09",
+      "confidence": "high"
+    },
+    "gender": {
+      "source_quote": "Sex: F",
+      "page": 1,
+      "locator": "line 9",
+      "value": "female",
+      "confidence": "high"
+    },
+    "identifiers": [
+      {
+        "source_quote": "Personal identity code: 090292-906C",
+        "page": 1,
+        "locator": "line 7",
+        "value": "090292-906C",
+        "type_text": "Personal identity code",
+        "issuer_text": "",
+        "confidence": "high"
+      }
+    ]
+  },
+  "allergies": {
+    "kind": "items_found",
+    "items": [
+      {
+        "source_quote": "Peanut allergy (anaphylaxis)",
+        "page": 1,
+        "locator": "line 40",
+        "substance_text": "Peanut",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "type": "allergy",
+        "category": "food",
+        "criticality": "not_stated",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "onset": "",
+        "reactions": [
+          {
+            "manifestations": [
+              "anaphylaxis"
+            ],
+            "severity": "not_stated"
+          }
+        ],
+        "note": "",
+        "confidence": "high"
+      }
+    ],
+    "none_known_statements": [
+      {
+        "source_quote": "No known drug allergies.",
+        "page": 1,
+        "locator": "line 39",
+        "confidence": "high",
+        "scope": "medication"
+      }
+    ]
+  },
+  "medications": {
+    "kind": "items_found",
+    "items": [
+      {
+        "source_quote": "Metoprolol 50 mg tabl 1 BID (ATC C07AB02)",
+        "page": 1,
+        "locator": "line 31",
+        "medication_text": "Metoprolol",
+        "printed_code": "C07AB02",
+        "printed_code_system_text": "ATC",
+        "strength_text": "50 mg",
+        "dose_form_text": "tabl",
+        "dosage": {
+          "text": "1 BID",
+          "dose_value": "1",
+          "dose_unit": "tabl",
+          "frequency": "2",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Folic acid 0.4 mg tabl 1 OD (ATC B03BB01)",
+        "page": 1,
+        "locator": "line 32",
+        "medication_text": "Folic acid",
+        "printed_code": "B03BB01",
+        "printed_code_system_text": "ATC",
+        "strength_text": "0.4 mg",
+        "dose_form_text": "tabl",
+        "dosage": {
+          "text": "1 OD",
+          "dose_value": "1",
+          "dose_unit": "tabl",
+          "frequency": "1",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Vitamin D3 20 mcg tabl 1 OD (ATC A11CC05)",
+        "page": 1,
+        "locator": "line 33",
+        "medication_text": "Vitamin D3",
+        "printed_code": "A11CC05",
+        "printed_code_system_text": "ATC",
+        "strength_text": "20 mcg",
+        "dose_form_text": "tabl",
+        "dosage": {
+          "text": "1 OD",
+          "dose_value": "1",
+          "dose_unit": "tabl",
+          "frequency": "1",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Calcium carbonate 500 mg tabl 1 OD (ATC A12AA04)",
+        "page": 1,
+        "locator": "line 34",
+        "medication_text": "Calcium carbonate",
+        "printed_code": "A12AA04",
+        "printed_code_system_text": "ATC",
+        "strength_text": "500 mg",
+        "dose_form_text": "tabl",
+        "dosage": {
+          "text": "1 OD",
+          "dose_value": "1",
+          "dose_unit": "tabl",
+          "frequency": "1",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Pregnancy multivitamin tabl 1 OD",
+        "page": 1,
+        "locator": "line 35",
+        "medication_text": "Pregnancy multivitamin",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "",
+        "dose_form_text": "tabl",
+        "dosage": {
+          "text": "1 OD",
+          "dose_value": "1",
+          "dose_unit": "tabl",
+          "frequency": "1",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "EpiPen 300 mcg auto-injector, use in anaphylaxis",
+        "page": 1,
+        "locator": "line 36",
+        "medication_text": "EpiPen",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "300 mcg",
+        "dose_form_text": "auto-injector",
+        "dosage": {
+          "text": "use in anaphylaxis",
+          "dose_value": "",
+          "dose_unit": "",
+          "frequency": "",
+          "period": "",
+          "period_unit": "not_stated",
+          "as_needed": true,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      }
+    ]
+  },
+  "problems": {
+    "kind": "items_found",
+    "items": [
+      {
+        "source_quote": "Z32.1 Pregnancy confirmed (6+2 weeks)",
+        "page": 1,
+        "locator": "line 26",
+        "condition_text": "Pregnancy confirmed",
+        "printed_code": "Z32.1",
+        "printed_code_system_text": "",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "severity": "not_stated",
+        "body_site_text": "",
+        "onset": "",
+        "abatement": "",
+        "note": "6+2 weeks",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Q21.1 Atrial septal defect, closed 2004",
+        "page": 1,
+        "locator": "line 27",
+        "condition_text": "Atrial septal defect",
+        "printed_code": "Q21.1",
+        "printed_code_system_text": "",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "severity": "not_stated",
+        "body_site_text": "",
+        "onset": "",
+        "abatement": "",
+        "note": "closed 2004",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "I47.1 Supraventricular tachycardia",
+        "page": 1,
+        "locator": "line 28",
+        "condition_text": "Supraventricular tachycardia",
+        "printed_code": "I47.1",
+        "printed_code_system_text": "",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "severity": "not_stated",
+        "body_site_text": "",
+        "onset": "",
+        "abatement": "",
+        "note": "",
+        "confidence": "high"
+      }
+    ]
+  }
+}

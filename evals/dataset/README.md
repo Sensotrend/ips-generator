@@ -1,6 +1,6 @@
 # Phase 1 eval dataset
 
-26 synthetic healthcare documents with gold extractions for the three required IPS
+36 synthetic healthcare documents with gold extractions for the three required IPS
 sections (allergies, medications, problems) and the patient. Used by `evals/run_evals.py`
 (PLAN.md Phase 1) and checked by `backend/tests/unit/test_eval_dataset.py`.
 
@@ -82,6 +82,11 @@ field descriptions. Where those leave room, these rules decide.
   findings without a written diagnosis, medication indications (these go to `reason_text`),
   and symptoms already explained by a stated (or suspected) diagnosis in the same passage.
   Presenting symptoms with no diagnosis (mx02) are problems.
+- A current pregnancy written as a diagnosis line (Z32.1 "Raskaus todettu") is a problem; pregnancy
+  history, last menstrual period, due date, height, weight, smoking, vaccinations and the contact
+  person in the narrative are not, nor are results, vital signs, devices, alerts, advance
+  directives, functional status, plans of care or the patient's own words (the schema has no place for
+  them; fi13-fi18, sv07-sv08, en07-en08).
 - Medications: every product the patient takes, took recently, or is prescribed now, including
   stopped and paused ones. Not: drugs only described generically ("IV antibiotics"), other
   people's medicines.
@@ -192,48 +197,61 @@ Section columns: `items` = items_found, `none` = none_known, `-` = no_informatio
 | `en06_patient_app_medlist_json` | en | json | medication_list | items | items | items | typos, multi_segment_quote, stopped_medication, as_needed_dosing, partial_dates, indication_not_problem, birth_date_stated, allergy_reactions |
 | `mx01_discharge_fi_sv_txt` | fi+sv | txt | discharge_summary | items | items | items | mixed_language, printed_icd10, duplicated_medication, as_needed_dosing, abbreviations, intolerance, procedure_distractor, partial_dates, caps_headings, hetu_without_birth_date |
 | `mx02_referral_fi_en_pdf` | fi+en | pdf | referral_letter | items | items | items | mixed_language, resolved_condition, stopped_medication, duplicated_medication, family_history_distractor, partial_dates, abbreviations, hetu_without_birth_date, allergy_reactions |
+| `fi13_referral_physio_lbp_txt` | fi | txt | referral_letter | none | items | items | physio_questionnaire_candidate, non_schema_facts, caps_headings, printed_icd10, printed_atc, resolved_condition, as_needed_dosing, partial_dates, abbreviations, decimal_comma, none_known_allergies, gender_stated, birth_date_stated |
+| `fi14_outpatient_physio_lbp_txt` | fi | txt | outpatient_note | items | items | items | physio_questionnaire_candidate, non_schema_facts, caps_headings, printed_icd10, printed_atc, as_needed_dosing, partial_dates, intolerance, allergy_reactions, gender_stated, birth_date_stated |
+| `fi15_outpatient_physio_copd_txt` | fi | txt | outpatient_note | none | items | items | physio_questionnaire_candidate, non_schema_facts, caps_headings, printed_icd10, printed_atc, hetu_without_birth_date, stopped_medication, as_needed_dosing, partial_dates, decimal_comma, none_known_allergies, gender_stated |
+| `sv07_referral_physio_lbp_txt` | sv | txt | referral_letter | items | items | items | physio_questionnaire_candidate, non_schema_facts, caps_headings, printed_icd10, printed_atc, as_needed_dosing, decimal_comma, procedure_distractor, allergy_reactions, gender_stated, birth_date_stated |
+| `en07_referral_physio_lbp_txt` | en | txt | referral_letter | none | items | items | physio_questionnaire_candidate, non_schema_facts, caps_headings, printed_icd10, printed_atc, as_needed_dosing, partial_dates, abbreviations, none_known_allergies, gender_stated, birth_date_stated |
+| `fi16_referral_maternity_t1dm_txt` | fi | txt | referral_letter | items | items | items | maternity_questionnaire_candidate, non_schema_facts, caps_headings, printed_icd10, printed_atc, resolved_condition, as_needed_dosing, partial_dates, abbreviations, allergy_reactions, gender_stated, birth_date_stated |
+| `fi17_maternity_intake_epilepsy_txt` | fi | txt | outpatient_note | none | items | items | maternity_questionnaire_candidate, non_schema_facts, caps_headings, printed_icd10, printed_atc, hetu_without_birth_date, stopped_medication, partial_dates, procedure_distractor, none_known_allergies, gender_stated |
+| `fi18_maternity_intake_crohn_pdf` | fi | pdf | outpatient_note | items | items | items | maternity_questionnaire_candidate, non_schema_facts, caps_headings, printed_icd10, printed_atc, procedure_distractor, resolved_condition, partial_dates, allergy_reactions, gender_stated, birth_date_stated |
+| `sv08_referral_maternity_asthma_txt` | sv | txt | referral_letter | items | items | items | maternity_questionnaire_candidate, non_schema_facts, caps_headings, printed_icd10, printed_atc, as_needed_dosing, decimal_comma, procedure_distractor, nkda_plus_food_allergy, allergy_reactions, gender_stated, birth_date_stated |
+| `en08_antenatal_booking_chd_txt` | en | txt | outpatient_note | items | items | items | maternity_questionnaire_candidate, non_schema_facts, caps_headings, printed_icd10, printed_atc, as_needed_dosing, procedure_distractor, nkda_plus_food_allergy, allergy_reactions, abbreviations, gender_stated, birth_date_stated |
 
 Feature coverage (number of cases):
 
 | feature | cases | description |
 | --- | --- | --- |
-| `nkda_plus_food_allergy` | 3 | NKDA-type statement next to a food allergy (D-7) |
-| `none_known_allergies` | 5 | Explicit 'no known allergies' (allergies none_known) |
+| `nkda_plus_food_allergy` | 5 | NKDA-type statement next to a food allergy (D-7) |
+| `none_known_allergies` | 9 | Explicit 'no known allergies' (allergies none_known) |
 | `section_no_information` | 10 | At least one section with no information at all |
 | `no_regular_medication` | 2 | Explicit 'no regular medication' (medications none_known) |
 | `regular_none_plus_new_course` | 1 | 'No regular medication' plus a newly prescribed drug |
-| `printed_icd10` | 11 | ICD-10 codes printed next to diagnoses (D-9) |
-| `printed_atc` | 5 | ATC codes printed next to medications (D-9) |
-| `resolved_condition` | 10 | Resolved/past condition alongside active ones (D-8) |
+| `printed_icd10` | 21 | ICD-10 codes printed next to diagnoses (D-9) |
+| `printed_atc` | 15 | ATC codes printed next to medications (D-9) |
+| `resolved_condition` | 13 | Resolved/past condition alongside active ones (D-8) |
 | `family_history_distractor` | 5 | Family history that must not become a problem |
 | `duplicated_medication` | 6 | Same medication in narrative/summary and list (report once) |
-| `stopped_medication` | 9 | Stopped / discontinued medication |
+| `stopped_medication` | 11 | Stopped / discontinued medication |
 | `paused_medication` | 4 | Paused medication (on_hold) |
-| `as_needed_dosing` | 16 | As-needed (PRN) dosing |
-| `partial_dates` | 18 | Year-only or month-year dates |
-| `abbreviations` | 20 | Clinical abbreviations (p.o., x2, tabl, RR, DM2, ...) |
+| `as_needed_dosing` | 24 | As-needed (PRN) dosing |
+| `partial_dates` | 25 | Year-only or month-year dates |
+| `abbreviations` | 24 | Clinical abbreviations (p.o., x2, tabl, RR, DM2, ...) |
 | `typos` | 3 | Spelling mistakes kept verbatim in quotes |
 | `prompt_injection` | 2 | Embedded instructions / fake markup aimed at the model |
 | `other_person_mentioned` | 3 | Facts about another person (caregiver, relative) |
-| `hetu_without_birth_date` | 13 | HETU present, no birth date stated (birth_date null, D-10) |
+| `hetu_without_birth_date` | 15 | HETU present, no birth date stated (birth_date null, D-10) |
 | `lab_report_all_no_information` | 4 | Lab report with nothing for the three sections |
 | `multi_page_pdf` | 3 | PDF with more than one page |
 | `mostly_empty_page` | 1 | PDF page with (almost) no text |
 | `mixed_language` | 2 | Document mixing two languages |
-| `caps_headings` | 6 | Headings in capitals |
+| `caps_headings` | 16 | Headings in capitals |
 | `messy_formatting` | 2 | Inconsistent formatting, mixed line breaks, stray whitespace |
-| `decimal_comma` | 12 | Finnish/Swedish decimal commas |
+| `decimal_comma` | 16 | Finnish/Swedish decimal commas |
 | `suspected_condition` | 2 | Suspected / provisional diagnosis |
 | `multi_segment_quote` | 4 | Gold quote spans several segments (JSON leaves / lines) |
-| `procedure_distractor` | 4 | Operation/procedure listed that is not a problem |
+| `procedure_distractor` | 9 | Operation/procedure listed that is not a problem |
 | `indication_not_problem` | 4 | Medication indication that must not become a problem |
-| `gender_stated` | 11 | Gender explicitly stated |
-| `birth_date_stated` | 10 | Birth date explicitly stated |
-| `allergy_reactions` | 12 | Allergy with stated reaction(s) |
-| `intolerance` | 2 | Intolerance (not allergy) |
+| `gender_stated` | 21 | Gender explicitly stated |
+| `birth_date_stated` | 18 | Birth date explicitly stated |
+| `allergy_reactions` | 18 | Allergy with stated reaction(s) |
+| `intolerance` | 3 | Intolerance (not allergy) |
+| `physio_questionnaire_candidate` | 5 | Built to pre-fill the physiotherapy low-back questionnaire |
+| `maternity_questionnaire_candidate` | 5 | Built to pre-fill the maternity clinic questionnaire |
+| `non_schema_facts` | 10 | Facts for other IPS sections in the text (vital signs, results, vaccinations, procedures, devices, plan of care, pregnancy history, social history, ...); gold ignores them (outside the schema) |
 
 Totals:
 
-- language: en 6, fi 12, fi+en 1, fi+sv 1, sv 6
-- format: csv 4, json 5, pdf 7, txt 10
-- doc type: discharge_summary 6, lab_report 4, medication_list 4, outpatient_note 6, prescription 1, referral_letter 5
+- language: en 8, fi 18, fi+en 1, fi+sv 1, sv 8
+- format: csv 4, json 5, pdf 8, txt 19
+- doc type: discharge_summary 6, lab_report 4, medication_list 4, outpatient_note 11, prescription 1, referral_letter 10

@@ -1,0 +1,26 @@
+{
+  "case_id": "sv08_referral_maternity_asthma_txt",
+  "language": "sv",
+  "format": "txt",
+  "media_type": "text/plain",
+  "doc_type": "referral_letter",
+  "features": [
+    "maternity_questionnaire_candidate",
+    "non_schema_facts",
+    "caps_headings",
+    "printed_icd10",
+    "printed_atc",
+    "as_needed_dosing",
+    "decimal_comma",
+    "procedure_distractor",
+    "nkda_plus_food_allergy",
+    "allergy_reactions",
+    "gender_stated",
+    "birth_date_stated"
+  ],
+  "notes": "Swedish maternity clinic referral. Also carries procedures (appendectomy, colonoscopy; not problems), vital signs, lab results, an inhaler spacer and a plan of care (context only). Asthma J45 and ulcerative colitis K51 fall under the maternity checklist; folic acid, vitamin D and calcium answer three supplement questions. A drug-scoped none-known statement stands next to a nut allergy (D-7). 'Tidigare graviditeter: 0' is context only.",
+  "expected_patient": {
+    "birth_date": "1993-06-27",
+    "gender": "female"
+  }
+}

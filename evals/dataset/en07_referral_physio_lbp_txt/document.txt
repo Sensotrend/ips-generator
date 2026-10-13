@@ -1,0 +1,44 @@
+KUVITTEELA HEALTH CENTRE / Outpatient clinic
+SYNTHETIC TEST DOCUMENT - NOT A REAL PATIENT
+
+REFERRAL TO PHYSIOTHERAPY
+
+Patient: GREENWOOD-TEST, Daniel James
+Personal identity code: 140590-962A
+DOB: 14.05.1990
+Sex: M
+Date: 07.10.2026
+
+REASON FOR REFERRAL
+Low back pain since April 2026, worse after sitting at a desk for long periods. No leg symptoms. Please assess and advise on an exercise programme.
+
+BACKGROUND
+Height 183 cm, weight 79 kg. Non-smoker. Office worker.
+Immunisations: tetanus booster 2021, influenza vaccine 10/2025.
+
+VITAL SIGNS AND RESULTS
+BP 124/78 mmHg, pulse 66/min, BMI 23.6 (07.10.2026).
+HbA1c 58 mmol/mol, eGFR above 90 ml/min (23.09.2026).
+
+DEVICES
+Continuous glucose monitor (FreeStyle Libre 2).
+
+DIAGNOSES
+M54.5 Low back pain, onset 04/2026
+E10.9 Type 1 diabetes mellitus, diagnosed 2008
+F41.1 Generalised anxiety disorder
+K58.9 Irritable bowel syndrome
+
+MEDICATION
+- Insulin glargine 100 U/ml 22 units OD (ATC A10AE04)
+- Insulin aspart 100 U/ml with meals per carbohydrate count
+- Escitalopram 10 mg tabl 1 OD
+- Ibuprofen 400 mg tabl 1 PRN, max 3 per day
+
+ALLERGIES
+No known allergies.
+
+PLAN
+Physiotherapy 6 sessions over 6 weeks; goals: sit for 90 minutes at work without pain, return to running. Review by the GP after the course.
+
+Dr Test, general practitioner

@@ -1,0 +1,277 @@
+{
+  "document_language": "sv",
+  "patient": {
+    "names": [
+      {
+        "source_quote": "SJÖBERG-TEST, Anna Maria",
+        "page": 1,
+        "locator": "line 6",
+        "text": "SJÖBERG-TEST, Anna Maria",
+        "family": "SJÖBERG-TEST",
+        "given": [
+          "Anna",
+          "Maria"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "birth_date": {
+      "source_quote": "Födelsedatum: 03.09.1982",
+      "page": 1,
+      "locator": "line 8",
+      "value": "1982-09-03",
+      "confidence": "high"
+    },
+    "gender": {
+      "source_quote": "Kön: kvinna",
+      "page": 1,
+      "locator": "line 9",
+      "value": "female",
+      "confidence": "high"
+    },
+    "identifiers": [
+      {
+        "source_quote": "Personnummer: 030982-9533",
+        "page": 1,
+        "locator": "line 7",
+        "value": "030982-9533",
+        "type_text": "Personnummer",
+        "issuer_text": "",
+        "confidence": "high"
+      }
+    ]
+  },
+  "allergies": {
+    "kind": "items_found",
+    "items": [
+      {
+        "source_quote": "Björkpollenallergi: rinit och ögonsymtom",
+        "page": 1,
+        "locator": "line 38",
+        "substance_text": "Björkpollen",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "type": "allergy",
+        "category": "environment",
+        "criticality": "not_stated",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "onset": "",
+        "reactions": [
+          {
+            "manifestations": [
+              "rinit",
+              "ögonsymtom"
+            ],
+            "severity": "not_stated"
+          }
+        ],
+        "note": "",
+        "confidence": "high"
+      }
+    ],
+    "none_known_statements": [
+      {
+        "source_quote": "Inga kända läkemedelsallergier.",
+        "page": 1,
+        "locator": "line 37",
+        "confidence": "high",
+        "scope": "medication"
+      }
+    ]
+  },
+  "medications": {
+    "kind": "items_found",
+    "items": [
+      {
+        "source_quote": "Budesonid/formoterol 160/4,5 mikrog inh 1 puff x 2 (ATC R03AK07)",
+        "page": 1,
+        "locator": "line 31",
+        "medication_text": "Budesonid/formoterol",
+        "printed_code": "R03AK07",
+        "printed_code_system_text": "ATC",
+        "strength_text": "160/4,5 mikrog",
+        "dose_form_text": "inh",
+        "dosage": {
+          "text": "1 puff x 2",
+          "dose_value": "1",
+          "dose_unit": "puff",
+          "frequency": "2",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Salbutamol 0,1 mg/dos inh 1-2 doser vid behov",
+        "page": 1,
+        "locator": "line 32",
+        "medication_text": "Salbutamol",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "0,1 mg/dos",
+        "dose_form_text": "inh",
+        "dosage": {
+          "text": "1-2 doser vid behov",
+          "dose_value": "",
+          "dose_unit": "doser",
+          "frequency": "",
+          "period": "",
+          "period_unit": "not_stated",
+          "as_needed": true,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Daivobet salva vid behov på plack",
+        "page": 1,
+        "locator": "line 33",
+        "medication_text": "Daivobet",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "",
+        "dose_form_text": "salva",
+        "dosage": {
+          "text": "vid behov på plack",
+          "dose_value": "",
+          "dose_unit": "",
+          "frequency": "",
+          "period": "",
+          "period_unit": "not_stated",
+          "as_needed": true,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Sumatriptan 50 mg tabl 1 tabl vid behov vid migrän",
+        "page": 1,
+        "locator": "line 34",
+        "medication_text": "Sumatriptan",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "50 mg",
+        "dose_form_text": "tabl",
+        "dosage": {
+          "text": "1 tabl vid behov vid migrän",
+          "dose_value": "1",
+          "dose_unit": "tabl",
+          "frequency": "",
+          "period": "",
+          "period_unit": "not_stated",
+          "as_needed": true,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      }
+    ]
+  },
+  "problems": {
+    "kind": "items_found",
+    "items": [
+      {
+        "source_quote": "M54.5 Ländryggssmärta",
+        "page": 1,
+        "locator": "line 24",
+        "condition_text": "Ländryggssmärta",
+        "printed_code": "M54.5",
+        "printed_code_system_text": "",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "severity": "not_stated",
+        "body_site_text": "",
+        "onset": "",
+        "abatement": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "J45.9 Astma",
+        "page": 1,
+        "locator": "line 25",
+        "condition_text": "Astma",
+        "printed_code": "J45.9",
+        "printed_code_system_text": "",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "severity": "not_stated",
+        "body_site_text": "",
+        "onset": "",
+        "abatement": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "L40.0 Psoriasis vulgaris",
+        "page": 1,
+        "locator": "line 26",
+        "condition_text": "Psoriasis vulgaris",
+        "printed_code": "L40.0",
+        "printed_code_system_text": "",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "severity": "not_stated",
+        "body_site_text": "",
+        "onset": "",
+        "abatement": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "G43.9 Migrän",
+        "page": 1,
+        "locator": "line 27",
+        "condition_text": "Migrän",
+        "printed_code": "G43.9",
+        "printed_code_system_text": "",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "severity": "not_stated",
+        "body_site_text": "",
+        "onset": "",
+        "abatement": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "E66.9 Övervikt",
+        "page": 1,
+        "locator": "line 28",
+        "condition_text": "Övervikt",
+        "printed_code": "E66.9",
+        "printed_code_system_text": "",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "severity": "not_stated",
+        "body_site_text": "",
+        "onset": "",
+        "abatement": "",
+        "note": "",
+        "confidence": "high"
+      }
+    ]
+  }
+}

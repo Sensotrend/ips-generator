@@ -1,0 +1,45 @@
+KUVITTEELA ANTENATAL CLINIC / Maternity services
+SYNTHETIC TEST DOCUMENT - NOT A REAL PATIENT
+
+ANTENATAL BOOKING NOTE
+
+Patient: WHITFIELD-TEST, Emma Louise
+Personal identity code: 090292-906C
+DOB: 09.02.1992
+Sex: F
+Date: 08.10.2026
+
+PREGNANCY
+Last menstrual period 25.08.2026, estimated due date 01.06.2027. Second pregnancy, one previous delivery (caesarean section 2022). No miscarriages.
+Height 169 cm, pre-pregnancy weight 66 kg. Non-smoker, no alcohol.
+Immunisations: MMR x 2, varicella immune, influenza vaccine 10/2026, COVID-19 booster 2025.
+Emergency contact: Oliver Example-Test (partner), phone 040 000 0004.
+
+VITAL SIGNS AND RESULTS
+BP 112/68 mmHg, pulse 70/min (08.10.2026).
+Hb 124 g/l, rubella IgG positive, HIV and hepatitis B screening negative (06.10.2026).
+
+ALERT
+Peanut anaphylaxis: carries adrenaline auto-injector. Cardiology review before delivery.
+
+DIAGNOSES
+Z32.1 Pregnancy confirmed (6+2 weeks)
+Q21.1 Atrial septal defect, closed 2004
+I47.1 Supraventricular tachycardia
+
+MEDICATION
+- Metoprolol 50 mg tabl 1 BID (ATC C07AB02)
+- Folic acid 0.4 mg tabl 1 OD (ATC B03BB01)
+- Vitamin D3 20 mcg tabl 1 OD (ATC A11CC05)
+- Calcium carbonate 500 mg tabl 1 OD (ATC A12AA04)
+- Pregnancy multivitamin tabl 1 OD
+- EpiPen 300 mcg auto-injector, use in anaphylaxis
+
+ALLERGIES
+No known drug allergies.
+Peanut allergy (anaphylaxis)
+
+PLAN
+Shared care with cardiology: ECG at 20 weeks, growth scan at 32 weeks, elective caesarean section to be discussed.
+
+Midwife Test

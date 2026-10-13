@@ -1,0 +1,26 @@
+{
+  "case_id": "en08_antenatal_booking_chd_txt",
+  "language": "en",
+  "format": "txt",
+  "media_type": "text/plain",
+  "doc_type": "outpatient_note",
+  "features": [
+    "maternity_questionnaire_candidate",
+    "non_schema_facts",
+    "caps_headings",
+    "printed_icd10",
+    "printed_atc",
+    "as_needed_dosing",
+    "procedure_distractor",
+    "nkda_plus_food_allergy",
+    "allergy_reactions",
+    "abbreviations",
+    "gender_stated",
+    "birth_date_stated"
+  ],
+  "notes": "English antenatal booking note. Also carries dated vaccinations, vital signs, lab results, an alert and a plan of care (context only; the alert is not a problem). The atrial septal defect Q21 is the 'heart defect' option and SVT I47 the heart-disease option; the closure is part of the diagnosis line, and the caesarean is a procedure, not a problem. Supplements: folic acid, vitamin D, calcium, multivitamin. 'No known drug allergies.' (scope medication) stands next to a peanut allergy; the EpiPen, used only on a stated trigger (anaphylaxis), is as_needed (sv01 convention).",
+  "expected_patient": {
+    "birth_date": "1992-02-09",
+    "gender": "female"
+  }
+}

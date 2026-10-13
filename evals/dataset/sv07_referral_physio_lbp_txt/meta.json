@@ -1,0 +1,25 @@
+{
+  "case_id": "sv07_referral_physio_lbp_txt",
+  "language": "sv",
+  "format": "txt",
+  "media_type": "text/plain",
+  "doc_type": "referral_letter",
+  "features": [
+    "physio_questionnaire_candidate",
+    "non_schema_facts",
+    "caps_headings",
+    "printed_icd10",
+    "printed_atc",
+    "as_needed_dosing",
+    "decimal_comma",
+    "procedure_distractor",
+    "allergy_reactions",
+    "gender_stated",
+    "birth_date_stated"
+  ],
+  "notes": "Swedish physiotherapy referral. Also carries vaccinations with dates, an appendectomy (a procedure, not a problem) and vital signs; none is in the schema. Asthma J45, psoriasis L40, overweight E66 and migraine G43 fall under the checklist. A drug-scoped none-known statement stands next to a pollen allergy (D-7); 'Björkpollenallergi' loses its 'allergi' ending in substance_text. The indication written inside the sumatriptan dosing line stays in the dosage text.",
+  "expected_patient": {
+    "birth_date": "1982-09-03",
+    "gender": "female"
+  }
+}

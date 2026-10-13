@@ -1,0 +1,49 @@
+KUVITTEELAN TERVEYSASEMA / Hoitajan ja lääkärin vastaanotto
+SYNTEETTINEN TESTIASIAKIRJA - EI OIKEA POTILAS
+
+VASTAANOTTOKIRJAUS
+
+POTILAS
+Nimi: VIRTANEN-TESTI, Pentti Johannes
+Henkilötunnus: 300459-9415
+Taustatiedot: 67-vuotias mies, eläkkeellä.
+
+KÄYNNIN SYY
+Alaselän jumi ja kipu kävellessä, pahentunut parin kuukauden aikana. Fysioterapeutin arvio toivottu.
+
+MITAT JA ELINTAVAT
+Pituus 175 cm, paino 88,5 kg. Tupakointi lopetettu 2019, aiemmin noin 30 askivuotta. Alkoholia ei käytä.
+
+MITTAUKSET JA TULOKSET
+Verenpaine 146/88 mmHg, pulssi 78/min, SpO2 93 % huoneilmassa (05.10.2026).
+Spirometria 09/2026: FEV1 62 % viitearvosta. Hb 148 g/l (28.09.2026).
+
+LAITTEET JA APUVÄLINEET
+Inhalaatiovälikammio (Volumatic) ja kävelykeppi.
+
+HOITOTAHTO
+Potilaalla on hoitotahto (laadittu 03/2026): ei pitkäaikaista hengityskonehoitoa.
+
+HUOMIO
+Kaatumisriski, kaatui kerran elokuussa 2026.
+
+DIAGNOOSIT
+M54.5 Alaselkäkipu
+J44.9 Keuhkoahtaumatauti (COPD)
+I25.1 Sepelvaltimotauti, todettu 2018
+I10 Verenpainetauti
+
+LÄÄKITYS
+- Tiotropium 18 mikrog inh kapseli 1 x 1 (ATC R03BB04)
+- Salbutamoli 0,1 mg/annos inh 1-2 annosta tarv.
+- Asetyylisalisyylihappo 100 mg tabl 1 x 1 aamulla
+- Bisoprololi 5 mg tabl 1 x 1
+- Rosuvastatiini 10 mg tabl 1 x 1 iltaisin
+
+LOPETETUT LÄÄKKEET
+- Tramadoli 50 mg, lopetettu 09/2026 pahoinvoinnin vuoksi
+
+ALLERGIAT
+Ei tiedossa.
+
+Testi Lääkäri

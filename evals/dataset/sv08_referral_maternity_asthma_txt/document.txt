@@ -1,0 +1,48 @@
+KUVITTEELAN HÄLSOCENTRAL / Mottagning
+SYNTETISKT TESTDOKUMENT - INTE EN RIKTIG PATIENT
+
+REMISS TILL MÖDRARÅDGIVNINGEN
+
+Patient: STRÖM-TEST, Karin Helena
+Personnummer: 270693-994A
+Födelsedatum: 27.06.1993
+Kön: kvinna
+Remissdatum: 08.10.2026
+
+GRAVIDITET
+Positivt graviditetstest 03.10.2026. Första dagen av sista menstruationen 06.08.2026, beräknad förlossning 13.05.2027.
+Tidigare graviditeter: 0. Längd 172 cm, vikt före graviditeten 66 kg. Röker inte.
+Vaccinationer: MPR-vaccin 1995 och 2000, vattkoppor genomgångna.
+Kontaktperson: Erik Exempel-Test (make), tel 040 000 0003.
+Operationer: appendektomi 2008. Koloskopi 03/2026.
+
+MÄTVÄRDEN OCH RESULTAT
+Blodtryck 112/70 mmHg, puls 74/min (08.10.2026).
+Hb 118 g/l, ferritin 14 µg/l, fekalt kalprotektin 45 µg/g (05.10.2026).
+
+HJÄLPMEDEL
+Spacer (Volumatic) till inhalatorn.
+
+DIAGNOSER
+Z32.1 Graviditet bekräftad (v 9+0)
+J45.9 Astma
+K51.9 Ulcerös kolit, diagnostiserad 2019
+D50.9 Järnbristanemi
+
+MEDICINERING
+- Budesonid/formoterol 160/4,5 mikrog inh 1 puff x 2 (ATC R03AK07)
+- Salbutamol 0,1 mg/dos inh 1-2 doser vid behov
+- Mesalazin 500 mg tabl 1 x 3
+- Järn 100 mg tabl 1 x 1
+- Folsyra 0,4 mg tabl 1 x 1 (ATC B03BB01)
+- D-vitamin 20 mikrog tabl 1 x 1 (ATC A11CC05)
+- Kalcium 500 mg tabl 1 x 1 (ATC A12AA04)
+
+ALLERGIER
+Inga kända läkemedelsallergier.
+Nötallergi: svullnad i läpparna
+
+PLAN
+Täta besök på mödrarådgivningen, uppföljning av järnvärden. Kontroll hos gastroenterolog i vecka 14.
+
+Testläkare, specialist i allmänmedicin

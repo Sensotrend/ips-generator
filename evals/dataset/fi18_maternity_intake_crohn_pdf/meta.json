@@ -1,0 +1,25 @@
+{
+  "case_id": "fi18_maternity_intake_crohn_pdf",
+  "language": "fi",
+  "format": "pdf",
+  "media_type": "application/pdf",
+  "doc_type": "outpatient_note",
+  "features": [
+    "maternity_questionnaire_candidate",
+    "non_schema_facts",
+    "caps_headings",
+    "printed_icd10",
+    "printed_atc",
+    "procedure_distractor",
+    "resolved_condition",
+    "partial_dates",
+    "allergy_reactions",
+    "gender_stated",
+    "birth_date_stated"
+  ],
+  "notes": "One-page PDF intake note. Also carries dated vaccinations, vital signs, lab results and functional status (context only), and a resolved urinary tract infection (past problem). Crohn's disease K50 is the bowel-disease option; iron deficiency anaemia D50, B12 (B03BA) and folic acid and vitamin D answer the supplement questions. The bowel resection is a procedure and is not a problem. 'Kala-allergia' loses its 'allergia' ending in substance_text.",
+  "expected_patient": {
+    "birth_date": "1998-01-14",
+    "gender": "female"
+  }
+}

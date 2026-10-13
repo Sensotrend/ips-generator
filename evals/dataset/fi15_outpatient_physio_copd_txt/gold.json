@@ -1,0 +1,276 @@
+{
+  "document_language": "fi",
+  "patient": {
+    "names": [
+      {
+        "source_quote": "VIRTANEN-TESTI, Pentti Johannes",
+        "page": 1,
+        "locator": "line 7",
+        "text": "VIRTANEN-TESTI, Pentti Johannes",
+        "family": "VIRTANEN-TESTI",
+        "given": [
+          "Pentti",
+          "Johannes"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "birth_date": null,
+    "gender": {
+      "source_quote": "67-vuotias mies",
+      "page": 1,
+      "locator": "line 9",
+      "value": "male",
+      "confidence": "high"
+    },
+    "identifiers": [
+      {
+        "source_quote": "Henkilötunnus: 300459-9415",
+        "page": 1,
+        "locator": "line 8",
+        "value": "300459-9415",
+        "type_text": "Henkilötunnus",
+        "issuer_text": "",
+        "confidence": "high"
+      }
+    ]
+  },
+  "allergies": {
+    "kind": "none_known",
+    "source_quote": "Ei tiedossa.",
+    "page": 1,
+    "locator": "line 47",
+    "confidence": "medium",
+    "scope": "all"
+  },
+  "medications": {
+    "kind": "items_found",
+    "items": [
+      {
+        "source_quote": "Tiotropium 18 mikrog inh kapseli 1 x 1 (ATC R03BB04)",
+        "page": 1,
+        "locator": "line 37",
+        "medication_text": "Tiotropium",
+        "printed_code": "R03BB04",
+        "printed_code_system_text": "ATC",
+        "strength_text": "18 mikrog",
+        "dose_form_text": "inh kapseli",
+        "dosage": {
+          "text": "1 x 1",
+          "dose_value": "1",
+          "dose_unit": "kapseli",
+          "frequency": "1",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Salbutamoli 0,1 mg/annos inh 1-2 annosta tarv.",
+        "page": 1,
+        "locator": "line 38",
+        "medication_text": "Salbutamoli",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "0,1 mg/annos",
+        "dose_form_text": "inh",
+        "dosage": {
+          "text": "1-2 annosta tarv.",
+          "dose_value": "",
+          "dose_unit": "annosta",
+          "frequency": "",
+          "period": "",
+          "period_unit": "not_stated",
+          "as_needed": true,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Asetyylisalisyylihappo 100 mg tabl 1 x 1 aamulla",
+        "page": 1,
+        "locator": "line 39",
+        "medication_text": "Asetyylisalisyylihappo",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "100 mg",
+        "dose_form_text": "tabl",
+        "dosage": {
+          "text": "1 x 1 aamulla",
+          "dose_value": "1",
+          "dose_unit": "tabl",
+          "frequency": "1",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Bisoprololi 5 mg tabl 1 x 1",
+        "page": 1,
+        "locator": "line 40",
+        "medication_text": "Bisoprololi",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "5 mg",
+        "dose_form_text": "tabl",
+        "dosage": {
+          "text": "1 x 1",
+          "dose_value": "1",
+          "dose_unit": "tabl",
+          "frequency": "1",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Rosuvastatiini 10 mg tabl 1 x 1 iltaisin",
+        "page": 1,
+        "locator": "line 41",
+        "medication_text": "Rosuvastatiini",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "10 mg",
+        "dose_form_text": "tabl",
+        "dosage": {
+          "text": "1 x 1 iltaisin",
+          "dose_value": "1",
+          "dose_unit": "tabl",
+          "frequency": "1",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Tramadoli 50 mg, lopetettu 09/2026 pahoinvoinnin vuoksi",
+        "page": 1,
+        "locator": "line 44",
+        "medication_text": "Tramadoli",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "50 mg",
+        "dose_form_text": "",
+        "dosage": {
+          "text": "",
+          "dose_value": "",
+          "dose_unit": "",
+          "frequency": "",
+          "period": "",
+          "period_unit": "not_stated",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "stopped",
+        "effective_start": "",
+        "effective_end": "2026-09",
+        "reason_text": "",
+        "note": "pahoinvoinnin vuoksi",
+        "confidence": "high"
+      }
+    ]
+  },
+  "problems": {
+    "kind": "items_found",
+    "items": [
+      {
+        "source_quote": "M54.5 Alaselkäkipu",
+        "page": 1,
+        "locator": "line 31",
+        "condition_text": "Alaselkäkipu",
+        "printed_code": "M54.5",
+        "printed_code_system_text": "",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "severity": "not_stated",
+        "body_site_text": "",
+        "onset": "",
+        "abatement": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "J44.9 Keuhkoahtaumatauti (COPD)",
+        "page": 1,
+        "locator": "line 32",
+        "condition_text": "Keuhkoahtaumatauti",
+        "printed_code": "J44.9",
+        "printed_code_system_text": "",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "severity": "not_stated",
+        "body_site_text": "",
+        "onset": "",
+        "abatement": "",
+        "note": "COPD",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "I25.1 Sepelvaltimotauti, todettu 2018",
+        "page": 1,
+        "locator": "line 33",
+        "condition_text": "Sepelvaltimotauti",
+        "printed_code": "I25.1",
+        "printed_code_system_text": "",
+        "clinical_status": "not_stated",
+        "verification_status": "confirmed",
+        "severity": "not_stated",
+        "body_site_text": "",
+        "onset": "2018",
+        "abatement": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "I10 Verenpainetauti",
+        "page": 1,
+        "locator": "line 34",
+        "condition_text": "Verenpainetauti",
+        "printed_code": "I10",
+        "printed_code_system_text": "",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "severity": "not_stated",
+        "body_site_text": "",
+        "onset": "",
+        "abatement": "",
+        "note": "",
+        "confidence": "high"
+      }
+    ]
+  }
+}

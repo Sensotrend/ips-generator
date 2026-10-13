@@ -1,0 +1,25 @@
+{
+  "case_id": "fi14_outpatient_physio_lbp_txt",
+  "language": "fi",
+  "format": "txt",
+  "media_type": "text/plain",
+  "doc_type": "outpatient_note",
+  "features": [
+    "physio_questionnaire_candidate",
+    "non_schema_facts",
+    "caps_headings",
+    "printed_icd10",
+    "printed_atc",
+    "as_needed_dosing",
+    "partial_dates",
+    "intolerance",
+    "allergy_reactions",
+    "gender_stated",
+    "birth_date_stated"
+  ],
+  "notes": "GP note for prolonged low back pain with sciatica. Diagnoses map to the physiotherapy questionnaire's checklist: M54.4 (back pain, duration 3 months), osteoporosis M81, depression F32, thyroid E03. The codeine entry says 'intoleranssi', so it is an intolerance, not an allergy. Smoking, height and weight are context only.",
+  "expected_patient": {
+    "birth_date": "1977-07-21",
+    "gender": "female"
+  }
+}

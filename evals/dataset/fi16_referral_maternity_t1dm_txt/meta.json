@@ -1,0 +1,26 @@
+{
+  "case_id": "fi16_referral_maternity_t1dm_txt",
+  "language": "fi",
+  "format": "txt",
+  "media_type": "text/plain",
+  "doc_type": "referral_letter",
+  "features": [
+    "maternity_questionnaire_candidate",
+    "non_schema_facts",
+    "caps_headings",
+    "printed_icd10",
+    "printed_atc",
+    "resolved_condition",
+    "as_needed_dosing",
+    "partial_dates",
+    "abbreviations",
+    "allergy_reactions",
+    "gender_stated",
+    "birth_date_stated"
+  ],
+  "notes": "GP referral to the maternity clinic. Also carries vital signs, lab results, a glucose monitor device and a plan of care (context only), and a resolved ketoacidosis in 2013 (past problem). Diabetes E10, thyroid E03 and asthma J45 fall under the maternity checklist; folic acid (B03BB) and vitamin D (A11CC) answer the supplement questions. The pregnancy is a problem (Z32.1, written as a diagnosis line). Pregnancy history, LMP, height, weight, vaccinations and the contact person are context only (not in the schema). 'Ei keskenmenoja eikä keskeytyksiä' is not a problem or a statement.",
+  "expected_patient": {
+    "birth_date": "1995-03-05",
+    "gender": "female"
+  }
+}

@@ -1,0 +1,338 @@
+{
+  "document_language": "sv",
+  "patient": {
+    "names": [
+      {
+        "source_quote": "STRÖM-TEST, Karin Helena",
+        "page": 1,
+        "locator": "line 6",
+        "text": "STRÖM-TEST, Karin Helena",
+        "family": "STRÖM-TEST",
+        "given": [
+          "Karin",
+          "Helena"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "birth_date": {
+      "source_quote": "Födelsedatum: 27.06.1993",
+      "page": 1,
+      "locator": "line 8",
+      "value": "1993-06-27",
+      "confidence": "high"
+    },
+    "gender": {
+      "source_quote": "Kön: kvinna",
+      "page": 1,
+      "locator": "line 9",
+      "value": "female",
+      "confidence": "high"
+    },
+    "identifiers": [
+      {
+        "source_quote": "Personnummer: 270693-994A",
+        "page": 1,
+        "locator": "line 7",
+        "value": "270693-994A",
+        "type_text": "Personnummer",
+        "issuer_text": "",
+        "confidence": "high"
+      }
+    ]
+  },
+  "allergies": {
+    "kind": "items_found",
+    "items": [
+      {
+        "source_quote": "Nötallergi: svullnad i läpparna",
+        "page": 1,
+        "locator": "line 43",
+        "substance_text": "Nöt",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "type": "allergy",
+        "category": "food",
+        "criticality": "not_stated",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "onset": "",
+        "reactions": [
+          {
+            "manifestations": [
+              "svullnad i läpparna"
+            ],
+            "severity": "not_stated"
+          }
+        ],
+        "note": "",
+        "confidence": "high"
+      }
+    ],
+    "none_known_statements": [
+      {
+        "source_quote": "Inga kända läkemedelsallergier.",
+        "page": 1,
+        "locator": "line 42",
+        "confidence": "high",
+        "scope": "medication"
+      }
+    ]
+  },
+  "medications": {
+    "kind": "items_found",
+    "items": [
+      {
+        "source_quote": "Budesonid/formoterol 160/4,5 mikrog inh 1 puff x 2 (ATC R03AK07)",
+        "page": 1,
+        "locator": "line 33",
+        "medication_text": "Budesonid/formoterol",
+        "printed_code": "R03AK07",
+        "printed_code_system_text": "ATC",
+        "strength_text": "160/4,5 mikrog",
+        "dose_form_text": "inh",
+        "dosage": {
+          "text": "1 puff x 2",
+          "dose_value": "1",
+          "dose_unit": "puff",
+          "frequency": "2",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Salbutamol 0,1 mg/dos inh 1-2 doser vid behov",
+        "page": 1,
+        "locator": "line 34",
+        "medication_text": "Salbutamol",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "0,1 mg/dos",
+        "dose_form_text": "inh",
+        "dosage": {
+          "text": "1-2 doser vid behov",
+          "dose_value": "",
+          "dose_unit": "doser",
+          "frequency": "",
+          "period": "",
+          "period_unit": "not_stated",
+          "as_needed": true,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Mesalazin 500 mg tabl 1 x 3",
+        "page": 1,
+        "locator": "line 35",
+        "medication_text": "Mesalazin",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "500 mg",
+        "dose_form_text": "tabl",
+        "dosage": {
+          "text": "1 x 3",
+          "dose_value": "1",
+          "dose_unit": "tabl",
+          "frequency": "3",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Järn 100 mg tabl 1 x 1",
+        "page": 1,
+        "locator": "line 36",
+        "medication_text": "Järn",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "100 mg",
+        "dose_form_text": "tabl",
+        "dosage": {
+          "text": "1 x 1",
+          "dose_value": "1",
+          "dose_unit": "tabl",
+          "frequency": "1",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Folsyra 0,4 mg tabl 1 x 1 (ATC B03BB01)",
+        "page": 1,
+        "locator": "line 37",
+        "medication_text": "Folsyra",
+        "printed_code": "B03BB01",
+        "printed_code_system_text": "ATC",
+        "strength_text": "0,4 mg",
+        "dose_form_text": "tabl",
+        "dosage": {
+          "text": "1 x 1",
+          "dose_value": "1",
+          "dose_unit": "tabl",
+          "frequency": "1",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "D-vitamin 20 mikrog tabl 1 x 1 (ATC A11CC05)",
+        "page": 1,
+        "locator": "line 38",
+        "medication_text": "D-vitamin",
+        "printed_code": "A11CC05",
+        "printed_code_system_text": "ATC",
+        "strength_text": "20 mikrog",
+        "dose_form_text": "tabl",
+        "dosage": {
+          "text": "1 x 1",
+          "dose_value": "1",
+          "dose_unit": "tabl",
+          "frequency": "1",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Kalcium 500 mg tabl 1 x 1 (ATC A12AA04)",
+        "page": 1,
+        "locator": "line 39",
+        "medication_text": "Kalcium",
+        "printed_code": "A12AA04",
+        "printed_code_system_text": "ATC",
+        "strength_text": "500 mg",
+        "dose_form_text": "tabl",
+        "dosage": {
+          "text": "1 x 1",
+          "dose_value": "1",
+          "dose_unit": "tabl",
+          "frequency": "1",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      }
+    ]
+  },
+  "problems": {
+    "kind": "items_found",
+    "items": [
+      {
+        "source_quote": "Z32.1 Graviditet bekräftad (v 9+0)",
+        "page": 1,
+        "locator": "line 27",
+        "condition_text": "Graviditet bekräftad",
+        "printed_code": "Z32.1",
+        "printed_code_system_text": "",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "severity": "not_stated",
+        "body_site_text": "",
+        "onset": "",
+        "abatement": "",
+        "note": "v 9+0",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "J45.9 Astma",
+        "page": 1,
+        "locator": "line 28",
+        "condition_text": "Astma",
+        "printed_code": "J45.9",
+        "printed_code_system_text": "",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "severity": "not_stated",
+        "body_site_text": "",
+        "onset": "",
+        "abatement": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "K51.9 Ulcerös kolit, diagnostiserad 2019",
+        "page": 1,
+        "locator": "line 29",
+        "condition_text": "Ulcerös kolit",
+        "printed_code": "K51.9",
+        "printed_code_system_text": "",
+        "clinical_status": "not_stated",
+        "verification_status": "confirmed",
+        "severity": "not_stated",
+        "body_site_text": "",
+        "onset": "2019",
+        "abatement": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "D50.9 Järnbristanemi",
+        "page": 1,
+        "locator": "line 30",
+        "condition_text": "Järnbristanemi",
+        "printed_code": "D50.9",
+        "printed_code_system_text": "",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "severity": "not_stated",
+        "body_site_text": "",
+        "onset": "",
+        "abatement": "",
+        "note": "",
+        "confidence": "high"
+      }
+    ]
+  }
+}

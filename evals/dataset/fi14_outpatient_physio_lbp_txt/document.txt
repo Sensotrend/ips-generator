@@ -1,0 +1,43 @@
+KUVITTEELAN TERVEYSASEMA / Lääkärin vastaanotto
+SYNTEETTINEN TESTIASIAKIRJA - EI OIKEA POTILAS
+
+LÄÄKÄRIN KIRJAUS
+
+Potilas: LEHTINEN-TESTI, Sari Marjatta
+Henkilötunnus: 210777-923U
+Syntymäaika: 21.07.1977
+Sukupuoli: nainen
+Käyntipäivä: 02.10.2026
+
+SYY
+Pitkittynyt alaselkäkipu, joka säteilee vasempaan reiteen. Kesto yli 3 kuukautta ja kipu häiritsee unta.
+
+ESITIEDOT
+Pituus 164 cm, paino 71 kg. Tupakoi noin 5 savuketta päivässä. Työ: sairaanhoitaja, kolmivuorotyö. Kuntoutuksena fysioterapian alkuarvio ja liikuntaohjeet.
+
+MITTAUKSET JA TULOKSET
+Verenpaine 122/78 mmHg, pulssi 68/min (02.10.2026).
+TSH 2,1 mU/l, 25-OH-D-vitamiini 58 nmol/l (22.09.2026). Luuntiheysmittaus (DXA) 2023: T-arvo -2,7.
+
+POTILAAN OMA KUVAUS
+"Haluaisin jaksaa töissä ja ulkoilla koiran kanssa ilman, että selkä jumittuu ja yöunet menevät."
+
+PERUSSAIRAUDET
+M54.4 Alaselkäkipu ja iskias, kesto 3 kk
+M81.9 Osteoporoosi, todettu 2023
+F32.0 Lievä masennustila
+E03.9 Kilpirauhasen vajaatoiminta
+
+LÄÄKITYS
+- Sertraliini 50 mg tabl 1 x 1 aamulla (ATC N06AB06)
+- Levotyroksiini 75 mikrog tabl 1 x 1 aamulla
+- Calcichew-D3 500 mg/10 mikrog purutabl 1 x 1
+- Naprokseeni 500 mg tabl 1 tarv., max 2 x vrk
+
+ALLERGIAT
+Kodeiini: pahoinvointi ja huimaus (intoleranssi)
+
+SUUNNITELMA
+Fysioterapiaa 8 käyntiä 8 viikon aikana, tavoitteena kivun hallinta ja yöunen paraneminen. Lääkärin seuranta 6 viikon kuluttua.
+
+Testi Lääkäri

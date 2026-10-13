@@ -1,0 +1,40 @@
+KUVITTEELAN HÄLSOCENTRAL / Mottagning
+SYNTETISKT TESTDOKUMENT - INTE EN RIKTIG PATIENT
+
+REMISS TILL FYSIOTERAPI
+
+Patient: SJÖBERG-TEST, Anna Maria
+Personnummer: 030982-9533
+Födelsedatum: 03.09.1982
+Kön: kvinna
+Remissdatum: 05.10.2026
+
+ORSAK TILL REMISSEN
+Ländryggssmärta sedan cirka 2 månader, värre vid långvarigt stående. Ingen utstrålning till benen. Önskar fysioterapeutens bedömning och träningsprogram.
+
+BAKGRUND
+Längd 168 cm, vikt 82 kg. Röker inte. Arbetar som lärare.
+Vaccinationer: dTp-vaccin 2019, influensavaccin 10/2025, covid-19-vaccin 2024.
+Operationer: appendektomi 2008.
+
+MÄTVÄRDEN
+Blodtryck 126/80 mmHg, puls 70/min, BMI 29,0 (05.10.2026).
+
+DIAGNOSER
+M54.5 Ländryggssmärta
+J45.9 Astma
+L40.0 Psoriasis vulgaris
+G43.9 Migrän
+E66.9 Övervikt
+
+MEDICINERING
+- Budesonid/formoterol 160/4,5 mikrog inh 1 puff x 2 (ATC R03AK07)
+- Salbutamol 0,1 mg/dos inh 1-2 doser vid behov
+- Daivobet salva vid behov på plack
+- Sumatriptan 50 mg tabl 1 tabl vid behov vid migrän
+
+ALLERGIER
+Inga kända läkemedelsallergier.
+Björkpollenallergi: rinit och ögonsymtom
+
+Testläkare, specialist i allmänmedicin

@@ -1,0 +1,26 @@
+{
+  "case_id": "fi15_outpatient_physio_copd_txt",
+  "language": "fi",
+  "format": "txt",
+  "media_type": "text/plain",
+  "doc_type": "outpatient_note",
+  "features": [
+    "physio_questionnaire_candidate",
+    "non_schema_facts",
+    "caps_headings",
+    "printed_icd10",
+    "printed_atc",
+    "hetu_without_birth_date",
+    "stopped_medication",
+    "as_needed_dosing",
+    "partial_dates",
+    "decimal_comma",
+    "none_known_allergies",
+    "gender_stated"
+  ],
+  "notes": "Physiotherapy-bound note. Also carries vital signs, a spirometry and lab result, devices, an advance directive and an alert (a fall risk, not a problem); none is in the schema. COPD (J44), coronary disease (I25) and hypertension (I10) all fall under the checklist. Only a HETU is given, so birth_date is null in gold (D-10); '67-vuotias mies' states the gender. A bare 'Ei tiedossa.' under the allergy heading is an explicit none-known statement, medium confidence, scope all. Tramadol is a stopped medication.",
+  "expected_patient": {
+    "birth_date": "1959-04-30",
+    "gender": "male"
+  }
+}

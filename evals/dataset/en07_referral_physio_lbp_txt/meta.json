@@ -1,0 +1,25 @@
+{
+  "case_id": "en07_referral_physio_lbp_txt",
+  "language": "en",
+  "format": "txt",
+  "media_type": "text/plain",
+  "doc_type": "referral_letter",
+  "features": [
+    "physio_questionnaire_candidate",
+    "non_schema_facts",
+    "caps_headings",
+    "printed_icd10",
+    "printed_atc",
+    "as_needed_dosing",
+    "partial_dates",
+    "abbreviations",
+    "none_known_allergies",
+    "gender_stated",
+    "birth_date_stated"
+  ],
+  "notes": "English physiotherapy referral. Also carries vaccinations, vital signs, lab results, a glucose-monitor device and a plan of care with goals; none is in the schema. Type 1 diabetes E10, anxiety F41 and IBS K58 fall under the checklist; M54.5 gives the onset. 'OD' and 'PRN' dosing abbreviations. 'No known allergies.' is an unscoped none-known statement (scope all).",
+  "expected_patient": {
+    "birth_date": "1990-05-14",
+    "gender": "male"
+  }
+}

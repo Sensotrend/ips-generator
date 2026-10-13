@@ -1,0 +1,27 @@
+{
+  "case_id": "fi13_referral_physio_lbp_txt",
+  "language": "fi",
+  "format": "txt",
+  "media_type": "text/plain",
+  "doc_type": "referral_letter",
+  "features": [
+    "physio_questionnaire_candidate",
+    "non_schema_facts",
+    "caps_headings",
+    "printed_icd10",
+    "printed_atc",
+    "resolved_condition",
+    "as_needed_dosing",
+    "partial_dates",
+    "abbreviations",
+    "decimal_comma",
+    "none_known_allergies",
+    "gender_stated",
+    "birth_date_stated"
+  ],
+  "notes": "GP referral to physiotherapy for low back pain. Also carries vital signs, lab results, functional status and a plan of care (context only), and a resolved pneumonia (past problem, 'parantunut'). Four diagnoses fall under the physiotherapy questionnaire's illness checklist (I10, E78.0, E11.9, K21.9) and E66.9 under overweight; M54.5 gives the pain duration. Height, weight and smoking are context only (not in the schema). 'Ei tiedossa olevia lääkeaineallergioita' is a drug-scoped none-known statement.",
+  "expected_patient": {
+    "birth_date": "1968-02-12",
+    "gender": "male"
+  }
+}

@@ -1,0 +1,253 @@
+{
+  "document_language": "fi",
+  "patient": {
+    "names": [
+      {
+        "source_quote": "LEHTINEN-TESTI, Sari Marjatta",
+        "page": 1,
+        "locator": "line 6",
+        "text": "LEHTINEN-TESTI, Sari Marjatta",
+        "family": "LEHTINEN-TESTI",
+        "given": [
+          "Sari",
+          "Marjatta"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "birth_date": {
+      "source_quote": "Syntymäaika: 21.07.1977",
+      "page": 1,
+      "locator": "line 8",
+      "value": "1977-07-21",
+      "confidence": "high"
+    },
+    "gender": {
+      "source_quote": "Sukupuoli: nainen",
+      "page": 1,
+      "locator": "line 9",
+      "value": "female",
+      "confidence": "high"
+    },
+    "identifiers": [
+      {
+        "source_quote": "Henkilötunnus: 210777-923U",
+        "page": 1,
+        "locator": "line 7",
+        "value": "210777-923U",
+        "type_text": "Henkilötunnus",
+        "issuer_text": "",
+        "confidence": "high"
+      }
+    ]
+  },
+  "allergies": {
+    "kind": "items_found",
+    "items": [
+      {
+        "source_quote": "Kodeiini: pahoinvointi ja huimaus (intoleranssi)",
+        "page": 1,
+        "locator": "line 38",
+        "substance_text": "Kodeiini",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "type": "intolerance",
+        "category": "medication",
+        "criticality": "not_stated",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "onset": "",
+        "reactions": [
+          {
+            "manifestations": [
+              "pahoinvointi",
+              "huimaus"
+            ],
+            "severity": "not_stated"
+          }
+        ],
+        "note": "",
+        "confidence": "high"
+      }
+    ],
+    "none_known_statements": []
+  },
+  "medications": {
+    "kind": "items_found",
+    "items": [
+      {
+        "source_quote": "Sertraliini 50 mg tabl 1 x 1 aamulla (ATC N06AB06)",
+        "page": 1,
+        "locator": "line 32",
+        "medication_text": "Sertraliini",
+        "printed_code": "N06AB06",
+        "printed_code_system_text": "ATC",
+        "strength_text": "50 mg",
+        "dose_form_text": "tabl",
+        "dosage": {
+          "text": "1 x 1 aamulla",
+          "dose_value": "1",
+          "dose_unit": "tabl",
+          "frequency": "1",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Levotyroksiini 75 mikrog tabl 1 x 1 aamulla",
+        "page": 1,
+        "locator": "line 33",
+        "medication_text": "Levotyroksiini",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "75 mikrog",
+        "dose_form_text": "tabl",
+        "dosage": {
+          "text": "1 x 1 aamulla",
+          "dose_value": "1",
+          "dose_unit": "tabl",
+          "frequency": "1",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Calcichew-D3 500 mg/10 mikrog purutabl 1 x 1",
+        "page": 1,
+        "locator": "line 34",
+        "medication_text": "Calcichew-D3",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "500 mg/10 mikrog",
+        "dose_form_text": "purutabl",
+        "dosage": {
+          "text": "1 x 1",
+          "dose_value": "1",
+          "dose_unit": "purutabl",
+          "frequency": "1",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Naprokseeni 500 mg tabl 1 tarv., max 2 x vrk",
+        "page": 1,
+        "locator": "line 35",
+        "medication_text": "Naprokseeni",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "500 mg",
+        "dose_form_text": "tabl",
+        "dosage": {
+          "text": "1 tarv., max 2 x vrk",
+          "dose_value": "1",
+          "dose_unit": "tabl",
+          "frequency": "",
+          "period": "",
+          "period_unit": "not_stated",
+          "as_needed": true,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      }
+    ]
+  },
+  "problems": {
+    "kind": "items_found",
+    "items": [
+      {
+        "source_quote": "M54.4 Alaselkäkipu ja iskias, kesto 3 kk",
+        "page": 1,
+        "locator": "line 26",
+        "condition_text": "Alaselkäkipu ja iskias",
+        "printed_code": "M54.4",
+        "printed_code_system_text": "",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "severity": "not_stated",
+        "body_site_text": "",
+        "onset": "",
+        "abatement": "",
+        "note": "kesto 3 kk",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "M81.9 Osteoporoosi, todettu 2023",
+        "page": 1,
+        "locator": "line 27",
+        "condition_text": "Osteoporoosi",
+        "printed_code": "M81.9",
+        "printed_code_system_text": "",
+        "clinical_status": "not_stated",
+        "verification_status": "confirmed",
+        "severity": "not_stated",
+        "body_site_text": "",
+        "onset": "2023",
+        "abatement": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "F32.0 Lievä masennustila",
+        "page": 1,
+        "locator": "line 28",
+        "condition_text": "Lievä masennustila",
+        "printed_code": "F32.0",
+        "printed_code_system_text": "",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "severity": "not_stated",
+        "body_site_text": "",
+        "onset": "",
+        "abatement": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "E03.9 Kilpirauhasen vajaatoiminta",
+        "page": 1,
+        "locator": "line 29",
+        "condition_text": "Kilpirauhasen vajaatoiminta",
+        "printed_code": "E03.9",
+        "printed_code_system_text": "",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "severity": "not_stated",
+        "body_site_text": "",
+        "onset": "",
+        "abatement": "",
+        "note": "",
+        "confidence": "high"
+      }
+    ]
+  }
+}
