@@ -1,8 +1,12 @@
 import { useEffect, useState } from 'react'
 import { useJob, useJobEvents } from './api/hooks'
+import type { ReviewerRole } from './api/types'
 import { JobProgress } from './components/JobProgress'
+import { PatientReview } from './components/PatientReview'
 import { ReviewScreen } from './components/ReviewScreen'
+import { RoleScreen } from './components/RoleScreen'
 import { UploadScreen } from './components/UploadScreen'
+import { useRole } from './lib/role'
 
 /** Hash routes: `#/` (upload) and `#/jobs/<id>`. The job id is not PHI. */
 function parseRoute(hash: string): { jobId: string | null } {
@@ -20,7 +24,7 @@ function useHashRoute() {
   return parseRoute(hash)
 }
 
-function JobScreen({ jobId }: { jobId: string }) {
+function JobScreen({ jobId, role }: { jobId: string; role: ReviewerRole }) {
   const job = useJob(jobId)
   const running = job.data?.status === 'queued' || job.data?.status === 'running'
   const events = useJobEvents(jobId, running)
@@ -47,25 +51,42 @@ function JobScreen({ jobId }: { jobId: string }) {
       </div>
     )
   }
-  return <ReviewScreen jobId={jobId} />
+  return role === 'patient' ? (
+    <PatientReview jobId={jobId} />
+  ) : (
+    <ReviewScreen jobId={jobId} role={role} />
+  )
 }
 
 function App() {
   const { jobId } = useHashRoute()
+  const [role, setRole] = useRole()
   return (
-    <div className="app">
+    <div className={`app${role ? ` role-${role}` : ' role-none'}`}>
       <header className="app-header">
         <a href="#/" className="brand">
           IPS Generator
         </a>
-        <span className="muted">Synthetic data only</span>
+        <span className="header-right">
+          {role && (
+            <>
+              <span className="role-chip">{role === 'patient' ? 'Patient' : 'Clinician'}</span>
+              <button type="button" className="link-button" onClick={() => setRole(null)}>
+                Change
+              </button>
+            </>
+          )}
+          <span className="muted">Synthetic data only</span>
+        </span>
       </header>
       <main>
         <h1 className="visually-hidden">IPS Generator</h1>
-        {jobId ? (
-          <JobScreen key={jobId} jobId={jobId} />
+        {!role ? (
+          <RoleScreen onChoose={setRole} />
+        ) : jobId ? (
+          <JobScreen key={jobId} jobId={jobId} role={role} />
         ) : (
-          <UploadScreen onJob={(id) => (window.location.hash = `#/jobs/${id}`)} />
+          <UploadScreen role={role} onJob={(id) => (window.location.hash = `#/jobs/${id}`)} />
         )}
       </main>
     </div>

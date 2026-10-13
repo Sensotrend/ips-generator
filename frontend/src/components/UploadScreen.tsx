@@ -1,12 +1,13 @@
 import { useState } from 'react'
 import { ApiError, api } from '../api/client'
 import { useJobs } from '../api/hooks'
+import type { ReviewerRole } from '../api/types'
 
 /** Supported inputs (PLAN D-2). Camera capture comes with OCR in Phase 4, so no `capture`. */
 export const ACCEPT =
   '.txt,.md,.markdown,.json,.csv,.tsv,.pdf,text/plain,text/markdown,application/json,text/csv,application/pdf'
 
-export function UploadScreen({ onJob }: { onJob: (id: string) => void }) {
+export function UploadScreen({ role, onJob }: { role: ReviewerRole; onJob: (id: string) => void }) {
   const [file, setFile] = useState<File | null>(null)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -14,6 +15,13 @@ export function UploadScreen({ onJob }: { onJob: (id: string) => void }) {
 
   return (
     <div className="upload">
+      <h2>{role === 'patient' ? 'Let’s build your patient summary' : 'New document'}</h2>
+      {role === 'patient' && (
+        <p>
+          Choose a document from your health records. We will read it, then ask you to confirm what
+          we found before anything is saved.
+        </p>
+      )}
       <form
         onSubmit={(event) => {
           event.preventDefault()

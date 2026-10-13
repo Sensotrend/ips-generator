@@ -9,6 +9,7 @@ interface Props {
   busy: boolean
   error: unknown
   validation: ValidationSummary | null
+  role: ReviewerRole
   onApprove: (role: ReviewerRole) => void
 }
 
@@ -29,9 +30,9 @@ export function ApprovePanel({
   busy,
   error,
   validation,
+  role,
   onApprove,
 }: Props) {
-  const [role, setRole] = useState<ReviewerRole | null>(null)
   const [downloadError, setDownloadError] = useState(false)
 
   if (approved) {
@@ -69,34 +70,18 @@ export function ApprovePanel({
           ))}
         </ul>
       )}
-      <fieldset>
-        <legend>I am reviewing as</legend>
-        <label>
-          <input
-            type="radio"
-            name="role"
-            checked={role === 'patient'}
-            onChange={() => setRole('patient')}
-          />{' '}
-          the patient
-        </label>
-        <label>
-          <input
-            type="radio"
-            name="role"
-            checked={role === 'clinician'}
-            onChange={() => setRole('clinician')}
-          />{' '}
-          a clinician
-        </label>
-      </fieldset>
+      <p className="muted">
+        {role === 'patient'
+          ? 'By approving, you confirm as the patient that this summary is correct.'
+          : 'By approving, you attest this summary as a clinician.'}
+      </p>
       <button
         type="button"
         className="primary"
-        disabled={busy || blockers.length > 0 || role === null}
-        onClick={() => role && onApprove(role)}
+        disabled={busy || blockers.length > 0}
+        onClick={() => onApprove(role)}
       >
-        Approve IPS
+        {role === 'patient' ? 'Approve my summary' : 'Approve IPS'}
       </button>
       {error !== null && error !== undefined && (
         <p className="note note-warning" role="alert">

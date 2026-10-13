@@ -517,3 +517,106 @@ mark {
   background: rgb(255 210 0 / 0.45);
   border-radius: 2px;
 }
+
+/* Role-first flow. Placeholder look: restyle via the custom properties at the top. */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.role-chip {
+  background: rgb(255 255 255 / 0.2);
+  border-radius: 999px;
+  padding: 0.1rem 0.6rem;
+  font-size: 0.85rem;
+}
+
+.link-button {
+  background: none;
+  border: 0;
+  color: #fff;
+  text-decoration: underline;
+  min-height: 0;
+  padding: 0;
+}
+
+@keyframes settle {
+  from {
+    opacity: 0;
+    transform: translateY(1.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Before a role is chosen the question sits centred; afterwards content moves up to the top. */
+.role-none main {
+  min-height: 70vh;
+  display: grid;
+  align-content: center;
+}
+
+.role-screen {
+  max-width: 40rem;
+  margin: 0 auto;
+  animation: settle 0.3s ease-out;
+}
+
+.role-choices {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  margin-top: 1rem;
+}
+
+.role-choice {
+  display: grid;
+  gap: 0.4rem;
+  text-align: left;
+  padding: 1rem;
+  border-radius: 10px;
+}
+
+.role-choice strong {
+  font-size: 1.15rem;
+  color: var(--brand);
+}
+
+.role-patient main,
+.role-clinician main {
+  animation: settle 0.3s ease-out;
+}
+
+.role-patient main {
+  max-width: 40rem;
+  font-size: 1.1rem;
+}
+
+.chat-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem 1.25rem;
+  margin: 0.5rem 0 1rem;
+}
+
+.chat-sentence {
+  font-size: 1.25rem;
+  margin-top: 0;
+}
+
+.inline-field {
+  display: block;
+  margin: 0.5rem 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .role-screen,
+  .role-patient main,
+  .role-clinician main {
+    animation: none;
+  }
+}

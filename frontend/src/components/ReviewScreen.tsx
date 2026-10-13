@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { ApiError } from '../api/client'
 import { useApprove, useDraft, useUpdateDraft } from '../api/hooks'
-import type { Draft, Fact, ReviewAction, Section, SourceRef } from '../api/types'
+import type { Draft, Fact, ReviewAction, ReviewerRole, Section, SourceRef } from '../api/types'
 import { ApprovePanel } from './ApprovePanel'
 import { FactCard } from './FactCard'
 import { FlagChips } from './FlagChips'
@@ -86,7 +86,7 @@ export function SectionsList(props: ListProps) {
   )
 }
 
-export function ReviewScreen({ jobId }: { jobId: string }) {
+export function ReviewScreen({ jobId, role }: { jobId: string; role: ReviewerRole }) {
   const draft = useDraft(jobId, true)
   const update = useUpdateDraft(jobId)
   const approve = useApprove(jobId)
@@ -171,6 +171,7 @@ export function ReviewScreen({ jobId }: { jobId: string }) {
             busy={busy}
             error={approve.error}
             validation={approve.data?.validation ?? null}
+            role={role}
             onApprove={(role) => approve.mutate({ version: data.version, role })}
           />
         </div>

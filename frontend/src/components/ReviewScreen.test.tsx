@@ -22,7 +22,7 @@ function stubApi(onPut = vi.fn()) {
 function renderReview() {
   render(
     <QueryClientProvider client={new QueryClient()}>
-      <ReviewScreen jobId="22222222-2222-2222-2222-222222222222" />
+      <ReviewScreen jobId="22222222-2222-2222-2222-222222222222" role="clinician" />
     </QueryClientProvider>,
   )
 }

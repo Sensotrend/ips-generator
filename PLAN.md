@@ -13,6 +13,7 @@ document Bundle, reviewed and approved by a human, via a mobile-friendly PWA.
 - Autonomous clinical decision-making — every output is human-reviewed.
 - Writing back into an EHR (later phase, via SMART on FHIR).
 - Offline storage of patient data on devices.
+- Multi-document upload and merging of several IPS summaries: possible future enhancements, see D-12 and Phase 4.
 
 ## 2. Architecture
 
@@ -233,6 +234,7 @@ PLAN.md  CLAUDE.md  README.md
   - Gap: a reviewer can't *add* a missing name or birth date, only edit/confirm existing facts.
 - [x] Manifest, icons, installability; service worker caches app shell only `[opus]` (PHI rule — review carefully)
   - Build runs `scripts/check-sw.mjs`: only the app shell is precached and `/api/` is NetworkOnly.
+- [x] Role-first flow: the app first asks patient or clinician (self-declared, kept in `sessionStorage`, not auth). Clinician gets the compact review screen; patient gets a one-question-at-a-time review with deterministic plain-language sentences (`lib/sentences.ts`) and a summary step to approve. The role chosen at the start is the attester type (the role radio in `ApprovePanel` is gone). Styling is a placeholder until the LUVN look and feel lands. Multi-document upload is not part of this (D-12). `[opus]`
 - [ ] OIDC login (Keycloak dev realm) `[opus]`
   - **Deferred:** dev-only fixed reviewer behind `APP_ENV=development` (`get_current_user` is the OIDC slot);
     the API refuses to start outside development.
@@ -241,7 +243,7 @@ PLAN.md  CLAUDE.md  README.md
 
 ### Phase 4 — More inputs & quality
 - [ ] Scanned PDFs, images/photos (multi-page capture): local OCR at ingest; DOCX, HL7 v2, CDA (deterministic parsers where structured) `[opus]`
-- [ ] Multi-document merge into one IPS (dedupe meds/problems across docs; D-11: a "none known" claim contradicted by another document is not asserted and is flagged) `[fable]`
+- [ ] Multi-document merge into one IPS (future enhancement per D-12: multi-document upload, and merging several IPS summaries; dedupe meds/problems across docs; D-11: a "none known" claim contradicted by another document is not asserted and is flagged) `[fable]`
 - [ ] Rendered human-readable IPS view (Composition narrative) `[sonnet]`
 - [ ] Prompt caching for system prompt + schema; Batch API path for bulk backfills `[sonnet]`
 
@@ -275,6 +277,7 @@ PLAN.md  CLAUDE.md  README.md
 | D-9 | Codes printed in a document (ICD-10, ATC, …) are captured as text hints only; the terminology step uses them only if the server confirms the code exists and matches the text. | Decided 2026-10-08 |
 | D-10 | Birth date and sex are **derived deterministically** from a valid Finnish personal identity code (never by the LLM) when the document doesn't state them, and marked as derived for review. IPS 2.0.1 requires `Patient.birthDate` (1..1). | Decided 2026-10-13 |
 | D-11 | "Allergiat: ei tiedossa" (bare "not known") is `none_known` (scope all) with its source quote when no other document says anything about allergies. If another document suggests allergies (Phase 4 merge), the "none known" claim is not asserted: the section becomes `no_information` and is flagged for review. | Decided 2026-10-13 |
+| D-12 | **One document → one summary** stays the design for now (one job = one document = one IPS). Possible future enhancements, not scheduled: (a) uploading several documents and reviewing them together as one job (needs cross-document dedupe, conflict flagging and a same-patient check); (b) merging several existing IPS summaries into one. Both build on the Phase 4 merge task and D-11. | Decided 2026-10-13 |
 
 Still open, before the phase that needs them:
 - ~~Phase 1 validity without codes~~ **Resolved:** text-only `CodeableConcept`s give 0 errors and no extra warnings in IPS 2.0.1 (bindings are "preferred"). Fixtures in `tests/fixtures/ips-variants/`.

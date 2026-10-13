@@ -6,7 +6,7 @@ import { UploadScreen } from './UploadScreen'
 function renderUpload(onJob = vi.fn()) {
   render(
     <QueryClientProvider client={new QueryClient()}>
-      <UploadScreen onJob={onJob} />
+      <UploadScreen role="clinician" onJob={onJob} />
     </QueryClientProvider>,
   )
   return onJob

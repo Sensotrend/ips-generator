@@ -10,6 +10,7 @@ const base = {
   busy: false,
   error: null,
   validation: null,
+  role: 'clinician' as const,
 }
 
 describe('ApprovePanel', () => {
@@ -18,18 +19,14 @@ describe('ApprovePanel', () => {
     expect(screen.getByRole('list', { name: 'Approval blocked' })).toHaveTextContent(
       'birth date is missing',
     )
-    fireEvent.click(screen.getByLabelText(/the patient/))
     expect(screen.getByRole('button', { name: 'Approve IPS' })).toBeDisabled()
   })
 
-  it('needs a reviewer role and approves with it', () => {
+  it('approves with the role chosen at the start', () => {
     const onApprove = vi.fn()
-    render(<ApprovePanel {...base} blockers={[]} onApprove={onApprove} />)
-    const button = screen.getByRole('button', { name: 'Approve IPS' })
-    expect(button).toBeDisabled()
-    fireEvent.click(screen.getByLabelText(/a clinician/))
-    fireEvent.click(button)
-    expect(onApprove).toHaveBeenCalledWith('clinician')
+    render(<ApprovePanel {...base} role="patient" blockers={[]} onApprove={onApprove} />)
+    fireEvent.click(screen.getByRole('button', { name: 'Approve my summary' }))
+    expect(onApprove).toHaveBeenCalledWith('patient')
   })
 
   it('explains a validation failure', () => {
