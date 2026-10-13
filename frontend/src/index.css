@@ -833,6 +833,51 @@ mark {
   white-space: nowrap;
 }
 
+.fact-review-grid tbody tr {
+  cursor: pointer;
+}
+
+.fact-review-grid tr.row-ticked {
+  background: #e3eff7;
+}
+
+.fact-review-grid tr.row-selected {
+  box-shadow: inset 3px 0 0 var(--brand);
+}
+
+.fact-review-grid tr.row-rejected td {
+  color: var(--muted);
+  text-decoration: line-through;
+}
+
+.fact-review-grid th,
+.fact-review-grid td {
+  padding-right: 0.5rem;
+}
+
+.fact-review-grid td {
+  overflow-wrap: anywhere;
+}
+
+.fact-review-grid td input:not([type='checkbox']),
+.fact-review-grid td select {
+  width: 100%;
+  min-width: 7rem;
+}
+
+.fact-review-grid .col-check {
+  width: 1%;
+}
+
+.fact-review-grid .col-actions {
+  white-space: nowrap;
+}
+
+.table-actions {
+  margin: 0.5rem 0 1rem;
+  align-items: center;
+}
+
 .print-only {
   display: none;
 }

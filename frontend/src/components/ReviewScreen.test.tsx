@@ -42,7 +42,7 @@ describe('ReviewScreen', () => {
   it('highlights the selected fact quote in the source', async () => {
     stubApi()
     renderReview()
-    fireEvent.click(await screen.findByText('Sulfa-antibiootit', { selector: '.fact-title' }))
+    fireEvent.click(await screen.findByRole('button', { name: /line 3/ }))
     const sourcePane = await screen.findByRole('region', { name: 'Source document' })
     const mark = await within(sourcePane).findByText('Sulfa-antibiootit: ihottuma (2009)', {
       selector: 'mark',
@@ -54,8 +54,11 @@ describe('ReviewScreen', () => {
     const onPut = vi.fn()
     stubApi(onPut)
     renderReview()
-    const card = await screen.findByRole('article', { name: 'Sulfa-antibiootit' })
-    fireEvent.click(within(card).getByRole('button', { name: 'Reject' }))
+    const allergies = within(
+      await screen.findByRole('region', { name: 'Allergies and intolerances' }),
+    )
+    fireEvent.click(allergies.getByRole('checkbox', { name: 'Select Sulfa-antibiootit' }))
+    fireEvent.click(allergies.getByRole('button', { name: 'Reject selected' }))
     await vi.waitFor(() =>
       expect(onPut).toHaveBeenCalledWith({
         version: 1,

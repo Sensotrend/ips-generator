@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import { ApiError } from '../api/client'
 import { useApprove, useDraft, useUpdateDraft } from '../api/hooks'
-import type { Draft, Fact, ReviewAction, ReviewerRole, SourceRef } from '../api/types'
-import { languageName, useT } from '../lib/i18n'
+import type { Draft, Fact, FactKind, ReviewAction, ReviewerRole, SourceRef } from '../api/types'
+import { languageName, useT, type TKey } from '../lib/i18n'
 import { sectionTitle } from '../lib/labels'
 import { ApprovePanel } from './ApprovePanel'
-import { FactCard } from './FactCard'
+import { FactTable } from './FactTable'
 import { FlagChips } from './FlagChips'
 import { SourceViewer } from './SourceViewer'
 
@@ -18,19 +18,40 @@ interface ListProps {
   onActions: (actions: ReviewAction[]) => void
 }
 
+const KIND_HEADING: Record<FactKind, TKey> = {
+  patient_name: 'row.name',
+  patient_identifier: 'row.identifier',
+  patient_birth_date: 'row.birthDate',
+  patient_gender: 'row.sex',
+  allergy: 'row.allergy',
+  medication: 'row.medication',
+  condition: 'row.problem',
+  no_known_allergy_statement: 'section.statements',
+  section_none_known: 'section.statements',
+}
+
+/** The facts as one table per kind (kinds have different columns), in order of appearance. */
 function FactList({ facts, ...props }: ListProps & { facts: Fact[] }) {
+  const { t } = useT()
+  const byKind = new Map<TKey, Fact[]>()
+  for (const fact of facts) {
+    const heading = KIND_HEADING[fact.kind]
+    byKind.set(heading, [...(byKind.get(heading) ?? []), fact])
+  }
   return (
     <>
-      {facts.map((fact) => (
-        <FactCard
-          key={fact.path}
-          fact={fact}
-          selected={props.selected === fact.path}
-          readOnly={props.readOnly}
-          busy={props.busy}
-          onSelect={props.onSelect}
-          onActions={props.onActions}
-        />
+      {[...byKind].map(([heading, group]) => (
+        <div key={heading}>
+          <h3>{t(heading)}</h3>
+          <FactTable
+            facts={group}
+            selected={props.selected}
+            readOnly={props.readOnly}
+            busy={props.busy}
+            onSelect={props.onSelect}
+            onActions={props.onActions}
+          />
+        </div>
       ))}
     </>
   )
@@ -68,14 +89,14 @@ export function SectionsList(props: ListProps) {
             )}
           </header>
           <FlagChips flags={section.flags} />
-          {section.statement && <FactList facts={[section.statement]} {...props} />}
-          <FactList facts={section.items} {...props} />
-          {section.scoped_statements.length > 0 && (
-            <>
-              <h3>{t('section.statements')}</h3>
-              <FactList facts={section.scoped_statements} {...props} />
-            </>
-          )}
+          <FactList
+            facts={[
+              ...(section.statement ? [section.statement] : []),
+              ...section.items,
+              ...section.scoped_statements,
+            ]}
+            {...props}
+          />
           {section.kind === 'no_information' && section.items.length === 0 && (
             <p className="muted">{t('section.silent')}</p>
           )}

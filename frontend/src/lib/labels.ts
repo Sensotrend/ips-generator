@@ -45,51 +45,6 @@ export function factTitle(fact: Fact): string {
   }
 }
 
-export function factDetails(fact: Fact): [string, string][] {
-  const v = fact.value
-  const out: [string, string][] = []
-  // `free` values are document text; the others are backend enums, shown in the interface language.
-  const add = (label: TKey, value: unknown, free = false) => {
-    const text = str(value)
-    if (text && text !== 'not_stated')
-      out.push([translate(label), free ? text : translateEnum(text)])
-  }
-  switch (fact.kind) {
-    case 'allergy':
-      add('detail.status', v.clinical_status)
-      add('detail.category', v.category)
-      add('detail.criticality', v.criticality)
-      add(
-        'detail.reactions',
-        (v.reactions ?? [])
-          .flatMap((r: { manifestations: string[] }) => r.manifestations)
-          .join(', '),
-        true,
-      )
-      add('detail.onset', v.onset, true)
-      break
-    case 'medication':
-      add('detail.dosage', v.dosage?.text, true)
-      add('detail.form', v.dose_form_text, true)
-      add('detail.status', v.status)
-      add('detail.reason', v.reason_text, true)
-      break
-    case 'condition':
-      add('detail.status', v.clinical_status)
-      add('detail.verification', v.verification_status)
-      add('detail.onset', v.onset, true)
-      add('detail.resolved', v.abatement, true)
-      break
-    case 'no_known_allergy_statement':
-    case 'section_none_known':
-      add('detail.scope', v.scope)
-      break
-    default:
-      break
-  }
-  return out
-}
-
 /**
  * The rows of a fact's table in the patient view: the elements that end up in the IPS resource,
  * labelled after the IPS profile elements (`[label, value]`). The first row is the main value.
