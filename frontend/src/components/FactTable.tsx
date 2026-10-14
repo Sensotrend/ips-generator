@@ -93,9 +93,11 @@ function ConfirmControls({
 }
 
 /**
- * One kind of fact as a table for the clinician: the labels are the column headings, a row is a
- * fact. Clicking a row ticks it; the buttons under the table accept, reject or undo the ticked
- * rows in one go. A row's Edit button turns its cells into inputs.
+ * One kind of fact as a table for the clinician: the labels are the column headings and each fact
+ * is a group of rows (its own `<tbody>`): the values, then the decision and notes, then the source
+ * quote when there is one. The checkbox and Actions cells span the group. Clicking a fact ticks
+ * it; the buttons under the table accept, reject or undo the ticked facts in one go. A fact's Edit
+ * button turns its value cells into inputs.
  */
 export function FactTable({ facts, selected, readOnly, busy, onSelect, onActions }: Props) {
   const { t } = useT()
@@ -106,6 +108,8 @@ export function FactTable({ facts, selected, readOnly, busy, onSelect, onActions
   const fields = editableFields(facts.find((f) => editableFields(f).length > 0) ?? facts[0])
   const extras = EXTRA_COLUMNS[kind] ?? []
   const showTitle = fields.length === 0
+  /** Data columns between the checkbox and Actions; the detail rows span them. */
+  const columns = (showTitle ? 1 : 0) + fields.length + extras.length
   const tickedHere = facts.filter((f) => ticked.has(f.path))
   const allTicked = tickedHere.length === facts.length
 
@@ -162,7 +166,7 @@ export function FactTable({ facts, selected, readOnly, busy, onSelect, onActions
   return (
     <div className="review-table">
       <div className="table-scroll">
-        <table className="fact-grid fact-review-grid">
+        <table className={`fact-grid fact-review-grid${readOnly ? ' read-only' : ''}`}>
           <thead>
             <tr>
               {!readOnly && (
@@ -189,37 +193,39 @@ export function FactTable({ facts, selected, readOnly, busy, onSelect, onActions
                   {t(extra.label)}
                 </th>
               ))}
-              <th scope="col">{t('table.decision')}</th>
-              <th scope="col">{t('table.source')}</th>
-              <th scope="col">{t('table.notes')}</th>
               {!readOnly && <th scope="col">{t('table.actions')}</th>}
             </tr>
           </thead>
-          <tbody>
-            {facts.map((fact) => {
-              const isEditing = editing?.path === fact.path
-              const rowFields = editableFields(fact)
-              const rejected = fact.decision === 'rejected'
-              const name = factTitle(fact) || t('fact.empty')
-              const onRowClick = (event: MouseEvent) => {
-                if (readOnly || isEditing || (event.target as HTMLElement).closest(INTERACTIVE))
-                  return
-                toggle(fact.path)
-              }
-              return (
-                <tr
-                  key={fact.path}
-                  className={[
-                    ticked.has(fact.path) ? 'row-ticked' : '',
-                    selected === fact.path ? 'row-selected' : '',
-                    rejected ? 'row-rejected' : '',
-                  ]
-                    .filter(Boolean)
-                    .join(' ')}
-                  onClick={onRowClick}
-                >
+          {facts.map((fact) => {
+            const isEditing = editing?.path === fact.path
+            const rowFields = editableFields(fact)
+            const rejected = fact.decision === 'rejected'
+            const name = factTitle(fact) || t('fact.empty')
+            const hasNotes =
+              fact.flags.length > 0 ||
+              fact.notes.length > 0 ||
+              (fact.needs_confirmation && !readOnly)
+            const rowSpan = fact.source ? 3 : 2
+            const onRowClick = (event: MouseEvent) => {
+              if (readOnly || isEditing || (event.target as HTMLElement).closest(INTERACTIVE))
+                return
+              toggle(fact.path)
+            }
+            return (
+              <tbody
+                key={fact.path}
+                className={[
+                  ticked.has(fact.path) ? 'row-ticked' : '',
+                  selected === fact.path ? 'row-selected' : '',
+                  rejected ? 'row-rejected' : '',
+                ]
+                  .filter(Boolean)
+                  .join(' ')}
+                onClick={onRowClick}
+              >
+                <tr>
                   {!readOnly && (
-                    <td className="col-check">
+                    <td className="col-check" rowSpan={rowSpan}>
                       <input
                         type="checkbox"
                         aria-label={t('table.selectRow', { name })}
@@ -240,50 +246,8 @@ export function FactTable({ facts, selected, readOnly, busy, onSelect, onActions
                   {extras.map((extra) => (
                     <td key={extra.label}>{extra.get(fact.value)}</td>
                   ))}
-                  <td>
-                    <span className={`decision decision-${fact.decision}`}>
-                      {t(`decision.${fact.decision}`)}
-                    </span>
-                    {fact.derived !== null && !('source_quote' in fact.value) && (
-                      <>
-                        {' '}
-                        <span className="badge">{t('fact.derived')}</span>
-                      </>
-                    )}
-                  </td>
-                  <td>
-                    {fact.source && (
-                      <button
-                        type="button"
-                        className="fact-source-link"
-                        title={t('fact.showInSource')}
-                        onClick={() => onSelect(fact)}
-                      >
-                        <span className="muted">
-                          {t('fact.page', { page: fact.source.page })}
-                          {fact.source.locator ? `, ${fact.source.locator}` : ''}:
-                        </span>{' '}
-                        <q>{fact.source.quote}</q>
-                      </button>
-                    )}
-                  </td>
-                  <td>
-                    <FlagChips flags={fact.flags} />
-                    {fact.notes.length > 0 && (
-                      <ul className="notes">
-                        {fact.notes.map((note, index) => (
-                          <li key={index} className={`note note-${note.severity}`}>
-                            {note.message}
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                    {fact.needs_confirmation && !readOnly && (
-                      <ConfirmControls fact={fact} busy={busy} onActions={onActions} />
-                    )}
-                  </td>
                   {!readOnly && (
-                    <td className="col-actions">
+                    <td className="col-actions" rowSpan={rowSpan}>
                       {isEditing ? (
                         <>
                           <button
@@ -322,9 +286,64 @@ export function FactTable({ facts, selected, readOnly, busy, onSelect, onActions
                     </td>
                   )}
                 </tr>
-              )
-            })}
-          </tbody>
+                <tr className="row-detail">
+                  <td colSpan={columns}>
+                    <div className="row-detail-items">
+                      <span>
+                        <span className="muted">{t('table.decision')}:</span>{' '}
+                        <span className={`decision decision-${fact.decision}`}>
+                          {t(`decision.${fact.decision}`)}
+                        </span>
+                        {fact.derived !== null && !('source_quote' in fact.value) && (
+                          <>
+                            {' '}
+                            <span className="badge">{t('fact.derived')}</span>
+                          </>
+                        )}
+                      </span>
+                      {hasNotes && (
+                        <div className="row-detail-notes">
+                          <span className="muted">{t('table.notes')}:</span>{' '}
+                          <FlagChips flags={fact.flags} />
+                          {fact.notes.length > 0 && (
+                            <ul className="notes">
+                              {fact.notes.map((note, index) => (
+                                <li key={index} className={`note note-${note.severity}`}>
+                                  {note.message}
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                          {fact.needs_confirmation && !readOnly && (
+                            <ConfirmControls fact={fact} busy={busy} onActions={onActions} />
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+                {fact.source && (
+                  <tr className="row-detail row-source">
+                    <td colSpan={columns}>
+                      <span className="muted">{t('table.source')}:</span>{' '}
+                      <button
+                        type="button"
+                        className="fact-source-link"
+                        title={t('fact.showInSource')}
+                        onClick={() => onSelect(fact)}
+                      >
+                        <span className="muted">
+                          {t('fact.page', { page: fact.source.page })}
+                          {fact.source.locator ? `, ${fact.source.locator}` : ''}:
+                        </span>{' '}
+                        <q>{fact.source.quote}</q>
+                      </button>
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            )
+          })}
         </table>
       </div>
       {!readOnly && (

@@ -42,14 +42,27 @@ function renderTable(facts: Fact[], readOnly = false) {
 describe('FactTable', () => {
   const facts = [medication(0, 'Metformiini'), medication(1, 'Simvastatiini')]
 
-  it('labels the columns and shows one row per fact', () => {
+  it('labels the columns and shows each fact as values, decision and source rows', () => {
     renderTable(facts)
-    for (const label of ['Medication', 'Strength', 'Dosage', 'Status', 'Decision', 'Source']) {
+    for (const label of ['Medication', 'Strength', 'Dosage', 'Status', 'Actions']) {
       expect(screen.getByRole('columnheader', { name: label })).toBeInTheDocument()
     }
-    const row = screen.getByRole('row', { name: /Metformiini/ })
-    expect(within(row).getByRole('cell', { name: 'active' })).toBeInTheDocument()
-    expect(within(row).getByRole('cell', { name: '1 x 1' })).toBeInTheDocument()
+    expect(screen.queryByRole('columnheader', { name: 'Decision' })).not.toBeInTheDocument()
+    const [values, detail, source] = within(screen.getAllByRole('rowgroup')[1]).getAllByRole('row')
+    expect(within(values).getByRole('cell', { name: 'active' })).toBeInTheDocument()
+    expect(within(values).getByRole('cell', { name: '1 x 1' })).toBeInTheDocument()
+    expect(detail).toHaveTextContent('Decision: pending')
+    expect(source).toHaveTextContent('Source: p. 1, line 0: Metformiini')
+  })
+
+  it('leaves out the source row when a fact has no source, and ticks from any row', () => {
+    renderTable([{ ...facts[0], source: null }, facts[1]])
+    const group = screen.getAllByRole('rowgroup')[1]
+    const rows = within(group).getAllByRole('row')
+    expect(rows).toHaveLength(2)
+    expect(within(rows[0]).getByRole('checkbox').closest('td')).toHaveAttribute('rowspan', '2')
+    fireEvent.click(within(rows[1]).getByText(/Decision/))
+    expect(screen.getByRole('checkbox', { name: 'Select Metformiini' })).toBeChecked()
   })
 
   it('ticks a row by clicking anywhere in it and acts on the ticked rows only', () => {

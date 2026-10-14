@@ -834,21 +834,47 @@ mark {
   white-space: nowrap;
 }
 
-.fact-review-grid tbody tr {
+/* Each fact is its own <tbody> of up to three rows; the line only goes between facts. */
+.fact-review-grid tbody {
   cursor: pointer;
 }
 
-.fact-review-grid tr.row-ticked {
+.fact-review-grid tbody td {
+  border-bottom: 0;
+}
+
+.fact-review-grid tbody tr:last-child td,
+.fact-review-grid tbody td[rowspan] {
+  border-bottom: 1px solid var(--line);
+}
+
+.fact-review-grid tbody.row-ticked td {
   background: #e3eff7;
 }
 
-.fact-review-grid tr.row-selected {
+.fact-review-grid tbody.row-selected td.col-check,
+.fact-review-grid.read-only tbody.row-selected td:first-child {
   box-shadow: inset 3px 0 0 var(--brand);
 }
 
-.fact-review-grid tr.row-rejected td {
+.fact-review-grid tbody.row-rejected td {
   color: var(--muted);
   text-decoration: line-through;
+}
+
+.fact-review-grid .row-detail td {
+  padding-top: 0;
+  font-size: 0.85rem;
+}
+
+.row-detail-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.5rem;
+}
+
+.row-detail-notes .notes {
+  margin: 0.15rem 0 0;
 }
 
 .fact-review-grid th,
