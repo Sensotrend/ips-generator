@@ -161,6 +161,9 @@ UCUM: Final = "http://unitsofmeasure.org"
 OBSERVATION_CATEGORY: Final = "http://terminology.hl7.org/CodeSystem/observation-category"
 CATEGORY_VITAL_SIGNS: Final = FixedCode(OBSERVATION_CATEGORY, "vital-signs", "Vital Signs")
 CATEGORY_SOCIAL_HISTORY: Final = FixedCode(OBSERVATION_CATEGORY, "social-history", "Social History")
+CATEGORY_LABORATORY: Final = FixedCode(OBSERVATION_CATEGORY, "laboratory", "Laboratory")
+CATEGORY_EXAM: Final = FixedCode(OBSERVATION_CATEGORY, "exam", "Exam")
+DATA_ABSENT_REASON_SYSTEM: Final = "http://terminology.hl7.org/CodeSystem/data-absent-reason"
 
 LOINC_BODY_HEIGHT: Final = FixedCode(LOINC, "8302-2", "Body height")
 LOINC_BODY_WEIGHT: Final = FixedCode(LOINC, "29463-7", "Body weight")

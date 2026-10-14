@@ -414,6 +414,38 @@ export const en = {
   'sentence.immunization.date': ', given {date}',
   'sentence.pregnancy': 'About your pregnancy the document says: {title}.',
   'sentence.contact': 'The document gives {title} as your contact person.',
+
+  // Results, procedures, medical devices
+  'section.results': 'Results',
+  'section.procedures': 'Procedures',
+  'section.devices': 'Medical devices',
+  'section.intro.results':
+    'Test results, such as blood tests, with the date of the test when the document gives one, so that a new doctor or nurse does not need to repeat them.',
+  'section.intro.procedures':
+    'Operations and procedures you have had, so that your care can take them into account.',
+  'section.intro.devices':
+    'Medical devices and aids you use, such as a glucose monitor or a walking aid.',
+  'row.test': 'Test',
+  'row.procedure': 'Procedure',
+  'row.device': 'Device or aid',
+  'row.brand': 'Brand or model',
+  'field.test': 'Test',
+  'field.comparator': 'Bound',
+  'field.valueText': 'Result as text',
+  'field.procedure': 'Procedure',
+  'field.device': 'Device or aid',
+  'field.brand': 'Brand or model',
+  'detail.testKind': 'kind',
+  'enum.laboratory': 'laboratory',
+  'enum.lt': 'less than',
+  'enum.le': 'at most',
+  'enum.ge': 'at least',
+  'enum.gt': 'more than',
+  'sentence.result': 'The document gives this test result for you: {title}{date}.',
+  'sentence.result.date': ', tested {date}',
+  'sentence.procedure': 'The document lists this procedure: {title}{date}.',
+  'sentence.procedure.date': ', done {date}',
+  'sentence.device': 'The document says you use this device or aid: {title}.',
 } as const
 
 export type MessageKey = keyof typeof en

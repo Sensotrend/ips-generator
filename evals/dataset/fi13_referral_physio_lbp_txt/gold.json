@@ -388,6 +388,52 @@
   ],
   "immunizations": [],
   "pregnancy": [],
+  "results": [
+    {
+      "source_quote": "HbA1c 52 mmol/mol",
+      "page": 1,
+      "locator": "line 20",
+      "category": "laboratory",
+      "test_text": "HbA1c",
+      "value": "52",
+      "comparator": "not_stated",
+      "value_text": "",
+      "unit_text": "mmol/mol",
+      "effective": "2026-09-24",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "P-Krea 78 µmol/l",
+      "page": 1,
+      "locator": "line 20",
+      "category": "laboratory",
+      "test_text": "P-Krea",
+      "value": "78",
+      "comparator": "not_stated",
+      "value_text": "",
+      "unit_text": "µmol/l",
+      "effective": "2026-09-24",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "LDL-kolesteroli 2,9 mmol/l",
+      "page": 1,
+      "locator": "line 20",
+      "category": "laboratory",
+      "test_text": "LDL-kolesteroli",
+      "value": "2,9",
+      "comparator": "not_stated",
+      "value_text": "",
+      "unit_text": "mmol/l",
+      "effective": "2026-09-24",
+      "note": "",
+      "confidence": "high"
+    }
+  ],
+  "procedures": [],
+  "devices": [],
   "document_date": {
     "source_quote": "Lähetepäivä: 06.10.2026",
     "page": 1,

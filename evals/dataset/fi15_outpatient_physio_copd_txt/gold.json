@@ -360,5 +360,56 @@
   ],
   "immunizations": [],
   "pregnancy": [],
+  "results": [
+    {
+      "source_quote": "Spirometria 09/2026: FEV1 62 % viitearvosta",
+      "page": 1,
+      "locator": "line 19",
+      "category": "other",
+      "test_text": "FEV1",
+      "value": "62",
+      "comparator": "not_stated",
+      "value_text": "",
+      "unit_text": "% viitearvosta",
+      "effective": "2026-09",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "Hb 148 g/l",
+      "page": 1,
+      "locator": "line 19",
+      "category": "laboratory",
+      "test_text": "Hb",
+      "value": "148",
+      "comparator": "not_stated",
+      "value_text": "",
+      "unit_text": "g/l",
+      "effective": "2026-09-28",
+      "note": "",
+      "confidence": "high"
+    }
+  ],
+  "procedures": [],
+  "devices": [
+    {
+      "source_quote": "Inhalaatiovälikammio (Volumatic)",
+      "page": 1,
+      "locator": "line 22",
+      "device_text": "Inhalaatiovälikammio",
+      "brand_text": "Volumatic",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "kävelykeppi",
+      "page": 1,
+      "locator": "line 22",
+      "device_text": "kävelykeppi",
+      "brand_text": "",
+      "note": "",
+      "confidence": "high"
+    }
+  ],
   "document_date": null
 }

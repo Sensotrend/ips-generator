@@ -621,6 +621,87 @@
       "confidence": "high"
     }
   ],
+  "results": [
+    {
+      "source_quote": "Veriryhmä A Rh(D) positiivinen",
+      "page": 1,
+      "locator": "line 25",
+      "category": "laboratory",
+      "test_text": "Veriryhmä",
+      "value": "",
+      "comparator": "not_stated",
+      "value_text": "A Rh(D) positiivinen",
+      "unit_text": "",
+      "effective": "2026-10-05",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "Hb 112 g/l",
+      "page": 1,
+      "locator": "line 25",
+      "category": "laboratory",
+      "test_text": "Hb",
+      "value": "112",
+      "comparator": "not_stated",
+      "value_text": "",
+      "unit_text": "g/l",
+      "effective": "2026-10-05",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "CRP 3 mg/l",
+      "page": 1,
+      "locator": "line 25",
+      "category": "laboratory",
+      "test_text": "CRP",
+      "value": "3",
+      "comparator": "not_stated",
+      "value_text": "",
+      "unit_text": "mg/l",
+      "effective": "2026-10-05",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "TSH 1,9 mU/l",
+      "page": 1,
+      "locator": "line 25",
+      "category": "laboratory",
+      "test_text": "TSH",
+      "value": "1,9",
+      "comparator": "not_stated",
+      "value_text": "",
+      "unit_text": "mU/l",
+      "effective": "2026-10-05",
+      "note": "",
+      "confidence": "high"
+    }
+  ],
+  "procedures": [
+    {
+      "source_quote": "Umpilisäkkeen poisto 2010",
+      "page": 1,
+      "locator": "line 37",
+      "procedure_text": "Umpilisäkkeen poisto",
+      "body_site_text": "",
+      "performed": "2010",
+      "note": "",
+      "confidence": "high"
+    }
+  ],
+  "devices": [
+    {
+      "source_quote": "Inhalaatiovälikammio (Volumatic)",
+      "page": 1,
+      "locator": "line 31",
+      "device_text": "Inhalaatiovälikammio",
+      "brand_text": "Volumatic",
+      "note": "",
+      "confidence": "high"
+    }
+  ],
   "document_date": {
     "source_quote": "Koontipäivä: 12.10.2026",
     "page": 1,

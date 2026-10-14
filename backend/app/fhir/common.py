@@ -29,12 +29,14 @@ from app.fhir.models import (
     CompositionSection,
     Condition,
     Device,
+    DeviceUseStatement,
     Extension,
     Immunization,
     MedicationStatement,
     Observation,
     Patient,
     PrimitiveElement,
+    Procedure,
     Reference,
 )
 from app.fhir.narrative import NarrativeLine, list_narrative, text_narrative
@@ -49,10 +51,12 @@ MappedFhirResource = (
     | Composition
     | Condition
     | Device
+    | DeviceUseStatement
     | Immunization
     | MedicationStatement
     | Observation
     | Patient
+    | Procedure
 )
 """Resource types the mappers produce."""
 
@@ -86,6 +90,9 @@ class NoteCode(StrEnum):
     IMMUNIZATION_NOT_CODED = "immunization_not_coded"  # vaccine not in the D-14 table: text only
     EFFECTIVE_IS_DOCUMENT_DATE = "effective_is_document_date"  # D-15: stand-in effective date
     CONDITION_STATUS_ASSUMED_ACTIVE = "condition_status_assumed_active"  # Problem List, not stated
+    RESULT_WITHOUT_VALUE = "result_without_value"  # no number or text: data-absent-reason
+    RESULT_UNIT_NOT_CODED = "result_unit_not_coded"  # unit kept as text, no UCUM code (info)
+    PROCEDURE_NOT_DATED = "procedure_not_dated"  # performed[x] is "Date not stated" (info)
 
 
 @dataclass(frozen=True, slots=True)
@@ -130,7 +137,8 @@ class SectionResult:
     section: CompositionSection
     key: str
     """Section key used in mapping records: ``allergies``, ``medications``, ``problems``,
-    ``past_illness``, ``immunizations``, ``pregnancy``, ``social_history``, ``vital_signs``."""
+    ``past_illness``, ``immunizations``, ``results``, ``procedures``, ``devices``,
+    ``pregnancy``, ``social_history``, ``vital_signs``."""
     entries: list[MappedResource] = field(default_factory=list)
     notes: list[MappingNote] = field(default_factory=list)
 

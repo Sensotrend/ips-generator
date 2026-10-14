@@ -73,7 +73,15 @@ __all__ = [
 # IPS section order: Problem List, Allergies and Intolerances, Medication Summary (History of
 # Past Illness, a Problem List split-off, follows them).
 SECTION_KEYS: Final = ("problems", "allergies", "medications")
-FLAT_SECTIONS: Final = ("immunizations", "pregnancy", "social_history", "vital_signs")
+FLAT_SECTIONS: Final = (
+    "immunizations",
+    "results",
+    "procedures",
+    "devices",
+    "pregnancy",
+    "social_history",
+    "vital_signs",
+)
 """Optional sections (schema 1.2.0): plain lists of items, shown after the required ones in IPS
 order. Their fact paths are ``vital_signs[0]``, no ``items``."""
 _PROVENANCE_FIELDS: Final = ("source_quote", "page", "locator")
@@ -166,6 +174,9 @@ _ITEM_KIND: Final[dict[str, FactKind]] = {
     "social_history": "social_history",
     "immunizations": "immunization",
     "pregnancy": "pregnancy_fact",
+    "results": "result",
+    "procedures": "procedure",
+    "devices": "device",
 }
 
 
@@ -470,7 +481,7 @@ def effective_enriched(state: DraftState) -> Effective:
 
 _PREFIX_RE: Final = re.compile(
     r"^((?:patient|allergies|medications|problems)\.[a-z_]+\[\d+\]"
-    r"|(?:immunizations|pregnancy|social_history|vital_signs)\[\d+\])(.*)$"
+    r"|(?:immunizations|results|procedures|devices|pregnancy|social_history|vital_signs)\[\d+\])(.*)$"
 )
 
 

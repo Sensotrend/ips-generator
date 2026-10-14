@@ -488,6 +488,48 @@
       "confidence": "high"
     }
   ],
+  "results": [
+    {
+      "source_quote": "HbA1c 49 mmol/mol",
+      "page": 1,
+      "locator": "line 21",
+      "category": "laboratory",
+      "test_text": "HbA1c",
+      "value": "49",
+      "comparator": "not_stated",
+      "value_text": "",
+      "unit_text": "mmol/mol",
+      "effective": "2026-09-29",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "TSH 1,8 mU/l",
+      "page": 1,
+      "locator": "line 21",
+      "category": "laboratory",
+      "test_text": "TSH",
+      "value": "1,8",
+      "comparator": "not_stated",
+      "value_text": "",
+      "unit_text": "mU/l",
+      "effective": "2026-09-29",
+      "note": "",
+      "confidence": "high"
+    }
+  ],
+  "procedures": [],
+  "devices": [
+    {
+      "source_quote": "Jatkuva sokeriseuranta (FreeStyle Libre 2)",
+      "page": 1,
+      "locator": "line 24",
+      "device_text": "Jatkuva sokeriseuranta",
+      "brand_text": "FreeStyle Libre 2",
+      "note": "",
+      "confidence": "high"
+    }
+  ],
   "document_date": {
     "source_quote": "Lähetepäivä: 08.10.2026",
     "page": 1,

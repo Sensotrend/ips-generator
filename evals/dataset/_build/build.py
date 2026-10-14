@@ -107,7 +107,7 @@ FEATURES: dict[str, str] = {
     "maternity_questionnaire_candidate": "Built to pre-fill the maternity clinic questionnaire",
     "multi_context_candidate": "One summary built for maternity, physiotherapy and unplanned care use",
     "severe_allergy_criticality": "Allergy worded as severe hypersensitivity with criticality high (criticality high, reaction severity severe)",
-    "non_schema_facts": "Facts for other IPS sections in the text (vital signs, results, vaccinations, procedures, devices, plan of care, pregnancy history, social history, ...); gold ignores them (outside the schema)",
+    "non_schema_facts": "Facts for other IPS sections in the text (vital signs, results, vaccinations, procedures, devices, plan of care, pregnancy history, social history, ...); gold lists those the schema covers and ignores the rest (advance directive, alerts, functional status, plan of care, the patient's own words)",
 }
 
 
@@ -209,7 +209,15 @@ def check_item_order(case: Case, doc: IngestedDocument) -> None:
             if positions != sorted(positions):
                 raise AssertionError(f"{case.case_id}: {section}.{key} not in document order")
     lists = {
-        name: case.gold.get(name, []) for name in ("vital_signs", "social_history", "immunizations")
+        name: case.gold.get(name, [])
+        for name in (
+            "vital_signs",
+            "social_history",
+            "immunizations",
+            "results",
+            "procedures",
+            "devices",
+        )
     }
     lists["pregnancy"] = case.gold.get("pregnancy", [])
     lists["patient.contacts"] = case.gold["patient"].get("contacts", [])

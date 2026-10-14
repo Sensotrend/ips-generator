@@ -1,4 +1,4 @@
-"""Helpers for authoring gold extractions (``IpsExtraction``, schema 1.3.0) in case modules.
+"""Helpers for authoring gold extractions (``IpsExtraction``, schema 1.4.0) in case modules.
 
 Every helper returns a plain dict in the exact JSON shape the LLM produces (absent text is ``""``,
 absent enums are ``"not_stated"``), with ``page``/``locator`` left as placeholders. The builder
@@ -369,6 +369,75 @@ def pregnancy_fact(
     }
 
 
+# ---- results, procedures, devices (schema 1.4.0) -------------------------------------------
+
+
+def result(
+    quote: str,
+    test: str,
+    *,
+    value: str = "",
+    comparator: str = "not_stated",
+    value_text: str = "",
+    unit: str = "",
+    effective: str = "",
+    category: str = "laboratory",
+    note: str = "",
+    confidence: str = "high",
+    nth: int | None = None,
+) -> Fact:
+    return {
+        **_prov(quote, nth),
+        "category": category,
+        "test_text": test,
+        "value": value,
+        "comparator": comparator,
+        "value_text": value_text,
+        "unit_text": unit,
+        "effective": effective,
+        "note": note,
+        "confidence": confidence,
+    }
+
+
+def procedure(
+    quote: str,
+    procedure_text: str,
+    *,
+    performed: str = "",
+    site: str = "",
+    note: str = "",
+    confidence: str = "high",
+    nth: int | None = None,
+) -> Fact:
+    return {
+        **_prov(quote, nth),
+        "procedure_text": procedure_text,
+        "body_site_text": site,
+        "performed": performed,
+        "note": note,
+        "confidence": confidence,
+    }
+
+
+def device(
+    quote: str,
+    device_text: str,
+    *,
+    brand: str = "",
+    note: str = "",
+    confidence: str = "high",
+    nth: int | None = None,
+) -> Fact:
+    return {
+        **_prov(quote, nth),
+        "device_text": device_text,
+        "brand_text": brand,
+        "note": note,
+        "confidence": confidence,
+    }
+
+
 def extraction(
     language: str,
     pat: Fact,
@@ -380,6 +449,9 @@ def extraction(
     social_history: list[Fact] | None = None,
     immunizations: list[Fact] | None = None,
     pregnancy: list[Fact] | None = None,
+    results: list[Fact] | None = None,
+    procedures: list[Fact] | None = None,
+    devices: list[Fact] | None = None,
 ) -> Fact:
     return {
         "document_language": language,
@@ -391,6 +463,9 @@ def extraction(
         "social_history": social_history or [],
         "immunizations": immunizations or [],
         "pregnancy": pregnancy or [],
+        "results": results or [],
+        "procedures": procedures or [],
+        "devices": devices or [],
     }
 
 

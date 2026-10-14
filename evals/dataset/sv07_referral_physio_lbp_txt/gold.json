@@ -388,6 +388,20 @@
     }
   ],
   "pregnancy": [],
+  "results": [],
+  "procedures": [
+    {
+      "source_quote": "appendektomi 2008",
+      "page": 1,
+      "locator": "line 18",
+      "procedure_text": "appendektomi",
+      "body_site_text": "",
+      "performed": "2008",
+      "note": "",
+      "confidence": "high"
+    }
+  ],
+  "devices": [],
   "document_date": {
     "source_quote": "Remissdatum: 05.10.2026",
     "page": 1,

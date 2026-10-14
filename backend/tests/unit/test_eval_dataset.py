@@ -332,6 +332,9 @@ def test_extra_sections_cases_annotate_the_optional_sections() -> None:
             *gold.social_history,
             *gold.immunizations,
             *gold.pregnancy,
+            *gold.results,
+            *gold.procedures,
+            *gold.devices,
             *gold.patient.contacts,
         ]
         if case_id in annotated:
@@ -339,3 +342,12 @@ def test_extra_sections_cases_annotate_the_optional_sections() -> None:
             assert gold.social_history or case_id.startswith(("fi16", "fi14")), case_id
         else:
             assert not facts, case_id
+
+
+def test_extra_sections_cases_cover_results_procedures_and_devices() -> None:
+    annotated = [c for c in CASE_IDS if _meta(c).get("extra_sections")]
+    assert all(_gold(c).results for c in annotated if not c.startswith("sv07")), annotated
+    assert sum(bool(_gold(c).procedures) for c in annotated) >= 3
+    assert sum(bool(_gold(c).devices) for c in annotated) >= 3
+    laboratory = {r.category.value for c in annotated for r in _gold(c).results}
+    assert laboratory == {"laboratory", "other"}

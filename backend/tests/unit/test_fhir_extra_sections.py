@@ -97,6 +97,9 @@ def test_schema_version_and_required_properties() -> None:
         "social_history",
         "immunizations",
         "pregnancy",
+        "results",
+        "procedures",
+        "devices",
     ]
     assert "default" not in str(schema)
     assert "contacts" in schema["$defs"]["PatientExtraction"]["required"]

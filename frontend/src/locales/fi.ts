@@ -411,4 +411,36 @@ export const fi: Messages = {
   'sentence.immunization.date': ', annettu {date}',
   'sentence.pregnancy': 'Asiakirja kertoo raskaudestasi: {title}.',
   'sentence.contact': 'Asiakirjassa yhteyshenkilöksesi on merkitty {title}.',
+
+  // Results, procedures, medical devices
+  'section.results': 'Tutkimustulokset',
+  'section.procedures': 'Toimenpiteet',
+  'section.devices': 'Lääkinnälliset laitteet ja apuvälineet',
+  'section.intro.results':
+    'Tutkimustulokset, kuten verikokeet, sekä tutkimuspäivä, jos asiakirja ilmoittaa sen, jotta uuden lääkärin tai hoitajan ei tarvitse toistaa niitä.',
+  'section.intro.procedures':
+    'Sinulle tehdyt leikkaukset ja toimenpiteet, jotta hoidossasi voidaan ottaa ne huomioon.',
+  'section.intro.devices':
+    'Käyttämäsi lääkinnälliset laitteet ja apuvälineet, kuten sokeriseurantalaite tai kävelykeppi.',
+  'row.test': 'Tutkimus',
+  'row.procedure': 'Toimenpide',
+  'row.device': 'Laite tai apuväline',
+  'row.brand': 'Merkki tai malli',
+  'field.test': 'Tutkimus',
+  'field.comparator': 'Raja',
+  'field.valueText': 'Tulos tekstinä',
+  'field.procedure': 'Toimenpide',
+  'field.device': 'Laite tai apuväline',
+  'field.brand': 'Merkki tai malli',
+  'detail.testKind': 'laji',
+  'enum.laboratory': 'laboratoriotutkimus',
+  'enum.lt': 'pienempi kuin',
+  'enum.le': 'enintään',
+  'enum.ge': 'vähintään',
+  'enum.gt': 'suurempi kuin',
+  'sentence.result': 'Asiakirja ilmoittaa sinusta tämän tutkimustuloksen: {title}{date}.',
+  'sentence.result.date': ', tutkittu {date}',
+  'sentence.procedure': 'Asiakirjassa on lueteltu tämä toimenpide: {title}{date}.',
+  'sentence.procedure.date': ', tehty {date}',
+  'sentence.device': 'Asiakirjan mukaan käytät tätä laitetta tai apuvälinettä: {title}.',
 }

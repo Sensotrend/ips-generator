@@ -31,6 +31,13 @@ function vitalValue(v: FactValue): string {
   return [value, str(v.unit_text)].filter(Boolean).join(' ')
 }
 
+/** `112 g/l`, `>90 ml/min`, `positive`: the result as the document gives it. */
+function resultValue(v: FactValue): string {
+  const bound = { lt: '<', le: '≤', ge: '≥', gt: '>' }[str(v.comparator)] ?? ''
+  const number = num(v.value) ? `${bound}${num(v.value)}` : str(v.value_text)
+  return [number, num(v.value) ? str(v.unit_text) : ''].filter(Boolean).join(' ')
+}
+
 /** The value a pregnancy fact carries, whichever kind it is. */
 function pregnancyValue(v: FactValue): string {
   if (str(v.status) && str(v.status) !== 'not_stated') return translateEnum(str(v.status))
@@ -54,6 +61,14 @@ export function factTitle(fact: Fact): string {
       return [str(v.vaccine_text), str(v.occurrence)].filter(Boolean).join(' ')
     case 'pregnancy_fact':
       return `${translateEnum(str(v.kind))}: ${pregnancyValue(v)}`
+    case 'result':
+      return [str(v.test_text), resultValue(v)].filter(Boolean).join(' ')
+    case 'procedure':
+      return [str(v.procedure_text), str(v.body_site_text), str(v.performed)]
+        .filter(Boolean)
+        .join(' ')
+    case 'device':
+      return [str(v.device_text), str(v.brand_text)].filter(Boolean).join(' ')
     case 'patient_contact':
       return [str(v.name_text), str(v.relationship_text) && `(${str(v.relationship_text)})`]
         .filter(Boolean)
@@ -108,6 +123,23 @@ export function factRows(fact: Fact): [string, string][] {
     case 'pregnancy_fact':
       add('row.pregnancyFact', v.kind)
       add('row.value', pregnancyValue(v), true)
+      add('row.note', v.note, true)
+      break
+    case 'result':
+      add('row.test', v.test_text, true)
+      add('row.value', resultValue(v), true)
+      add('row.date', v.effective, true)
+      add('row.note', v.note, true)
+      break
+    case 'procedure':
+      add('row.procedure', v.procedure_text, true)
+      add('row.bodySite', v.body_site_text, true)
+      add('row.date', v.performed, true)
+      add('row.note', v.note, true)
+      break
+    case 'device':
+      add('row.device', v.device_text, true)
+      add('row.brand', v.brand_text, true)
       add('row.note', v.note, true)
       break
     case 'patient_contact':

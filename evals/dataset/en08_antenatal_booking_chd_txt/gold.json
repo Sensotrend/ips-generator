@@ -483,6 +483,52 @@
       "confidence": "high"
     }
   ],
+  "results": [
+    {
+      "source_quote": "Hb 124 g/l",
+      "page": 1,
+      "locator": "line 20",
+      "category": "laboratory",
+      "test_text": "Hb",
+      "value": "124",
+      "comparator": "not_stated",
+      "value_text": "",
+      "unit_text": "g/l",
+      "effective": "2026-10-06",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "rubella IgG positive",
+      "page": 1,
+      "locator": "line 20",
+      "category": "laboratory",
+      "test_text": "rubella IgG",
+      "value": "",
+      "comparator": "not_stated",
+      "value_text": "positive",
+      "unit_text": "",
+      "effective": "2026-10-06",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "HIV and hepatitis B screening negative",
+      "page": 1,
+      "locator": "line 20",
+      "category": "laboratory",
+      "test_text": "HIV and hepatitis B screening",
+      "value": "",
+      "comparator": "not_stated",
+      "value_text": "negative",
+      "unit_text": "",
+      "effective": "2026-10-06",
+      "note": "",
+      "confidence": "high"
+    }
+  ],
+  "procedures": [],
+  "devices": [],
   "document_date": {
     "source_quote": "Date: 08.10.2026",
     "page": 1,

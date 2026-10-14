@@ -329,6 +329,48 @@
     }
   ],
   "pregnancy": [],
+  "results": [
+    {
+      "source_quote": "HbA1c 58 mmol/mol",
+      "page": 1,
+      "locator": "line 21",
+      "category": "laboratory",
+      "test_text": "HbA1c",
+      "value": "58",
+      "comparator": "not_stated",
+      "value_text": "",
+      "unit_text": "mmol/mol",
+      "effective": "2026-09-23",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "eGFR above 90 ml/min",
+      "page": 1,
+      "locator": "line 21",
+      "category": "laboratory",
+      "test_text": "eGFR",
+      "value": "90",
+      "comparator": "gt",
+      "value_text": "",
+      "unit_text": "ml/min",
+      "effective": "2026-09-23",
+      "note": "",
+      "confidence": "high"
+    }
+  ],
+  "procedures": [],
+  "devices": [
+    {
+      "source_quote": "Continuous glucose monitor (FreeStyle Libre 2)",
+      "page": 1,
+      "locator": "line 24",
+      "device_text": "Continuous glucose monitor",
+      "brand_text": "FreeStyle Libre 2",
+      "note": "",
+      "confidence": "high"
+    }
+  ],
   "document_date": {
     "source_quote": "Date: 07.10.2026",
     "page": 1,

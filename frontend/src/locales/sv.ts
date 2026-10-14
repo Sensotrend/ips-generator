@@ -413,4 +413,36 @@ export const sv: Messages = {
   'sentence.immunization.date': ', given {date}',
   'sentence.pregnancy': 'Dokumentet säger så här om din graviditet: {title}.',
   'sentence.contact': 'Dokumentet anger {title} som din kontaktperson.',
+
+  // Results, procedures, medical devices
+  'section.results': 'Provsvar och undersökningar',
+  'section.procedures': 'Ingrepp',
+  'section.devices': 'Medicintekniska produkter och hjälpmedel',
+  'section.intro.results':
+    'Provsvar och undersökningsresultat, till exempel blodprover, med datum för undersökningen om dokumentet anger det, så att en ny läkare eller sjukskötare inte behöver upprepa dem.',
+  'section.intro.procedures':
+    'Operationer och ingrepp du har genomgått, så att vården kan ta hänsyn till dem.',
+  'section.intro.devices':
+    'Medicintekniska produkter och hjälpmedel du använder, till exempel en glukosmätare eller en käpp.',
+  'row.test': 'Undersökning',
+  'row.procedure': 'Ingrepp',
+  'row.device': 'Hjälpmedel',
+  'row.brand': 'Märke eller modell',
+  'field.test': 'Undersökning',
+  'field.comparator': 'Gräns',
+  'field.valueText': 'Resultat som text',
+  'field.procedure': 'Ingrepp',
+  'field.device': 'Hjälpmedel',
+  'field.brand': 'Märke eller modell',
+  'detail.testKind': 'typ',
+  'enum.laboratory': 'laboratorieprov',
+  'enum.lt': 'mindre än',
+  'enum.le': 'högst',
+  'enum.ge': 'minst',
+  'enum.gt': 'mer än',
+  'sentence.result': 'Dokumentet anger det här provsvaret för dig: {title}{date}.',
+  'sentence.result.date': ', undersökt {date}',
+  'sentence.procedure': 'Dokumentet listar det här ingreppet: {title}{date}.',
+  'sentence.procedure.date': ', utfört {date}',
+  'sentence.device': 'Enligt dokumentet använder du det här hjälpmedlet: {title}.',
 }

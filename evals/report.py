@@ -75,9 +75,9 @@ def render_markdown(metadata: dict[str, Any], summary: RunSummary) -> str:
         "",
         f"Recall before grounding: {raw}. Match methods: {summary.match_methods or 'none'}.",
         "",
-        "The optional sections (vital signs, social history, immunizations, pregnancy, patient "
-        "contacts) and the document date are scored only for cases whose gold annotates them "
-        "(`meta.json` `extra_sections`).",
+        "The optional sections (vital signs, social history, immunizations, pregnancy, results, "
+        "procedures, devices, patient contacts) and the document date are scored only for cases "
+        "whose gold annotates them (`meta.json` `extra_sections`).",
         "",
         "Effective patient values = stated or derived (D-10) vs the true value in "
         f"`expected_patient`. Derived-value accuracy: {derived or 'n/a'}.",

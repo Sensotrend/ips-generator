@@ -469,6 +469,63 @@
       "confidence": "high"
     }
   ],
+  "results": [
+    {
+      "source_quote": "Hb 108 g/l",
+      "page": 1,
+      "locator": "",
+      "category": "laboratory",
+      "test_text": "Hb",
+      "value": "108",
+      "comparator": "not_stated",
+      "value_text": "",
+      "unit_text": "g/l",
+      "effective": "2026-10-06",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "ferritiini 9 µg/l",
+      "page": 1,
+      "locator": "",
+      "category": "laboratory",
+      "test_text": "ferritiini",
+      "value": "9",
+      "comparator": "not_stated",
+      "value_text": "",
+      "unit_text": "µg/l",
+      "effective": "2026-10-06",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "CRP 4 mg/l",
+      "page": 1,
+      "locator": "",
+      "category": "laboratory",
+      "test_text": "CRP",
+      "value": "4",
+      "comparator": "not_stated",
+      "value_text": "",
+      "unit_text": "mg/l",
+      "effective": "2026-10-06",
+      "note": "",
+      "confidence": "high"
+    }
+  ],
+  "procedures": [
+    {
+      "source_quote": "Suolen osaresektio 2019 Crohnin taudin vuoksi",
+      "page": 1,
+      "locator": "",
+      "procedure_text": "Suolen osaresektio",
+      "body_site_text": "",
+      "performed": "2019",
+      "note": "Crohnin taudin vuoksi",
+      "confidence": "high"
+    }
+  ],
+  "devices": [],
   "document_date": {
     "source_quote": "Käyntipäivä: 08.10.2026",
     "page": 1,

@@ -214,7 +214,28 @@ PLAN.md  CLAUDE.md  README.md
     must have been returned by a tool in that conversation (else rejected). Tested with a fake Claude only;
     needs one real smoke call. Estimated ≈ $0.10–0.15 per document.
 - [ ] `repair.py`: feed validator issues + offending intermediate item to Claude, patch intermediate JSON, re-map; max 2 loops, then flag `[opus]`
-- [ ] Add sections: Results, Procedures, Medical Devices `[sonnet]` (follow the Phase 1 mapper pattern; Immunizations: see "Optional sections" in Phase 4)
+- [x] Add sections: Results, Procedures, Medical Devices `[sonnet]` (follow the Phase 1 mapper pattern; Immunizations: see "Optional sections" in Phase 4)
+  - 2026-10-14, schema 1.4.0, prompt `extract_v8`. Plain lists `results`, `procedures`, `devices` in `IpsExtraction`, built like the
+    D-14 optional sections: no code fields from the model; `app/fhir/{results,procedures,devices}.py`; reviewable facts
+    (`results[0]`, ...: accept/reject/edit, `FLAT_SECTIONS`), fi/sv/en UI strings; sections appear only when they have content,
+    in the order Results, Procedures, Medical Devices after History of Past Illness.
+  - IPS 2.0.1 shaped by Matchbox (all 37 gold Bundles: 0 errors, no blocking unmatched entry):
+    - **Results**: only `category: laboratory` becomes an Observation (profile `Observation-results-laboratory-pathology`);
+      the profile needs a `performer`, which no document gives, so it is a Reference with `data-absent-reason` `unknown` and a display.
+      `effective[x]` follows D-15 (stated date, else the document date as a stand-in, else data-absent-reason). Numbers are
+      `valueQuantity` with the unit as written (no UCUM code) and the comparator; text is `valueString`. Spirometry, bone density
+      and other non-laboratory tests have no IPS profile: section narrative only (as alcohol use).
+    - **Procedures**: `Procedure-uv-ips`, status `completed`, `performedDateTime` or the string "Date not stated" (no stand-in: the
+      document date is not the date of an operation). Planned procedures and deliveries in the pregnancy history are not procedures.
+    - **Devices**: `DeviceUseStatement` (status `active`; `timing[x]` is required, so data-absent-reason) pointing at a `Device`
+      (type = the text, `deviceName` = brand) whose id is derived from the item id.
+  - Codes: text only for now. `codable_paths` are declared (`test_text`, `procedure_text`, `body_site_text`, `device_text`) but the
+    terminology step does not code these sections yet (as for immunizations); LOINC/SNOMED lookups are the follow-up. No hard-coded
+    lab codes.
+  - Evals: gold for the 11 `extra_sections` cases (28 results, 5 procedures, 6 devices); the harness scores the three sections
+    for those cases (`evals/metrics.py` `EXTRA_SECTIONS`). Gold self-test 37/37 pass. The facts still outside the schema: advance
+    directive, alerts, functional status, plan of care, the patient's own words. No live run yet (needs a key): record `extract_v8`
+    in `evals/RESULTS.md`. The extraction schema is now about 45 KB (API grammar compilation not yet tested with it).
 - [ ] Eval metric: code accuracy vs gold codes `[sonnet]`
 - [ ] Re-run evals with cheaper per-step models (§8.1 "try" column); keep only where metrics hold `[sonnet]`
 

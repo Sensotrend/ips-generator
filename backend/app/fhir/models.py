@@ -833,6 +833,67 @@ class Immunization(DomainResource):
     note: list[Annotation] | None = None
 
 
+class Procedure(DomainResource):
+    _choice_groups = (
+        (
+            "performed",
+            (
+                "performed_date_time",
+                "performed_period",
+                "performed_string",
+                "performed_age",
+                "performed_range",
+            ),
+            False,
+        ),
+    )
+
+    resource_type: Literal["Procedure"] = Field(default="Procedure", alias="resourceType")
+    identifier: list[Identifier] | None = None
+    based_on: list[Reference] | None = None
+    part_of: list[Reference] | None = None
+    status: Literal[
+        "preparation", "in-progress", "not-done", "on-hold", "stopped", "completed",
+        "entered-in-error", "unknown",
+    ]  # fmt: skip
+    status_reason: CodeableConcept | None = None
+    category: CodeableConcept | None = None
+    code: CodeableConcept | None = None
+    subject: Reference
+    encounter: Reference | None = None
+    performed_date_time: FhirDateTime | None = None
+    performed_period: Period | None = None
+    performed_string: FhirString | None = None
+    performed_age: Quantity | None = None
+    performed_range: Range | None = None
+    body_site: list[CodeableConcept] | None = None
+    outcome: CodeableConcept | None = None
+    note: list[Annotation] | None = None
+
+
+class DeviceUseStatement(DomainResource):
+    _choice_groups = (("timing", ("timing_timing", "timing_period", "timing_date_time"), False),)
+
+    resource_type: Literal["DeviceUseStatement"] = Field(
+        default="DeviceUseStatement", alias="resourceType"
+    )
+    identifier: list[Identifier] | None = None
+    based_on: list[Reference] | None = None
+    status: Literal["active", "completed", "entered-in-error", "intended", "stopped", "on-hold"]
+    subject: Reference
+    derived_from: list[Reference] | None = None
+    timing_timing: Timing | None = None
+    timing_period: Period | None = None
+    timing_date_time: FhirDateTime | None = None
+    recorded_on: FhirDateTime | None = None
+    source: Reference | None = None
+    device: Reference
+    reason_code: list[CodeableConcept] | None = None
+    reason_reference: list[Reference] | None = None
+    body_site: CodeableConcept | None = None
+    note: list[Annotation] | None = None
+
+
 class CompositionAttester(BackboneElement):
     mode: Literal["personal", "professional", "legal", "official"]
     time: FhirDateTime | None = None
@@ -925,6 +986,7 @@ MODELLED_RESOURCES: dict[str, type[Resource]] = {
         Composition,
         Condition,
         Device,
+        DeviceUseStatement,
         Immunization,
         Medication,
         MedicationStatement,
@@ -932,6 +994,7 @@ MODELLED_RESOURCES: dict[str, type[Resource]] = {
         Organization,
         Patient,
         Practitioner,
+        Procedure,
         Provenance,
     )
 }
@@ -953,6 +1016,7 @@ AnyResource = Annotated[
     | Annotated[Composition, Tag("Composition")]
     | Annotated[Condition, Tag("Condition")]
     | Annotated[Device, Tag("Device")]
+    | Annotated[DeviceUseStatement, Tag("DeviceUseStatement")]
     | Annotated[Immunization, Tag("Immunization")]
     | Annotated[Medication, Tag("Medication")]
     | Annotated[MedicationStatement, Tag("MedicationStatement")]
@@ -960,6 +1024,7 @@ AnyResource = Annotated[
     | Annotated[Organization, Tag("Organization")]
     | Annotated[Patient, Tag("Patient")]
     | Annotated[Practitioner, Tag("Practitioner")]
+    | Annotated[Procedure, Tag("Procedure")]
     | Annotated[Provenance, Tag("Provenance")]
     | Annotated[GenericResource, Tag(_GENERIC_TAG)],
     Discriminator(_resource_tag),

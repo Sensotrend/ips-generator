@@ -1,8 +1,9 @@
 """Step 6: deterministic assembly of the IPS document Bundle from ``EnrichedIps``.
 
 Pure function, no I/O, no LLM, no logging (D1). The section mappers live in ``app.fhir``
-(``patient``, ``allergies``, ``medications``, ``problems``, ``immunizations``, ``pregnancy``,
-``social_history``, ``vital_signs``, ``device``, ``composition``); this
+(``patient``, ``allergies``, ``medications``, ``problems``, ``immunizations``, ``results``,
+``procedures``, ``devices``, ``pregnancy``, ``social_history``, ``vital_signs``, ``device``,
+``composition``); this
 module wires them together:
 
 * Bundle ``type`` ``document``, ``identifier`` (``urn:ietf:rfc:3986`` + ``urn:uuid``),
@@ -46,12 +47,15 @@ from app.fhir.common import (
 from app.fhir.composition import build_composition
 from app.fhir.constants import PROFILE_BUNDLE, URI_IDENTIFIER_SYSTEM
 from app.fhir.device import PipelineInfo, map_pipeline_device
+from app.fhir.devices import map_devices
 from app.fhir.immunizations import map_immunizations
 from app.fhir.medications import map_medication_section
 from app.fhir.models import Bundle, BundleEntry, Identifier, Meta
 from app.fhir.patient import map_patient
 from app.fhir.pregnancy import map_pregnancy
 from app.fhir.problems import map_problem_sections
+from app.fhir.procedures import map_procedures
+from app.fhir.results import map_results
 from app.fhir.social_history import map_social_history
 from app.fhir.vital_signs import map_vital_signs
 from app.pipeline.ground import ReviewFlag, ReviewReason
@@ -79,7 +83,8 @@ class AssemblyEntry(BaseModel):
     resource_type: str
     section: str | None
     """``allergies``, ``medications``, ``problems``, ``past_illness``, ``immunizations``,
-    ``pregnancy``, ``social_history``, ``vital_signs``; ``None`` for Patient."""
+    ``results``, ``procedures``, ``devices``, ``pregnancy``, ``social_history``,
+    ``vital_signs``; ``None`` for Patient."""
     review_flags: tuple[ReviewReason, ...] = ()
 
 
@@ -157,12 +162,16 @@ def assemble(
         document_date=document_date if document_date and len(document_date) == 10 else None,
     )
     # IPS order: the required sections (Problem List, Allergies, Medication Summary), then the
-    # optional ones as they have content: Immunizations, History of Past Illness, History of
-    # Pregnancy, Social History, Vital Signs (D-14: none of these is emitted when empty).
+    # optional ones as they have content: Immunizations, History of Past Illness, Results,
+    # Procedures, Medical Devices, History of Pregnancy, Social History, Vital Signs (D-14: none
+    # of these is emitted when empty).
     problem_sections = map_problem_sections(enriched.problems, ctx)
     optional = (
         map_immunizations(enriched.immunizations, ctx),
         *problem_sections[1:],
+        map_results(enriched.results, ctx),
+        map_procedures(enriched.procedures, ctx),
+        map_devices(enriched.devices, ctx),
         map_pregnancy(enriched.pregnancy, ctx),
         map_social_history(enriched.social_history, ctx),
         map_vital_signs(enriched.vital_signs, ctx),

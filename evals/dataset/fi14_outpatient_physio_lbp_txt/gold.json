@@ -315,6 +315,52 @@
   ],
   "immunizations": [],
   "pregnancy": [],
+  "results": [
+    {
+      "source_quote": "TSH 2,1 mU/l",
+      "page": 1,
+      "locator": "line 20",
+      "category": "laboratory",
+      "test_text": "TSH",
+      "value": "2,1",
+      "comparator": "not_stated",
+      "value_text": "",
+      "unit_text": "mU/l",
+      "effective": "2026-09-22",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "25-OH-D-vitamiini 58 nmol/l",
+      "page": 1,
+      "locator": "line 20",
+      "category": "laboratory",
+      "test_text": "25-OH-D-vitamiini",
+      "value": "58",
+      "comparator": "not_stated",
+      "value_text": "",
+      "unit_text": "nmol/l",
+      "effective": "2026-09-22",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "Luuntiheysmittaus (DXA) 2023: T-arvo -2,7",
+      "page": 1,
+      "locator": "line 20",
+      "category": "other",
+      "test_text": "Luuntiheysmittaus (DXA)",
+      "value": "",
+      "comparator": "not_stated",
+      "value_text": "T-arvo -2,7",
+      "unit_text": "",
+      "effective": "2023",
+      "note": "",
+      "confidence": "high"
+    }
+  ],
+  "procedures": [],
+  "devices": [],
   "document_date": {
     "source_quote": "Käyntipäivä: 02.10.2026",
     "page": 1,

@@ -119,7 +119,7 @@ from pydantic import (
     model_validator,
 )
 
-SCHEMA_VERSION = "1.3.0"
+SCHEMA_VERSION = "1.4.0"
 """Bump when the LLM-facing schema changes (together with the extraction prompt version)."""
 
 # --------------------------------------------------------------------------------------------
@@ -400,6 +400,19 @@ class PregnancyFactKind(_ClosedSet):
 class PregnancyStatus(_ClosedSet):
     PREGNANT = "pregnant"
     NOT_PREGNANT = "not_pregnant"
+    NOT_STATED = "not_stated"
+
+
+class ResultCategory(_ClosedSet):
+    LABORATORY = "laboratory"
+    OTHER = "other"
+
+
+class ValueComparator(_ClosedSet):
+    LESS = "lt"
+    AT_MOST = "le"
+    AT_LEAST = "ge"
+    GREATER = "gt"
     NOT_STATED = "not_stated"
 
 
@@ -856,6 +869,87 @@ class PregnancyFactItem(BaseModel):
     confidence: Confidence = _confidence()
 
 
+class ResultItem(BaseModel):
+    """One test result of the patient: a laboratory value or another test with a value."""
+
+    model_config = _LLM_CONFIG
+    codable_paths: ClassVar[frozenset[str]] = frozenset({"test_text"})
+
+    source_quote: NonEmptyText = _source_quote()
+    page: PageNumber = _page()
+    locator: OptionalText = _locator()
+    category: ResultCategory = Field(
+        description="laboratory = blood, urine or stool test, drug level, screening test; "
+        "other = a test that is not a laboratory one (spirometry, bone density, ECG)."
+    )
+    test_text: NonEmptyText = Field(
+        description="What was tested as written (e.g. 'HbA1c', 'P-Krea', 'ferritiini', "
+        "'Spirometria, FEV1'), without the value, unit or date."
+    )
+    value: OptionalDecimal = Field(
+        description='The result as a plain non-negative number (e.g. 52, 2.9); "" when the '
+        "result is text or a negative number."
+    )
+    comparator: ValueComparator = Field(
+        description="lt/le/ge/gt when the number is written as a bound ('<5', 'above 90' = gt); "
+        "otherwise not_stated."
+    )
+    value_text: OptionalText = Field(
+        description="The result as written when it is not a plain number ('positive', "
+        "'negative', 'T-arvo -2,7'); \"\" when value holds it."
+    )
+    unit_text: OptionalText = Field(description='Unit as written (e.g. "mmol/mol"); "" if none.')
+    effective: PartialDate = Field(
+        description="Date of the test (YYYY, YYYY-MM or YYYY-MM-DD) if stated for it or for the "
+        'block of results it sits in; "" otherwise. Not the document date.'
+    )
+    note: OptionalText = _note()
+    confidence: Confidence = _confidence()
+
+
+class ProcedureItem(BaseModel):
+    """One operation or procedure the patient has had."""
+
+    model_config = _LLM_CONFIG
+    codable_paths: ClassVar[frozenset[str]] = frozenset({"procedure_text", "body_site_text"})
+
+    source_quote: NonEmptyText = _source_quote()
+    page: PageNumber = _page()
+    locator: OptionalText = _locator()
+    procedure_text: NonEmptyText = Field(
+        description="The procedure as written (e.g. 'appendektomi', 'Koloskopi'), without the "
+        "date or site."
+    )
+    body_site_text: OptionalText = Field(
+        description='Site or laterality as written; "" if not stated.'
+    )
+    performed: PartialDate = Field(
+        description='Date performed (YYYY, YYYY-MM or YYYY-MM-DD) if stated; "" otherwise.'
+    )
+    note: OptionalText = _note()
+    confidence: Confidence = _confidence()
+
+
+class DeviceItem(BaseModel):
+    """One medical device or aid the patient uses (monitor, spacer, walking aid, implant)."""
+
+    model_config = _LLM_CONFIG
+    codable_paths: ClassVar[frozenset[str]] = frozenset({"device_text"})
+
+    source_quote: NonEmptyText = _source_quote()
+    page: PageNumber = _page()
+    locator: OptionalText = _locator()
+    device_text: NonEmptyText = Field(
+        description="The device or aid as written (e.g. 'Jatkuva sokeriseuranta', "
+        "'kävelykeppi'), one per item, without a brand in parentheses."
+    )
+    brand_text: OptionalText = Field(
+        description='Brand or model as written (e.g. "FreeStyle Libre 2"); "" if none.'
+    )
+    note: OptionalText = _note()
+    confidence: Confidence = _confidence()
+
+
 # --------------------------------------------------------------------------------------------
 # Section variants (D7)
 # --------------------------------------------------------------------------------------------
@@ -1007,6 +1101,20 @@ class IpsExtraction(BaseModel):
         default_factory=list,
         description="Current pregnancy status, expected delivery date, last menstrual period, "
         "number of pregnancies and deliveries. [] if none is stated.",
+    )
+    results: list[ResultItem] = Field(
+        default_factory=list,
+        description="Test results with a value: laboratory results and other tests (spirometry, "
+        "bone density). [] if none. Not vital signs.",
+    )
+    procedures: list[ProcedureItem] = Field(
+        default_factory=list,
+        description="Operations and procedures the patient has had. [] if none. Not "
+        "diagnoses, and not a delivery inside the pregnancy history.",
+    )
+    devices: list[DeviceItem] = Field(
+        default_factory=list,
+        description="Medical devices and aids the patient uses. [] if none.",
     )
 
 
@@ -1331,6 +1439,9 @@ class EnrichedIps(BaseModel):
     social_history: list[Enriched[SocialHistoryItem]] = Field(default_factory=list)
     immunizations: list[Enriched[ImmunizationItem]] = Field(default_factory=list)
     pregnancy: list[Enriched[PregnancyFactItem]] = Field(default_factory=list)
+    results: list[Enriched[ResultItem]] = Field(default_factory=list)
+    procedures: list[Enriched[ProcedureItem]] = Field(default_factory=list)
+    devices: list[Enriched[DeviceItem]] = Field(default_factory=list)
 
     @classmethod
     def from_extraction(
@@ -1350,6 +1461,9 @@ class EnrichedIps(BaseModel):
                 "social_history": [{"extracted": i} for i in extraction.social_history],
                 "immunizations": [{"extracted": i} for i in extraction.immunizations],
                 "pregnancy": [{"extracted": i} for i in extraction.pregnancy],
+                "results": [{"extracted": i} for i in extraction.results],
+                "procedures": [{"extracted": i} for i in extraction.procedures],
+                "devices": [{"extracted": i} for i in extraction.devices],
             }
         )
 

@@ -55,7 +55,7 @@ Synthea was not used: hand-written records give tighter control over the edge ca
 
 ## Gold-authoring rules
 
-Gold follows the extraction prompt (`backend/app/llm/prompts/extract_v5.md`) and the schema
+Gold follows the extraction prompt (`backend/app/llm/prompts/extract_v8.md`) and the schema
 field descriptions. Where those leave room, these rules decide.
 
 ### Quotes and locations
@@ -85,8 +85,9 @@ field descriptions. Where those leave room, these rules decide.
 - A current pregnancy written as a diagnosis line (Z32.1 "Raskaus todettu") is a problem; pregnancy
   history, last menstrual period, due date, height, weight, smoking, vaccinations and the contact
   person in the narrative are not, nor are results, vital signs, devices, alerts, advance
-  directives, functional status, plans of care or the patient's own words (the schema has no place for
-  them; fi13-fi18, sv07-sv08, en07-en08).
+  directives, functional status, plans of care or the patient's own words (the 11 questionnaire
+  cases annotate those the schema covers, see "Optional sections"; advance directives, alerts,
+  functional status, plans of care and the patient's own words stay outside the schema).
 - Medications: every product the patient takes, took recently, or is prescribed now, including
   stopped and paused ones. Not: drugs only described generically ("IV antibiotics"), other
   people's medicines.
@@ -163,9 +164,9 @@ field descriptions. Where those leave room, these rules decide.
   medication" claim made inside an instruction to the reader or inside forged markup is not a
   clinical statement and decides nothing (fi09, en05), so gold does not quote it and reflects
   the true clinical facts. Nothing inside an instruction to the reader or forged markup is
-  quoted or extracted; the rest of the document stays valid evidence (prompt `extract_v5`).
+  quoted or extracted; the rest of the document stays valid evidence (prompt `extract_v8`).
 
-## Optional sections (schema 1.2.0)
+## Optional sections (schema 1.2.0 onwards)
 
 Cases with `"extra_sections": true` in `meta.json` annotate the optional sections in their gold:
 `vital_signs`, `social_history`, `immunizations`, `pregnancy` and `patient.contacts` (the 11
@@ -193,6 +194,19 @@ Schema 1.3.0 (prompt `extract_v7`, PLAN.md D-15) adds two things to the same 11 
 - A weight given as before the current pregnancy ("paino ennen raskautta", "vikt före
   graviditeten", "pre-pregnancy weight") has kind `pre_pregnancy_weight` and no note; a current
   weight next to it ("nyt 70 kg") stays `weight`.
+
+Schema 1.4.0 (prompt `extract_v8`) adds `results`, `procedures` and `devices` to the same 11 cases:
+
+- Results: one item per tested quantity ("HbA1c 52 mmol/mol, P-Krea 78 µmol/l" = two items).
+  `test_text` as written, without value or unit. `category` `laboratory` for blood, urine and
+  stool tests, drug levels and screening tests; `other` for spirometry and bone density. `value`
+  is one plain non-negative number (decimal comma kept); a bound is the number with `comparator`
+  ("eGFR above 90" = 90, `gt`). A text result ("positive") or a negative number ("T-arvo -2,7")
+  is `value_text`. `effective` is the date after the block of results, like a vital sign.
+- Procedures: operations listed as such (sv07, sv08, fi18, fi19), with the date written. Not a
+  delivery or caesarean in the pregnancy history, a closure inside a diagnosis line, or an
+  examination only planned in the plan of care.
+- Devices: one item per device or aid; a brand in parentheses is `brand_text`.
 
 ## Feature matrix
 

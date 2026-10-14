@@ -467,6 +467,52 @@
       "confidence": "high"
     }
   ],
+  "results": [
+    {
+      "source_quote": "Lamotrigiinipitoisuus 8,2 mg/l",
+      "page": 1,
+      "locator": "line 19",
+      "category": "laboratory",
+      "test_text": "Lamotrigiinipitoisuus",
+      "value": "8,2",
+      "comparator": "not_stated",
+      "value_text": "",
+      "unit_text": "mg/l",
+      "effective": "2026-10-05",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "Hb 121 g/l",
+      "page": 1,
+      "locator": "line 19",
+      "category": "laboratory",
+      "test_text": "Hb",
+      "value": "121",
+      "comparator": "not_stated",
+      "value_text": "",
+      "unit_text": "g/l",
+      "effective": "2026-10-05",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "ferritiini 18 µg/l",
+      "page": 1,
+      "locator": "line 19",
+      "category": "laboratory",
+      "test_text": "ferritiini",
+      "value": "18",
+      "comparator": "not_stated",
+      "value_text": "",
+      "unit_text": "µg/l",
+      "effective": "2026-10-05",
+      "note": "",
+      "confidence": "high"
+    }
+  ],
+  "procedures": [],
+  "devices": [],
   "document_date": {
     "source_quote": "Käyntipäivä: 08.10.2026",
     "page": 1,

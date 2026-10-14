@@ -59,3 +59,29 @@ def test_questionnaire_case_with_non_ips_pregnancy_observations(matchbox: Matchb
         assert isinstance(resource, Observation)
         unmatched_codes.add((resource.code.coding or [])[0].code)
     assert unmatched_codes == {"8665-2", "11996-6", "11977-6"}
+
+
+def test_results_procedures_and_devices_match_their_ips_profiles(matchbox: MatchboxClient) -> None:
+    """fi19 gold has laboratory results, a procedure and devices: Matchbox finds no error and
+    every one of them matches its Bundle slice (none is among the unmatched entries)."""
+    gold = DATASET / "fi19_summary_multi_context_txt" / "gold.json"
+    enriched = EnrichedIps.from_extraction(IpsExtraction.model_validate_json(gold.read_text()))
+    assert enriched.results
+    assert enriched.procedures
+    assert enriched.devices
+    bundle = assemble(enriched, now=NOW).bundle
+    result = matchbox.validate(bundle)
+    assert result.errors == [], [(i.path, i.message) for i in result.errors]
+    entries = bundle.entry or []
+    types = {"Procedure", "DeviceUseStatement", "Device"}
+    laboratory = {
+        i
+        for i, e in enumerate(entries)
+        if isinstance(e.resource, Observation)
+        and e.resource.category
+        and (e.resource.category[0].coding or [])[0].code == "laboratory"
+    }
+    covered = {i for i, e in enumerate(entries) if e.resource.resource_type in types} | laboratory
+    assert len(laboratory) == len(enriched.results)
+    assert covered
+    assert not covered & set(result.unmatched_bundle_entries)

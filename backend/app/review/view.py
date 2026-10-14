@@ -47,6 +47,9 @@ _TITLES: dict[SectionKey, str] = {
     "problems": "Problem list",
     "past_illness": "History of past illness",
     "immunizations": "Immunizations",
+    "results": "Results",
+    "procedures": "Procedures",
+    "devices": "Medical devices",
     "pregnancy": "History of pregnancy",
     "social_history": "Social history",
     "vital_signs": "Vital signs",
@@ -257,8 +260,9 @@ def build_draft_view(
                 scoped_statements=[],
                 flags=[],
             )
-    # IPS order after the required sections: Immunizations, History of Past Illness, History of
-    # Pregnancy, Social History, Vital Signs (a flat section is listed only when it has items).
+    # IPS order after the required sections: Immunizations, History of Past Illness, Results,
+    # Procedures, Medical Devices, History of Pregnancy, Social History, Vital Signs (a flat
+    # section is listed only when it has items).
     flat_sections = {key: _flat_section(key, facts, outs, effective) for key in FLAT_SECTIONS}
     if (immunizations := flat_sections["immunizations"]) is not None:
         sections.append(immunizations)
@@ -266,7 +270,14 @@ def build_draft_view(
         sections.append(past_section)
     sections.extend(
         section
-        for key in ("pregnancy", "social_history", "vital_signs")
+        for key in (
+            "results",
+            "procedures",
+            "devices",
+            "pregnancy",
+            "social_history",
+            "vital_signs",
+        )
         if (section := flat_sections[key]) is not None
     )
 

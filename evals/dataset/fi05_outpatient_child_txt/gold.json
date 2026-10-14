@@ -70,5 +70,8 @@
   "vital_signs": [],
   "social_history": [],
   "immunizations": [],
-  "pregnancy": []
+  "pregnancy": [],
+  "results": [],
+  "procedures": [],
+  "devices": []
 }

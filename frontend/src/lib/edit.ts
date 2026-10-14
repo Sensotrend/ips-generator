@@ -73,6 +73,29 @@ const EDIT_FIELDS: Partial<Record<FactKind, EditField[]>> = {
     { key: 'occurrence', label: 'field.date', format: 'format.partialDate' },
     { key: 'note', label: 'field.note' },
   ],
+  result: [
+    { key: 'test_text', label: 'field.test' },
+    { key: 'value', label: 'field.value' },
+    {
+      key: 'comparator',
+      label: 'field.comparator',
+      options: ['lt', 'le', 'ge', 'gt', 'not_stated'],
+    },
+    { key: 'value_text', label: 'field.valueText' },
+    { key: 'unit_text', label: 'field.unit' },
+    { key: 'effective', label: 'field.date', format: 'format.partialDate' },
+  ],
+  procedure: [
+    { key: 'procedure_text', label: 'field.procedure' },
+    { key: 'body_site_text', label: 'field.bodySite' },
+    { key: 'performed', label: 'field.date', format: 'format.partialDate' },
+    { key: 'note', label: 'field.note' },
+  ],
+  device: [
+    { key: 'device_text', label: 'field.device' },
+    { key: 'brand_text', label: 'field.brand' },
+    { key: 'note', label: 'field.note' },
+  ],
   pregnancy_fact: [
     {
       key: 'status',

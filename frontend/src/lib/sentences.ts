@@ -84,6 +84,22 @@ export function factSentence(fact: Fact): string {
           v.status === 'not_done' ? translate('sentence.status', { status: known(v.status) }) : '',
       })
     }
+    case 'result': {
+      const date = day(v.effective)
+      return translate('sentence.result', {
+        title,
+        date: date ? translate('sentence.result.date', { date }) : '',
+      })
+    }
+    case 'procedure': {
+      const date = day(v.performed)
+      return translate('sentence.procedure', {
+        title: [str(v.procedure_text), str(v.body_site_text)].filter(Boolean).join(' '),
+        date: date ? translate('sentence.procedure.date', { date }) : '',
+      })
+    }
+    case 'device':
+      return translate('sentence.device', { title })
     case 'pregnancy_fact':
       return translate('sentence.pregnancy', { title })
     case 'patient_contact':
@@ -127,7 +143,11 @@ const startDate = (fact: Fact): string =>
         ? fact.value.effective
         : fact.kind === 'immunization'
           ? fact.value.occurrence
-          : fact.value.onset,
+          : fact.kind === 'result'
+            ? fact.value.effective
+            : fact.kind === 'procedure'
+              ? fact.value.performed
+              : fact.value.onset,
   )
 
 /**

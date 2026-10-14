@@ -32,6 +32,7 @@ const EXTRA_COLUMNS: Partial<Record<FactKind, { label: TKey; get: (v: FactValue)
   vital_sign: [{ label: 'detail.measurement', get: (v) => enumText(v.kind) }],
   social_history: [{ label: 'detail.topic', get: (v) => enumText(v.kind) }],
   pregnancy_fact: [{ label: 'detail.pregnancyFact', get: (v) => enumText(v.kind) }],
+  result: [{ label: 'detail.testKind', get: (v) => enumText(v.category) }],
   no_known_allergy_statement: [{ label: 'detail.scope', get: (v) => enumText(v.scope) }],
   section_none_known: [{ label: 'detail.scope', get: (v) => enumText(v.scope) }],
 }

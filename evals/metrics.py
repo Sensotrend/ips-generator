@@ -56,6 +56,7 @@ from app.schemas.intermediate import (
     AllergiesFound,
     AllergyItem,
     ConditionItem,
+    DeviceItem,
     ImmunizationItem,
     IpsExtraction,
     ItemsFound,
@@ -64,6 +65,8 @@ from app.schemas.intermediate import (
     PatientContactExtraction,
     PatientDerivations,
     PregnancyFactItem,
+    ProcedureItem,
+    ResultItem,
     SocialHistoryItem,
     VitalSignItem,
 )
@@ -106,9 +109,12 @@ EXTRA_SECTIONS: Final = (
     "social_history",
     "immunizations",
     "pregnancy",
+    "results",
+    "procedures",
+    "devices",
     "patient_contacts",
 )
-"""Optional sections (schema 1.2.0): scored only for cases whose ``meta.json`` has
+"""Optional sections (schema 1.2.0, 1.4.0): scored only for cases whose ``meta.json`` has
 ``extra_sections: true``, i.e. whose gold annotates all of them."""
 DOCUMENT_DATE: Final = "document_date"
 """Schema 1.3.0 (D-15): a single value, scored like ``patient_birth_date``, for the same cases as
@@ -147,6 +153,9 @@ _KIND: Final[dict[str, TextKind]] = {
     "social_history": "fact",
     "immunizations": "fact",
     "pregnancy": "fact",
+    "results": "fact",
+    "procedures": "fact",
+    "devices": "fact",
     "patient_contacts": "name",
 }
 
@@ -373,6 +382,13 @@ def _primary_text(item: Any) -> str:
     if isinstance(item, PregnancyFactItem):
         value = item.date or (str(item.count) if item.count is not None else item.status.value)
         return f"{item.kind.value} {value}"
+    if isinstance(item, ResultItem):
+        value = _plain(item.value) if item.value is not None else item.value_text or ""
+        return f"{item.test_text} {value}".strip()
+    if isinstance(item, ProcedureItem):
+        return f"{item.procedure_text} {item.performed or ''}".strip()
+    if isinstance(item, DeviceItem):
+        return item.device_text
     if isinstance(item, PatientContactExtraction):
         return item.name_text
     raise TypeError(type(item).__name__)
@@ -558,6 +574,15 @@ _FIELDS: Final[dict[str, dict[str, FieldCheck]]] = {
         "date": lambda p, g: _date(p.date, g.date),
         "count": lambda p, g: _enum(p.count, g.count),
     },
+    "results": {
+        "category": lambda p, g: _enum(p.category, g.category),
+        "value": lambda p, g: _enum(p.value, g.value),
+        "comparator": lambda p, g: _enum(p.comparator, g.comparator),
+        "unit": lambda p, g: _strength(p.unit_text, g.unit_text),
+        "effective": lambda p, g: _date(p.effective, g.effective),
+    },
+    "procedures": {"performed": lambda p, g: _date(p.performed, g.performed)},
+    "devices": {"brand_present": lambda p, g: _present(p.brand_text, g.brand_text)},
     "patient_contacts": {
         "relationship_present": lambda p, g: _present(p.relationship_text, g.relationship_text),
         "phone": lambda p, g: _digits(p.phone, g.phone),

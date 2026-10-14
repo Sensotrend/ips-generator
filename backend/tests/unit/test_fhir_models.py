@@ -64,11 +64,10 @@ def test_modelled_resources_are_parsed_strictly(path: Path) -> None:
 
 def test_unmodelled_resources_fall_back_to_generic() -> None:
     procedure = {
-        "resourceType": "Procedure",
+        "resourceType": "Encounter",
         "id": "p1",
-        "status": "completed",
-        "code": {"text": "Appendectomy"},
-        "subject": {"reference": "urn:uuid:1"},
+        "status": "finished",
+        "class": {"code": "AMB"},
     }
     bundle = Bundle.model_validate(
         {"resourceType": "Bundle", "type": "document", "entry": [{"resource": procedure}]}
@@ -76,8 +75,8 @@ def test_unmodelled_resources_fall_back_to_generic() -> None:
     assert bundle.entry
     resource = bundle.entry[0].resource
     assert isinstance(resource, GenericResource)
-    assert resource.resource_type == "Procedure"
-    assert "Procedure" not in MODELLED_RESOURCES
+    assert resource.resource_type == "Encounter"
+    assert "Encounter" not in MODELLED_RESOURCES
     assert resource.to_fhir() == procedure
 
 

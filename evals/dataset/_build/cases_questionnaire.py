@@ -38,6 +38,7 @@ from gold import (
     cond,
     contact,
     daily,
+    device,
     document_date,
     dosage,
     extraction,
@@ -51,7 +52,9 @@ from gold import (
     no_known_allergies,
     patient,
     pregnancy_fact,
+    procedure,
     reaction,
+    result,
     social,
     vaccine,
     vital,
@@ -2305,4 +2308,182 @@ FI19 = _annotate(
 )
 
 
-CASES = [FI13, FI14, FI15, SV07, EN07, FI16, FI17, FI18, SV08, EN08, FI19]
+# ---------------------------------------------------------------------------------------------
+# Results, procedures, devices (schema 1.4.0). Added to the gold of every case of this module.
+# A result takes the date that stands after its block of results ("(24.09.2026)"), like a vital
+# sign; the quote is the result itself. Laboratory results are `laboratory`; spirometry and bone
+# density are `other`. A negative number or a text result is `value_text`. A delivery in the
+# pregnancy history and a closure inside a diagnosis line are not procedures.
+# ---------------------------------------------------------------------------------------------
+
+EXTRAS_1_4: dict[str, dict[str, list[dict[str, Any]]]] = {
+    "fi13_referral_physio_lbp_txt": {
+        "results": [
+            result("HbA1c 52 mmol/mol", "HbA1c", value="52", unit="mmol/mol", effective="2026-09-24"),
+            result("P-Krea 78 µmol/l", "P-Krea", value="78", unit="µmol/l", effective="2026-09-24"),
+            result(
+                "LDL-kolesteroli 2,9 mmol/l",
+                "LDL-kolesteroli",
+                value="2,9",
+                unit="mmol/l",
+                effective="2026-09-24",
+            ),
+        ],
+    },
+    "fi14_outpatient_physio_lbp_txt": {
+        "results": [
+            result("TSH 2,1 mU/l", "TSH", value="2,1", unit="mU/l", effective="2026-09-22"),
+            result(
+                "25-OH-D-vitamiini 58 nmol/l",
+                "25-OH-D-vitamiini",
+                value="58",
+                unit="nmol/l",
+                effective="2026-09-22",
+            ),
+            result(
+                "Luuntiheysmittaus (DXA) 2023: T-arvo -2,7",
+                "Luuntiheysmittaus (DXA)",
+                value_text="T-arvo -2,7",
+                effective="2023",
+                category="other",
+            ),
+        ],
+    },
+    "fi15_outpatient_physio_copd_txt": {
+        "results": [
+            result(
+                "Spirometria 09/2026: FEV1 62 % viitearvosta",
+                "FEV1",
+                value="62",
+                unit="% viitearvosta",
+                effective="2026-09",
+                category="other",
+            ),
+            result("Hb 148 g/l", "Hb", value="148", unit="g/l", effective="2026-09-28"),
+        ],
+        "devices": [
+            device("Inhalaatiovälikammio (Volumatic)", "Inhalaatiovälikammio", brand="Volumatic"),
+            device("kävelykeppi", "kävelykeppi"),
+        ],
+    },
+    "sv07_referral_physio_lbp_txt": {
+        "procedures": [procedure("appendektomi 2008", "appendektomi", performed="2008")],
+    },
+    "en07_referral_physio_lbp_txt": {
+        "results": [
+            result("HbA1c 58 mmol/mol", "HbA1c", value="58", unit="mmol/mol", effective="2026-09-23"),
+            result(
+                "eGFR above 90 ml/min",
+                "eGFR",
+                value="90",
+                comparator="gt",
+                unit="ml/min",
+                effective="2026-09-23",
+            ),
+        ],
+        "devices": [
+            device(
+                "Continuous glucose monitor (FreeStyle Libre 2)",
+                "Continuous glucose monitor",
+                brand="FreeStyle Libre 2",
+            )
+        ],
+    },
+    "fi16_referral_maternity_t1dm_txt": {
+        "results": [
+            result("HbA1c 49 mmol/mol", "HbA1c", value="49", unit="mmol/mol", effective="2026-09-29"),
+            result("TSH 1,8 mU/l", "TSH", value="1,8", unit="mU/l", effective="2026-09-29"),
+        ],
+        "devices": [
+            device(
+                "Jatkuva sokeriseuranta (FreeStyle Libre 2)",
+                "Jatkuva sokeriseuranta",
+                brand="FreeStyle Libre 2",
+            )
+        ],
+    },
+    "fi17_maternity_intake_epilepsy_txt": {
+        "results": [
+            result(
+                "Lamotrigiinipitoisuus 8,2 mg/l",
+                "Lamotrigiinipitoisuus",
+                value="8,2",
+                unit="mg/l",
+                effective="2026-10-05",
+            ),
+            result("Hb 121 g/l", "Hb", value="121", unit="g/l", effective="2026-10-05"),
+            result("ferritiini 18 µg/l", "ferritiini", value="18", unit="µg/l", effective="2026-10-05"),
+        ],
+    },
+    "fi18_maternity_intake_crohn_pdf": {
+        "results": [
+            result("Hb 108 g/l", "Hb", value="108", unit="g/l", effective="2026-10-06"),
+            result("ferritiini 9 µg/l", "ferritiini", value="9", unit="µg/l", effective="2026-10-06"),
+            result("CRP 4 mg/l", "CRP", value="4", unit="mg/l", effective="2026-10-06"),
+        ],
+        "procedures": [
+            procedure(
+                "Suolen osaresektio 2019 Crohnin taudin vuoksi",
+                "Suolen osaresektio",
+                performed="2019",
+                note="Crohnin taudin vuoksi",
+            )
+        ],
+    },
+    "sv08_referral_maternity_asthma_txt": {
+        "results": [
+            result("Hb 118 g/l", "Hb", value="118", unit="g/l", effective="2026-10-05"),
+            result("ferritin 14 µg/l", "ferritin", value="14", unit="µg/l", effective="2026-10-05"),
+            result(
+                "fekalt kalprotektin 45 µg/g",
+                "fekalt kalprotektin",
+                value="45",
+                unit="µg/g",
+                effective="2026-10-05",
+            ),
+        ],
+        "procedures": [
+            procedure("appendektomi 2008", "appendektomi", performed="2008"),
+            procedure("Koloskopi 03/2026", "Koloskopi", performed="2026-03"),
+        ],
+        "devices": [device("Spacer (Volumatic)", "Spacer", brand="Volumatic")],
+    },
+    "en08_antenatal_booking_chd_txt": {
+        "results": [
+            result("Hb 124 g/l", "Hb", value="124", unit="g/l", effective="2026-10-06"),
+            result(
+                "rubella IgG positive", "rubella IgG", value_text="positive", effective="2026-10-06"
+            ),
+            result(
+                "HIV and hepatitis B screening negative",
+                "HIV and hepatitis B screening",
+                value_text="negative",
+                effective="2026-10-06",
+            ),
+        ],
+    },
+    "fi19_summary_multi_context_txt": {
+        "results": [
+            result(
+                "Veriryhmä A Rh(D) positiivinen",
+                "Veriryhmä",
+                value_text="A Rh(D) positiivinen",
+                effective="2026-10-05",
+            ),
+            result("Hb 112 g/l", "Hb", value="112", unit="g/l", effective="2026-10-05"),
+            result("CRP 3 mg/l", "CRP", value="3", unit="mg/l", effective="2026-10-05"),
+            result("TSH 1,9 mU/l", "TSH", value="1,9", unit="mU/l", effective="2026-10-05"),
+        ],
+        "procedures": [
+            procedure("Umpilisäkkeen poisto 2010", "Umpilisäkkeen poisto", performed="2010")
+        ],
+        "devices": [
+            device("Inhalaatiovälikammio (Volumatic)", "Inhalaatiovälikammio", brand="Volumatic")
+        ],
+    },
+}
+
+CASES = [
+    replace(c, gold={**c.gold, **EXTRAS_1_4[c.case_id]})
+    for c in (FI13, FI14, FI15, SV07, EN07, FI16, FI17, FI18, SV08, EN08, FI19)
+]

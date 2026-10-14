@@ -480,6 +480,83 @@
       "confidence": "high"
     }
   ],
+  "results": [
+    {
+      "source_quote": "Hb 118 g/l",
+      "page": 1,
+      "locator": "line 21",
+      "category": "laboratory",
+      "test_text": "Hb",
+      "value": "118",
+      "comparator": "not_stated",
+      "value_text": "",
+      "unit_text": "g/l",
+      "effective": "2026-10-05",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "ferritin 14 µg/l",
+      "page": 1,
+      "locator": "line 21",
+      "category": "laboratory",
+      "test_text": "ferritin",
+      "value": "14",
+      "comparator": "not_stated",
+      "value_text": "",
+      "unit_text": "µg/l",
+      "effective": "2026-10-05",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "fekalt kalprotektin 45 µg/g",
+      "page": 1,
+      "locator": "line 21",
+      "category": "laboratory",
+      "test_text": "fekalt kalprotektin",
+      "value": "45",
+      "comparator": "not_stated",
+      "value_text": "",
+      "unit_text": "µg/g",
+      "effective": "2026-10-05",
+      "note": "",
+      "confidence": "high"
+    }
+  ],
+  "procedures": [
+    {
+      "source_quote": "appendektomi 2008",
+      "page": 1,
+      "locator": "line 17",
+      "procedure_text": "appendektomi",
+      "body_site_text": "",
+      "performed": "2008",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "Koloskopi 03/2026",
+      "page": 1,
+      "locator": "line 17",
+      "procedure_text": "Koloskopi",
+      "body_site_text": "",
+      "performed": "2026-03",
+      "note": "",
+      "confidence": "high"
+    }
+  ],
+  "devices": [
+    {
+      "source_quote": "Spacer (Volumatic)",
+      "page": 1,
+      "locator": "line 24",
+      "device_text": "Spacer",
+      "brand_text": "Volumatic",
+      "note": "",
+      "confidence": "high"
+    }
+  ],
   "document_date": {
     "source_quote": "Remissdatum: 08.10.2026",
     "page": 1,
