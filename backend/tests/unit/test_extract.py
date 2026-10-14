@@ -243,7 +243,7 @@ def test_happy_path_returns_validated_extraction(doc: IngestedDocument) -> None:
     assert result.model_requested == MODEL
     assert result.model_used == MODEL
     assert result.fallback_used is False
-    assert result.prompt_version == "extract_v4"
+    assert result.prompt_version == "extract_v5"
     assert result.schema_version == SCHEMA_VERSION
     assert result.attempts == 1
     assert result.request_ids == ("req_1",)

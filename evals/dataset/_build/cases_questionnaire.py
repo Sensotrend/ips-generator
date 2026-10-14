@@ -1701,4 +1701,236 @@ EN08 = Case(
     ),
 )
 
-CASES = [FI13, FI14, FI15, SV07, EN07, FI16, FI17, FI18, SV08, EN08]
+# ---------------------------------------------------------------------------------------------
+# fi19: one summary for maternity, physiotherapy and unplanned care; severe penicillin allergy
+# ---------------------------------------------------------------------------------------------
+
+H19 = hetu("1994-04-18", 913)
+FI19_DOC = f"""KUVITTEELAN TERVEYSASEMA / Potilaskooste
+SYNTEETTINEN TESTIASIAKIRJA - EI OIKEA POTILAS
+
+POTILASKOOSTE
+Koottu äitiysneuvolaa, fysioterapiaa ja päivystystä varten.
+
+Potilas: AHONEN-TESTI, Kaisa Johanna
+Henkilötunnus: {H19}
+Syntymäaika: 18.04.1994
+Sukupuoli: nainen
+Äidinkieli: suomi
+Koontipäivä: 12.10.2026
+
+HUOMIO
+Vaikea lääkeaineyliherkkyys, katso ALLERGIAT. Adrenaliinikynä mukana.
+
+RASKAUS
+Raskausviikko 24+1 (12.10.2026). Viimeisten kuukautisten alkamispäivä 26.04.2026, lasketun ajan arvio 31.01.2027. Raskaus 2, synnytyksiä 1 (alateitse 2023, lapsi 3 380 g). Ei keskenmenoja.
+
+MITAT JA ELINTAVAT
+Pituus 168 cm, paino ennen raskautta 62 kg, nyt 70 kg. Ei tupakoi. Ei alkoholia. Työ: sairaanhoitaja, päivävuoro.
+
+MITTAUKSET JA TULOKSET
+Verenpaine 114/70 mmHg, pulssi 84/min, lämpö 36,8 °C, SpO2 98 % huoneilmassa (12.10.2026).
+Veriryhmä A Rh(D) positiivinen. Hb 112 g/l, CRP 3 mg/l, TSH 1,9 mU/l (05.10.2026).
+
+ROKOTUKSET
+MPR-rokote 1996 ja 2001, influenssarokote 10/2026, DTaP-rokote 2023. Vesirokko sairastettu.
+
+LAITTEET JA APUVÄLINEET
+Inhalaatiovälikammio (Volumatic).
+
+TOIMINTAKYKY
+Työkykyinen. Nostaminen ja pitkä seisominen ovat vaikeita selkäkivun vuoksi. Kävelee itsenäisesti 3 km.
+
+TOIMENPITEET
+Umpilisäkkeen poisto 2010.
+
+YHTEYSHENKILÖ
+Teemu Ahonen-Testi (puoliso), puh. 040 000 0005.
+
+DIAGNOOSIT
+Z32.1 Raskaus todettu (rv 24+1)
+M54.5 Alaselkäkipu, alkanut syyskuussa 2026
+J45.9 Astma
+E03.9 Kilpirauhasen vajaatoiminta
+N10 Äkillinen pyelonefriitti 2024, parantunut
+
+LÄÄKITYS
+- Levotyroksiini 75 mikrog tabl 1 x 1 aamulla (ATC H03AA01)
+- Budesonidi/formoteroli 160/4,5 mikrog inh 1 annos x 2 (ATC R03AK07)
+- Salbutamoli 0,1 mg/annos inh 1-2 annosta tarv.
+- Foolihappo 0,4 mg tabl 1 x 1 (ATC B03BB01)
+- Kolekalsiferoli 20 mikrog tabl 1 x 1 (ATC A11CC05)
+- Rauta 100 mg tabl 1 x 1
+- Parasetamoli 500 mg tabl 1-2 tarv., max 3 x vrk
+- EpiPen 300 mikrog adrenaliinikynä, käytetään anafylaksiassa
+
+LOPETETUT LÄÄKKEET
+- Ibuprofeeni 400 mg, lopetettu 04/2026 raskauden vuoksi
+
+ALLERGIAT
+Penisilliiniallergia (vaikea lääkeaineyliherkkyys): anafylaksia 2015, kriittisyys korkea
+Ei muita tiedossa olevia allergioita.
+
+SUUNNITELMA
+Äitiysneuvolakäynnit 4 viikon välein. Fysioterapia selkäkipuun 6 käyntiä raskaudenaikaisella ohjelmalla. Päivystyskäynnillä: huomioi allergiatiedot ennen antibioottihoitoa, vältä tulehduskipulääkkeitä ja ilmoita raskaus kuvantamisessa.
+
+Testi Terveydenhoitaja
+"""
+
+FI19 = Case(
+    case_id="fi19_summary_multi_context_txt",
+    language="fi",
+    fmt="txt",
+    doc_type="outpatient_note",
+    features=(
+        MATERNITY,
+        PHYSIO,
+        NON_SCHEMA,
+        "multi_context_candidate",
+        "severe_allergy_criticality",
+        "caps_headings",
+        "printed_icd10",
+        "printed_atc",
+        "resolved_condition",
+        "stopped_medication",
+        "as_needed_dosing",
+        "partial_dates",
+        "decimal_comma",
+        "procedure_distractor",
+        "allergy_reactions",
+        "gender_stated",
+        "birth_date_stated",
+    ),
+    notes=(
+        "One patient summary built to serve the maternity pre-visit form (pregnancy at 24+1 weeks, "
+        "asthma J45, thyroid E03, supplements), the physiotherapy low-back form (M54.5 with onset, "
+        "asthma, thyroid, height, weight, smoking) and unplanned care (severe allergy first, "
+        "adrenaline pen, stopped NSAID, past pyelonephritis, blood group, vital signs, plan with an "
+        "emergency paragraph). The penicillin entry is worded 'vaikea lääkeaineyliherkkyys' "
+        "(reaction severity severe), 'anafylaksia' (the reaction) and 'kriittisyys korkea' "
+        "(criticality high); the HUOMIO line repeats the hypersensitivity without the substance, so "
+        "the allergy is reported once, from the ALLERGIAT line. 'Ei muita tiedossa olevia "
+        "allergioita' only confirms the list and is not recorded. Results, vital signs, vaccinations, "
+        "devices, the appendectomy, functional status, the contact person and the plan are context "
+        "(not in the schema)."
+    ),
+    document=FI19_DOC,
+    gold=extraction(
+        "fi",
+        patient(
+            names=[
+                name("AHONEN-TESTI, Kaisa Johanna", family="AHONEN-TESTI", given=["Kaisa", "Johanna"])
+            ],
+            birth_date=birth("Syntymäaika: 18.04.1994", "1994-04-18"),
+            gender=gender("Sukupuoli: nainen", "female"),
+            identifiers=[ident(f"Henkilötunnus: {H19}", H19, "Henkilötunnus")],
+        ),
+        allergies_found(
+            [
+                allergy(
+                    "Penisilliiniallergia (vaikea lääkeaineyliherkkyys): anafylaksia 2015, kriittisyys korkea",
+                    "Penisilliini",
+                    type="allergy",
+                    category="medication",
+                    criticality="high",
+                    onset="2015",
+                    reactions=[reaction("anafylaksia", severity="severe")],
+                )
+            ]
+        ),
+        found(
+            med(
+                "Levotyroksiini 75 mikrog tabl 1 x 1 aamulla (ATC H03AA01)",
+                "Levotyroksiini",
+                code="H03AA01",
+                code_system="ATC",
+                strength="75 mikrog",
+                form="tabl",
+                dose=daily("1 x 1 aamulla", "1", "tabl", "1"),
+            ),
+            med(
+                "Budesonidi/formoteroli 160/4,5 mikrog inh 1 annos x 2 (ATC R03AK07)",
+                "Budesonidi/formoteroli",
+                code="R03AK07",
+                code_system="ATC",
+                strength="160/4,5 mikrog",
+                form="inh",
+                dose=daily("1 annos x 2", "1", "annos", "2"),
+            ),
+            med(
+                "Salbutamoli 0,1 mg/annos inh 1-2 annosta tarv.",
+                "Salbutamoli",
+                strength="0,1 mg/annos",
+                form="inh",
+                dose=dosage("1-2 annosta tarv.", unit="annosta", prn=True),
+            ),
+            med(
+                "Foolihappo 0,4 mg tabl 1 x 1 (ATC B03BB01)",
+                "Foolihappo",
+                code="B03BB01",
+                code_system="ATC",
+                strength="0,4 mg",
+                form="tabl",
+                dose=daily("1 x 1", "1", "tabl", "1"),
+            ),
+            med(
+                "Kolekalsiferoli 20 mikrog tabl 1 x 1 (ATC A11CC05)",
+                "Kolekalsiferoli",
+                code="A11CC05",
+                code_system="ATC",
+                strength="20 mikrog",
+                form="tabl",
+                dose=daily("1 x 1", "1", "tabl", "1"),
+            ),
+            med(
+                "Rauta 100 mg tabl 1 x 1",
+                "Rauta",
+                strength="100 mg",
+                form="tabl",
+                dose=daily("1 x 1", "1", "tabl", "1"),
+            ),
+            med(
+                "Parasetamoli 500 mg tabl 1-2 tarv., max 3 x vrk",
+                "Parasetamoli",
+                strength="500 mg",
+                form="tabl",
+                dose=dosage("1-2 tarv., max 3 x vrk", unit="tabl", prn=True),
+            ),
+            med(
+                "EpiPen 300 mikrog adrenaliinikynä, käytetään anafylaksiassa",
+                "EpiPen",
+                strength="300 mikrog",
+                form="adrenaliinikynä",
+                dose=dosage("käytetään anafylaksiassa", prn=True),
+            ),
+            med(
+                "Ibuprofeeni 400 mg, lopetettu 04/2026 raskauden vuoksi",
+                "Ibuprofeeni",
+                strength="400 mg",
+                status="stopped",
+                end="2026-04",
+                note="raskauden vuoksi",
+            ),
+        ),
+        found(
+            cond("Z32.1 Raskaus todettu (rv 24+1)", "Raskaus todettu", code="Z32.1", note="rv 24+1"),
+            cond(
+                "M54.5 Alaselkäkipu, alkanut syyskuussa 2026",
+                "Alaselkäkipu",
+                code="M54.5",
+                onset="2026-09",
+            ),
+            cond("J45.9 Astma", "Astma", code="J45.9"),
+            cond("E03.9 Kilpirauhasen vajaatoiminta", "Kilpirauhasen vajaatoiminta", code="E03.9"),
+            cond(
+                "N10 Äkillinen pyelonefriitti 2024, parantunut",
+                "Äkillinen pyelonefriitti",
+                code="N10",
+                status="resolved",
+                onset="2024",
+            ),
+        ),
+    ),
+)
+
+CASES = [FI13, FI14, FI15, SV07, EN07, FI16, FI17, FI18, SV08, EN08, FI19]

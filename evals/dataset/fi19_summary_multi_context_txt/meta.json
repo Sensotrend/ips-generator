@@ -1,0 +1,31 @@
+{
+  "case_id": "fi19_summary_multi_context_txt",
+  "language": "fi",
+  "format": "txt",
+  "media_type": "text/plain",
+  "doc_type": "outpatient_note",
+  "features": [
+    "maternity_questionnaire_candidate",
+    "physio_questionnaire_candidate",
+    "non_schema_facts",
+    "multi_context_candidate",
+    "severe_allergy_criticality",
+    "caps_headings",
+    "printed_icd10",
+    "printed_atc",
+    "resolved_condition",
+    "stopped_medication",
+    "as_needed_dosing",
+    "partial_dates",
+    "decimal_comma",
+    "procedure_distractor",
+    "allergy_reactions",
+    "gender_stated",
+    "birth_date_stated"
+  ],
+  "notes": "One patient summary built to serve the maternity pre-visit form (pregnancy at 24+1 weeks, asthma J45, thyroid E03, supplements), the physiotherapy low-back form (M54.5 with onset, asthma, thyroid, height, weight, smoking) and unplanned care (severe allergy first, adrenaline pen, stopped NSAID, past pyelonephritis, blood group, vital signs, plan with an emergency paragraph). The penicillin entry is worded 'vaikea lääkeaineyliherkkyys' (reaction severity severe), 'anafylaksia' (the reaction) and 'kriittisyys korkea' (criticality high); the HUOMIO line repeats the hypersensitivity without the substance, so the allergy is reported once, from the ALLERGIAT line. 'Ei muita tiedossa olevia allergioita' only confirms the list and is not recorded. Results, vital signs, vaccinations, devices, the appendectomy, functional status, the contact person and the plan are context (not in the schema).",
+  "expected_patient": {
+    "birth_date": "1994-04-18",
+    "gender": "female"
+  }
+}

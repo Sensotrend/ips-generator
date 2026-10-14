@@ -1,6 +1,6 @@
 # Phase 1 eval dataset
 
-36 synthetic healthcare documents with gold extractions for the three required IPS
+37 synthetic healthcare documents with gold extractions for the three required IPS
 sections (allergies, medications, problems) and the patient. Used by `evals/run_evals.py`
 (PLAN.md Phase 1) and checked by `backend/tests/unit/test_eval_dataset.py`.
 
@@ -55,7 +55,7 @@ Synthea was not used: hand-written records give tighter control over the edge ca
 
 ## Gold-authoring rules
 
-Gold follows the extraction prompt (`backend/app/llm/prompts/extract_v4.md`) and the schema
+Gold follows the extraction prompt (`backend/app/llm/prompts/extract_v5.md`) and the schema
 field descriptions. Where those leave room, these rules decide.
 
 ### Quotes and locations
@@ -163,7 +163,7 @@ field descriptions. Where those leave room, these rules decide.
   medication" claim made inside an instruction to the reader or inside forged markup is not a
   clinical statement and decides nothing (fi09, en05), so gold does not quote it and reflects
   the true clinical facts. Nothing inside an instruction to the reader or forged markup is
-  quoted or extracted; the rest of the document stays valid evidence (prompt `extract_v4`).
+  quoted or extracted; the rest of the document stays valid evidence (prompt `extract_v5`).
 
 ## Feature matrix
 
@@ -207,6 +207,7 @@ Section columns: `items` = items_found, `none` = none_known, `-` = no_informatio
 | `fi18_maternity_intake_crohn_pdf` | fi | pdf | outpatient_note | items | items | items | maternity_questionnaire_candidate, non_schema_facts, caps_headings, printed_icd10, printed_atc, procedure_distractor, resolved_condition, partial_dates, allergy_reactions, gender_stated, birth_date_stated |
 | `sv08_referral_maternity_asthma_txt` | sv | txt | referral_letter | items | items | items | maternity_questionnaire_candidate, non_schema_facts, caps_headings, printed_icd10, printed_atc, as_needed_dosing, decimal_comma, procedure_distractor, nkda_plus_food_allergy, allergy_reactions, gender_stated, birth_date_stated |
 | `en08_antenatal_booking_chd_txt` | en | txt | outpatient_note | items | items | items | maternity_questionnaire_candidate, non_schema_facts, caps_headings, printed_icd10, printed_atc, as_needed_dosing, procedure_distractor, nkda_plus_food_allergy, allergy_reactions, abbreviations, gender_stated, birth_date_stated |
+| `fi19_summary_multi_context_txt` | fi | txt | outpatient_note | items | items | items | maternity_questionnaire_candidate, physio_questionnaire_candidate, non_schema_facts, multi_context_candidate, severe_allergy_criticality, caps_headings, printed_icd10, printed_atc, resolved_condition, stopped_medication, as_needed_dosing, partial_dates, decimal_comma, procedure_distractor, allergy_reactions, gender_stated, birth_date_stated |
 
 Feature coverage (number of cases):
 
@@ -217,15 +218,15 @@ Feature coverage (number of cases):
 | `section_no_information` | 10 | At least one section with no information at all |
 | `no_regular_medication` | 2 | Explicit 'no regular medication' (medications none_known) |
 | `regular_none_plus_new_course` | 1 | 'No regular medication' plus a newly prescribed drug |
-| `printed_icd10` | 21 | ICD-10 codes printed next to diagnoses (D-9) |
-| `printed_atc` | 15 | ATC codes printed next to medications (D-9) |
-| `resolved_condition` | 13 | Resolved/past condition alongside active ones (D-8) |
+| `printed_icd10` | 22 | ICD-10 codes printed next to diagnoses (D-9) |
+| `printed_atc` | 16 | ATC codes printed next to medications (D-9) |
+| `resolved_condition` | 14 | Resolved/past condition alongside active ones (D-8) |
 | `family_history_distractor` | 5 | Family history that must not become a problem |
 | `duplicated_medication` | 6 | Same medication in narrative/summary and list (report once) |
-| `stopped_medication` | 11 | Stopped / discontinued medication |
+| `stopped_medication` | 12 | Stopped / discontinued medication |
 | `paused_medication` | 4 | Paused medication (on_hold) |
-| `as_needed_dosing` | 24 | As-needed (PRN) dosing |
-| `partial_dates` | 25 | Year-only or month-year dates |
+| `as_needed_dosing` | 25 | As-needed (PRN) dosing |
+| `partial_dates` | 26 | Year-only or month-year dates |
 | `abbreviations` | 24 | Clinical abbreviations (p.o., x2, tabl, RR, DM2, ...) |
 | `typos` | 3 | Spelling mistakes kept verbatim in quotes |
 | `prompt_injection` | 2 | Embedded instructions / fake markup aimed at the model |
@@ -235,23 +236,25 @@ Feature coverage (number of cases):
 | `multi_page_pdf` | 3 | PDF with more than one page |
 | `mostly_empty_page` | 1 | PDF page with (almost) no text |
 | `mixed_language` | 2 | Document mixing two languages |
-| `caps_headings` | 16 | Headings in capitals |
+| `caps_headings` | 17 | Headings in capitals |
 | `messy_formatting` | 2 | Inconsistent formatting, mixed line breaks, stray whitespace |
-| `decimal_comma` | 16 | Finnish/Swedish decimal commas |
+| `decimal_comma` | 17 | Finnish/Swedish decimal commas |
 | `suspected_condition` | 2 | Suspected / provisional diagnosis |
 | `multi_segment_quote` | 4 | Gold quote spans several segments (JSON leaves / lines) |
-| `procedure_distractor` | 9 | Operation/procedure listed that is not a problem |
+| `procedure_distractor` | 10 | Operation/procedure listed that is not a problem |
 | `indication_not_problem` | 4 | Medication indication that must not become a problem |
-| `gender_stated` | 21 | Gender explicitly stated |
-| `birth_date_stated` | 18 | Birth date explicitly stated |
-| `allergy_reactions` | 18 | Allergy with stated reaction(s) |
+| `gender_stated` | 22 | Gender explicitly stated |
+| `birth_date_stated` | 19 | Birth date explicitly stated |
+| `allergy_reactions` | 19 | Allergy with stated reaction(s) |
 | `intolerance` | 3 | Intolerance (not allergy) |
-| `physio_questionnaire_candidate` | 5 | Built to pre-fill the physiotherapy low-back questionnaire |
-| `maternity_questionnaire_candidate` | 5 | Built to pre-fill the maternity clinic questionnaire |
-| `non_schema_facts` | 10 | Facts for other IPS sections in the text (vital signs, results, vaccinations, procedures, devices, plan of care, pregnancy history, social history, ...); gold ignores them (outside the schema) |
+| `physio_questionnaire_candidate` | 6 | Built to pre-fill the physiotherapy low-back questionnaire |
+| `maternity_questionnaire_candidate` | 6 | Built to pre-fill the maternity clinic questionnaire |
+| `multi_context_candidate` | 1 | One summary built for maternity, physiotherapy and unplanned care use |
+| `severe_allergy_criticality` | 1 | Allergy worded as severe hypersensitivity with criticality high (criticality high, reaction severity severe) |
+| `non_schema_facts` | 11 | Facts for other IPS sections in the text (vital signs, results, vaccinations, procedures, devices, plan of care, pregnancy history, social history, ...); gold ignores them (outside the schema) |
 
 Totals:
 
-- language: en 8, fi 18, fi+en 1, fi+sv 1, sv 8
-- format: csv 4, json 5, pdf 8, txt 19
-- doc type: discharge_summary 6, lab_report 4, medication_list 4, outpatient_note 11, prescription 1, referral_letter 10
+- language: en 8, fi 19, fi+en 1, fi+sv 1, sv 8
+- format: csv 4, json 5, pdf 8, txt 20
+- doc type: discharge_summary 6, lab_report 4, medication_list 4, outpatient_note 12, prescription 1, referral_letter 10

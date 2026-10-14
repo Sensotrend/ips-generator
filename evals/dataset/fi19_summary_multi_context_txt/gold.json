@@ -1,0 +1,398 @@
+{
+  "document_language": "fi",
+  "patient": {
+    "names": [
+      {
+        "source_quote": "AHONEN-TESTI, Kaisa Johanna",
+        "page": 1,
+        "locator": "line 7",
+        "text": "AHONEN-TESTI, Kaisa Johanna",
+        "family": "AHONEN-TESTI",
+        "given": [
+          "Kaisa",
+          "Johanna"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "birth_date": {
+      "source_quote": "Syntymäaika: 18.04.1994",
+      "page": 1,
+      "locator": "line 9",
+      "value": "1994-04-18",
+      "confidence": "high"
+    },
+    "gender": {
+      "source_quote": "Sukupuoli: nainen",
+      "page": 1,
+      "locator": "line 10",
+      "value": "female",
+      "confidence": "high"
+    },
+    "identifiers": [
+      {
+        "source_quote": "Henkilötunnus: 180494-913J",
+        "page": 1,
+        "locator": "line 8",
+        "value": "180494-913J",
+        "type_text": "Henkilötunnus",
+        "issuer_text": "",
+        "confidence": "high"
+      }
+    ]
+  },
+  "allergies": {
+    "kind": "items_found",
+    "items": [
+      {
+        "source_quote": "Penisilliiniallergia (vaikea lääkeaineyliherkkyys): anafylaksia 2015, kriittisyys korkea",
+        "page": 1,
+        "locator": "line 63",
+        "substance_text": "Penisilliini",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "type": "allergy",
+        "category": "medication",
+        "criticality": "high",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "onset": "2015",
+        "reactions": [
+          {
+            "manifestations": [
+              "anafylaksia"
+            ],
+            "severity": "severe"
+          }
+        ],
+        "note": "",
+        "confidence": "high"
+      }
+    ],
+    "none_known_statements": []
+  },
+  "medications": {
+    "kind": "items_found",
+    "items": [
+      {
+        "source_quote": "Levotyroksiini 75 mikrog tabl 1 x 1 aamulla (ATC H03AA01)",
+        "page": 1,
+        "locator": "line 50",
+        "medication_text": "Levotyroksiini",
+        "printed_code": "H03AA01",
+        "printed_code_system_text": "ATC",
+        "strength_text": "75 mikrog",
+        "dose_form_text": "tabl",
+        "dosage": {
+          "text": "1 x 1 aamulla",
+          "dose_value": "1",
+          "dose_unit": "tabl",
+          "frequency": "1",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Budesonidi/formoteroli 160/4,5 mikrog inh 1 annos x 2 (ATC R03AK07)",
+        "page": 1,
+        "locator": "line 51",
+        "medication_text": "Budesonidi/formoteroli",
+        "printed_code": "R03AK07",
+        "printed_code_system_text": "ATC",
+        "strength_text": "160/4,5 mikrog",
+        "dose_form_text": "inh",
+        "dosage": {
+          "text": "1 annos x 2",
+          "dose_value": "1",
+          "dose_unit": "annos",
+          "frequency": "2",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Salbutamoli 0,1 mg/annos inh 1-2 annosta tarv.",
+        "page": 1,
+        "locator": "line 52",
+        "medication_text": "Salbutamoli",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "0,1 mg/annos",
+        "dose_form_text": "inh",
+        "dosage": {
+          "text": "1-2 annosta tarv.",
+          "dose_value": "",
+          "dose_unit": "annosta",
+          "frequency": "",
+          "period": "",
+          "period_unit": "not_stated",
+          "as_needed": true,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Foolihappo 0,4 mg tabl 1 x 1 (ATC B03BB01)",
+        "page": 1,
+        "locator": "line 53",
+        "medication_text": "Foolihappo",
+        "printed_code": "B03BB01",
+        "printed_code_system_text": "ATC",
+        "strength_text": "0,4 mg",
+        "dose_form_text": "tabl",
+        "dosage": {
+          "text": "1 x 1",
+          "dose_value": "1",
+          "dose_unit": "tabl",
+          "frequency": "1",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Kolekalsiferoli 20 mikrog tabl 1 x 1 (ATC A11CC05)",
+        "page": 1,
+        "locator": "line 54",
+        "medication_text": "Kolekalsiferoli",
+        "printed_code": "A11CC05",
+        "printed_code_system_text": "ATC",
+        "strength_text": "20 mikrog",
+        "dose_form_text": "tabl",
+        "dosage": {
+          "text": "1 x 1",
+          "dose_value": "1",
+          "dose_unit": "tabl",
+          "frequency": "1",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Rauta 100 mg tabl 1 x 1",
+        "page": 1,
+        "locator": "line 55",
+        "medication_text": "Rauta",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "100 mg",
+        "dose_form_text": "tabl",
+        "dosage": {
+          "text": "1 x 1",
+          "dose_value": "1",
+          "dose_unit": "tabl",
+          "frequency": "1",
+          "period": "1",
+          "period_unit": "d",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Parasetamoli 500 mg tabl 1-2 tarv., max 3 x vrk",
+        "page": 1,
+        "locator": "line 56",
+        "medication_text": "Parasetamoli",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "500 mg",
+        "dose_form_text": "tabl",
+        "dosage": {
+          "text": "1-2 tarv., max 3 x vrk",
+          "dose_value": "",
+          "dose_unit": "tabl",
+          "frequency": "",
+          "period": "",
+          "period_unit": "not_stated",
+          "as_needed": true,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "EpiPen 300 mikrog adrenaliinikynä, käytetään anafylaksiassa",
+        "page": 1,
+        "locator": "line 57",
+        "medication_text": "EpiPen",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "300 mikrog",
+        "dose_form_text": "adrenaliinikynä",
+        "dosage": {
+          "text": "käytetään anafylaksiassa",
+          "dose_value": "",
+          "dose_unit": "",
+          "frequency": "",
+          "period": "",
+          "period_unit": "not_stated",
+          "as_needed": true,
+          "route_text": ""
+        },
+        "status": "active",
+        "effective_start": "",
+        "effective_end": "",
+        "reason_text": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "Ibuprofeeni 400 mg, lopetettu 04/2026 raskauden vuoksi",
+        "page": 1,
+        "locator": "line 60",
+        "medication_text": "Ibuprofeeni",
+        "printed_code": "",
+        "printed_code_system_text": "",
+        "strength_text": "400 mg",
+        "dose_form_text": "",
+        "dosage": {
+          "text": "",
+          "dose_value": "",
+          "dose_unit": "",
+          "frequency": "",
+          "period": "",
+          "period_unit": "not_stated",
+          "as_needed": false,
+          "route_text": ""
+        },
+        "status": "stopped",
+        "effective_start": "",
+        "effective_end": "2026-04",
+        "reason_text": "",
+        "note": "raskauden vuoksi",
+        "confidence": "high"
+      }
+    ]
+  },
+  "problems": {
+    "kind": "items_found",
+    "items": [
+      {
+        "source_quote": "Z32.1 Raskaus todettu (rv 24+1)",
+        "page": 1,
+        "locator": "line 43",
+        "condition_text": "Raskaus todettu",
+        "printed_code": "Z32.1",
+        "printed_code_system_text": "",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "severity": "not_stated",
+        "body_site_text": "",
+        "onset": "",
+        "abatement": "",
+        "note": "rv 24+1",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "M54.5 Alaselkäkipu, alkanut syyskuussa 2026",
+        "page": 1,
+        "locator": "line 44",
+        "condition_text": "Alaselkäkipu",
+        "printed_code": "M54.5",
+        "printed_code_system_text": "",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "severity": "not_stated",
+        "body_site_text": "",
+        "onset": "2026-09",
+        "abatement": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "J45.9 Astma",
+        "page": 1,
+        "locator": "line 45",
+        "condition_text": "Astma",
+        "printed_code": "J45.9",
+        "printed_code_system_text": "",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "severity": "not_stated",
+        "body_site_text": "",
+        "onset": "",
+        "abatement": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "E03.9 Kilpirauhasen vajaatoiminta",
+        "page": 1,
+        "locator": "line 46",
+        "condition_text": "Kilpirauhasen vajaatoiminta",
+        "printed_code": "E03.9",
+        "printed_code_system_text": "",
+        "clinical_status": "not_stated",
+        "verification_status": "not_stated",
+        "severity": "not_stated",
+        "body_site_text": "",
+        "onset": "",
+        "abatement": "",
+        "note": "",
+        "confidence": "high"
+      },
+      {
+        "source_quote": "N10 Äkillinen pyelonefriitti 2024, parantunut",
+        "page": 1,
+        "locator": "line 47",
+        "condition_text": "Äkillinen pyelonefriitti",
+        "printed_code": "N10",
+        "printed_code_system_text": "",
+        "clinical_status": "resolved",
+        "verification_status": "not_stated",
+        "severity": "not_stated",
+        "body_site_text": "",
+        "onset": "2024",
+        "abatement": "",
+        "note": "",
+        "confidence": "high"
+      }
+    ]
+  }
+}

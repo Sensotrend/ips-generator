@@ -105,6 +105,8 @@ FEATURES: dict[str, str] = {
     "intolerance": "Intolerance (not allergy)",
     "physio_questionnaire_candidate": "Built to pre-fill the physiotherapy low-back questionnaire",
     "maternity_questionnaire_candidate": "Built to pre-fill the maternity clinic questionnaire",
+    "multi_context_candidate": "One summary built for maternity, physiotherapy and unplanned care use",
+    "severe_allergy_criticality": "Allergy worded as severe hypersensitivity with criticality high (criticality high, reaction severity severe)",
     "non_schema_facts": "Facts for other IPS sections in the text (vital signs, results, vaccinations, procedures, devices, plan of care, pregnancy history, social history, ...); gold ignores them (outside the schema)",
 }
 

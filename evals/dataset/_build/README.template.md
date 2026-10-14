@@ -55,7 +55,7 @@ Synthea was not used: hand-written records give tighter control over the edge ca
 
 ## Gold-authoring rules
 
-Gold follows the extraction prompt (`backend/app/llm/prompts/extract_v4.md`) and the schema
+Gold follows the extraction prompt (`backend/app/llm/prompts/extract_v5.md`) and the schema
 field descriptions. Where those leave room, these rules decide.
 
 ### Quotes and locations
@@ -163,7 +163,7 @@ field descriptions. Where those leave room, these rules decide.
   medication" claim made inside an instruction to the reader or inside forged markup is not a
   clinical statement and decides nothing (fi09, en05), so gold does not quote it and reflects
   the true clinical facts. Nothing inside an instruction to the reader or forged markup is
-  quoted or extracted; the rest of the document stays valid evidence (prompt `extract_v4`).
+  quoted or extracted; the rest of the document stays valid evidence (prompt `extract_v5`).
 
 ## Feature matrix
 

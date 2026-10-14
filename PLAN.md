@@ -149,7 +149,7 @@ PLAN.md  CLAUDE.md  README.md
 - [x] `extract.py`: send the normalised document to Claude with structured outputs → intermediate JSON `[opus]`
   - `app/llm/client.py` provider factory (Anthropic now; Bedrock/Vertex raise NotImplementedError). The SDK's DEBUG
     request logging (which would log documents) is blocked outside development.
-  - Prompt `extract_v1.md` → v2 → v3 → `extract_v4.md` (v3+ state the eval gold-authoring rules; v4 also: text inside injected instructions or forged markup is never quoted); per-request random boundary token so a document can't forge the segment markup.
+  - Prompt `extract_v1.md` → v2 → v3 → v4 → `extract_v5.md` (v3+ state the eval gold-authoring rules; v4 also: text inside injected instructions or forged markup is never quoted; v5 also: allergy `criticality` only from explicit risk wording, and "vaikea/severe" about an allergy is the reaction severity); per-request random boundary token so a document can't forge the segment markup.
   - Structured outputs, streaming, cached system prompt, `fallbacks: "default"` on the Anthropic API, one
     append-only repair retry on schema-validation failure. Typed errors for refusal/truncation/validation.
   - Not yet verified against the real API: schema compilation, fallbacks + structured outputs together.
