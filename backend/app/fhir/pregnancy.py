@@ -1,6 +1,6 @@
-"""History of Pregnancy section (optional, LOINC 10162-6) -> Observations (IPS profiles).
+"""History of Pregnancy section (optional, LOINC 10162-6) -> Observations.
 
-What the IPS can hold (``Composition.section:sectionPregnancyHx``, PLAN.md D-14, fixed codes):
+IPS profiles (``Composition.section:sectionPregnancyHx``, PLAN.md D-14, fixed codes):
 
 * **status** -> ``Observation-pregnancy-status-uv-ips``: LOINC 82810-3, value SNOMED CT
   pregnant / not pregnant; ``hasMember`` points to the expected-delivery-date Observation;
@@ -9,31 +9,46 @@ What the IPS can hold (``Composition.section:sectionPregnancyHx``, PLAN.md D-14,
 * **deliveries** -> ``Observation-pregnancy-outcome-uv-ips``: LOINC 11640-0 "[#] Births total",
   ``valueQuantity`` (UCUM ``1``).
 
-The IPS has no place for the number of pregnancies or the last menstrual period: those facts
-are kept in the section narrative only, with an info note. Every IPS pregnancy profile requires
-``effective[x]``: the date stated for the status (``date`` of a ``status`` item), else
-``data-absent-reason`` ``unknown``. A fact without its status, date or number is not emitted
-(warning note). The section is emitted only when it has content.
+Facts the IPS has no profile for (PLAN.md D-15) are plain R4 Observations with fixed LOINC codes.
+They validate without errors but match no IPS Bundle slice, so the validation gate accepts them
+through ``NON_IPS_OBSERVATION_CODES``:
+
+* **last menstrual period** -> LOINC 8665-2, ``valueDateTime``;
+* **number of pregnancies** -> LOINC 11996-6 "[#] Pregnancies" (gravidity), ``valueInteger``;
+* **deliveries**, besides the IPS outcome above -> LOINC 11977-6 "[#] Parity", ``valueInteger``
+  (a second resource for the same item, id derived from the item id; one narrative line).
+
+``effective[x]``: the date stated for the status (``date`` of a ``status`` item); for every other
+fact, and a status without a date, the document date as a stand-in (D-15, marked in the narrative,
+``note`` and a mapping note); with no day-precise document date either, ``data-absent-reason``
+``unknown`` (every IPS pregnancy profile requires ``effective[x]``). A fact without its status,
+date or number is not emitted (warning note). The section is emitted only when it has content.
 """
 
 from __future__ import annotations
 
 from decimal import Decimal
+from uuid import NAMESPACE_URL, uuid5
 
 from app.fhir.common import (
+    Effective,
     MappedResource,
     MappingContext,
     MappingNote,
     NoteCode,
     SectionResult,
     data_absent,
+    effective_date,
+    entries_section,
     fixed_concept,
-    section_with_extras,
     urn_uuid,
 )
 from app.fhir.constants import (
     LOINC_BIRTHS_TOTAL,
     LOINC_EXPECTED_DELIVERY_DATE,
+    LOINC_GRAVIDITY,
+    LOINC_LAST_MENSTRUAL_PERIOD,
+    LOINC_PARITY,
     LOINC_PREGNANCY_STATUS,
     PREGNANCY_STATUS_VALUES,
     PROFILE_PREGNANCY_EDD,
@@ -42,7 +57,7 @@ from app.fhir.constants import (
     SECTION_PREGNANCY,
     UCUM,
 )
-from app.fhir.models import Annotation, Meta, Observation, PrimitiveElement, Quantity, Reference
+from app.fhir.models import Meta, Observation, PrimitiveElement, Quantity, Reference
 from app.fhir.narrative import NarrativeLine, line_narrative
 from app.schemas.intermediate import (
     Enriched,
@@ -54,61 +69,67 @@ from app.schemas.intermediate import (
 KEY = "pregnancy"
 TITLE = "History of Pregnancy"
 
-_NARRATIVE_ONLY = {
-    PregnancyFactKind.PREGNANCIES: "Number of pregnancies",
+_TITLES = {
+    PregnancyFactKind.EXPECTED_DELIVERY_DATE: "Expected delivery date",
     PregnancyFactKind.LAST_MENSTRUAL_PERIOD: "Last menstrual period",
+    PregnancyFactKind.PREGNANCIES: "Number of pregnancies",
+    PregnancyFactKind.DELIVERIES: "Number of deliveries",
 }
 
 
-def _line(fact: PregnancyFactItem) -> NarrativeLine | None:
+def _line(fact: PregnancyFactItem, effective: Effective) -> NarrativeLine | None:
     """The fact as a narrative line, ``None`` if it lacks its value."""
+    details: list[tuple[str, str]] = []
     if fact.kind is PregnancyFactKind.STATUS:
         if fact.status is PregnancyStatus.NOT_STATED:
             return None
-        details = (("date", fact.date),) if fact.date else ()
-        return NarrativeLine(
-            f"Pregnancy status: {PREGNANCY_STATUS_VALUES[fact.status.value].display}", details
-        )
-    if fact.kind in (
+        title = f"Pregnancy status: {PREGNANCY_STATUS_VALUES[fact.status.value].display}"
+    elif fact.kind in (
         PregnancyFactKind.EXPECTED_DELIVERY_DATE,
         PregnancyFactKind.LAST_MENSTRUAL_PERIOD,
     ):
         if not fact.date:
             return None
-        title = (
-            "Expected delivery date"
-            if fact.kind is PregnancyFactKind.EXPECTED_DELIVERY_DATE
-            else _NARRATIVE_ONLY[fact.kind]
-        )
-        return NarrativeLine(f"{title}: {fact.date}")
-    if fact.count is None:
-        return None
-    title = (
-        "Number of deliveries"
-        if fact.kind is PregnancyFactKind.DELIVERIES
-        else (_NARRATIVE_ONLY[fact.kind])
-    )
-    return NarrativeLine(f"{title}: {fact.count}", (("note", fact.note),) if fact.note else ())
+        title = f"{_TITLES[fact.kind]}: {fact.date}"
+    else:
+        if fact.count is None:
+            return None
+        title = f"{_TITLES[fact.kind]}: {fact.count}"
+    if effective.value is not None:
+        # A status's date is when it holds; for the other facts, whose value may be a date
+        # itself, it is when they were recorded.
+        label = "date" if fact.kind is PregnancyFactKind.STATUS else "recorded"
+        details.append((label, effective.detail()[1]))
+    if fact.note:
+        details.append(("note", fact.note))
+    return NarrativeLine(title, tuple(details))
 
 
-def _absent(date: str | None) -> dict[str, PrimitiveElement | list[PrimitiveElement | None]] | None:
-    """``effectiveDateTime`` has no value: data-absent-reason ``unknown`` (IPS requires it)."""
-    return None if date else {"effectiveDateTime": data_absent()}
+def _effective(fact: PregnancyFactItem, ctx: MappingContext) -> Effective:
+    """A status has its own stated date; the other facts' ``date`` is their value, not when they
+    were recorded, so they always take the stand-in."""
+    return effective_date(fact.date if fact.kind is PregnancyFactKind.STATUS else None, ctx)
+
+
+def _absent(
+    effective: Effective,
+) -> dict[str, PrimitiveElement | list[PrimitiveElement | None]] | None:
+    """No ``effectiveDateTime`` value: data-absent-reason ``unknown`` (IPS requires it)."""
+    return None if effective.value else {"effectiveDateTime": data_absent()}
 
 
 def map_pregnancy(
     items: list[Enriched[PregnancyFactItem]], ctx: MappingContext
 ) -> SectionResult | None:
     entries: list[MappedResource] = []
-    extra: list[NarrativeLine] = []
     notes: list[MappingNote] = []
     edd_urls: list[str] = []
-    status_items: list[tuple[int, Enriched[PregnancyFactItem], NarrativeLine]] = []
-    others: list[tuple[int, Enriched[PregnancyFactItem], NarrativeLine]] = []
+    statuses: list[tuple[Enriched[PregnancyFactItem], str, NarrativeLine, Effective]] = []
 
     for index, item in enumerate(items):
         path = f"{KEY}[{index}]"
-        line = _line(item.extracted)
+        effective = _effective(item.extracted, ctx)
+        line = _line(item.extracted, effective)
         if line is None:
             notes.append(
                 MappingNote(
@@ -118,35 +139,26 @@ def map_pregnancy(
                 )
             )
             continue
+        notes += effective.notes(path)
         kind = item.extracted.kind
-        if kind in _NARRATIVE_ONLY:
-            extra.append(line)
-            notes.append(
-                MappingNote(
-                    path=path,
-                    code=NoteCode.NOT_REPRESENTABLE_IN_IPS,
-                    message="The IPS has no element for this pregnancy fact; kept in the "
-                    "section narrative only.",
-                    severity="info",
-                )
-            )
-        elif kind is PregnancyFactKind.STATUS:
-            status_items.append((index, item, line))
-        else:
-            others.append((index, item, line))
-
-    # Expected delivery dates and outcomes first (the status points at the dates).
-    for index, item, line in others:
-        entry = _observation(item, f"{KEY}[{index}]", line, ctx)
+        if kind is PregnancyFactKind.STATUS:
+            statuses.append((item, path, line, effective))
+            continue
+        entry = _observation(item, path, line, effective, ctx)
         entries.append(entry)
-        if item.extracted.kind is PregnancyFactKind.EXPECTED_DELIVERY_DATE:
+        if kind is PregnancyFactKind.EXPECTED_DELIVERY_DATE:
             edd_urls.append(entry.full_url)
-    for index, item, line in status_items:
-        entries.insert(0, _observation(item, f"{KEY}[{index}]", line, ctx, members=edd_urls))
+        elif kind is PregnancyFactKind.DELIVERIES:
+            entries.append(_parity(item, path, line, effective, ctx))
 
-    if not entries and not extra:
+    # The status points at the expected delivery dates, and comes first in the section.
+    entries = [
+        _observation(item, path, line, effective, ctx, members=edd_urls)
+        for item, path, line, effective in statuses
+    ] + entries
+    if not entries:
         return None
-    section = section_with_extras(SECTION_PREGNANCY, TITLE, entries, extra)
+    section = entries_section(SECTION_PREGNANCY, TITLE, entries)
     return SectionResult(section, KEY, entries, notes)
 
 
@@ -154,49 +166,69 @@ def _observation(
     item: Enriched[PregnancyFactItem],
     path: str,
     line: NarrativeLine,
+    effective: Effective,
     ctx: MappingContext,
     *,
     members: list[str] | None = None,
 ) -> MappedResource:
+    """The Observation of one fact; ``members`` (status only): fullUrls of the expected delivery
+    dates."""
     f = item.extracted
-    note = [Annotation(text=f.note)] if f.note else None
-    resource: Observation
+    profile: str | None = None
+    value_concept = None
+    value_date = None
+    value_integer = None
+    value_quantity = None
     if f.kind is PregnancyFactKind.STATUS:
-        resource = Observation(
-            id=str(item.id),
-            meta=Meta(profile=[PROFILE_PREGNANCY_STATUS]),
-            text=line_narrative(line),
-            status="final",
-            code=fixed_concept(LOINC_PREGNANCY_STATUS),
-            subject=ctx.patient,
-            value_codeable_concept=fixed_concept(PREGNANCY_STATUS_VALUES[f.status.value]),
-            has_member=[Reference(reference=url) for url in members or []] or None,
-            note=note,
-            effective_date_time=f.date,
-            primitive_extensions=_absent(f.date),
-        )
+        profile, code = PROFILE_PREGNANCY_STATUS, LOINC_PREGNANCY_STATUS
+        value_concept = fixed_concept(PREGNANCY_STATUS_VALUES[f.status.value])
     elif f.kind is PregnancyFactKind.EXPECTED_DELIVERY_DATE:
-        resource = Observation(
-            id=str(item.id),
-            meta=Meta(profile=[PROFILE_PREGNANCY_EDD]),
-            text=line_narrative(line),
-            status="final",
-            code=fixed_concept(LOINC_EXPECTED_DELIVERY_DATE),
-            subject=ctx.patient,
-            value_date_time=f.date,
-            note=note,
-            primitive_extensions=_absent(None),
-        )
+        profile, code, value_date = PROFILE_PREGNANCY_EDD, LOINC_EXPECTED_DELIVERY_DATE, f.date
+    elif f.kind is PregnancyFactKind.LAST_MENSTRUAL_PERIOD:
+        code, value_date = LOINC_LAST_MENSTRUAL_PERIOD, f.date
+    elif f.kind is PregnancyFactKind.PREGNANCIES:
+        code, value_integer = LOINC_GRAVIDITY, f.count
     else:
-        resource = Observation(
-            id=str(item.id),
-            meta=Meta(profile=[PROFILE_PREGNANCY_OUTCOME]),
-            text=line_narrative(line),
-            status="final",
-            code=fixed_concept(LOINC_BIRTHS_TOTAL),
-            subject=ctx.patient,
-            value_quantity=Quantity(value=Decimal(f.count or 0), system=UCUM, code="1"),
-            note=note,
-            primitive_extensions=_absent(None),
-        )
+        profile, code = PROFILE_PREGNANCY_OUTCOME, LOINC_BIRTHS_TOTAL
+        value_quantity = Quantity(value=Decimal(f.count or 0), system=UCUM, code="1")
+    resource = Observation(
+        id=str(item.id),
+        meta=Meta(profile=[profile]) if profile else None,
+        text=line_narrative(line),
+        status="final",
+        code=fixed_concept(code),
+        subject=ctx.patient,
+        effective_date_time=effective.value,
+        primitive_extensions=_absent(effective),
+        value_codeable_concept=value_concept,
+        value_date_time=value_date,
+        value_integer=value_integer,
+        value_quantity=value_quantity,
+        has_member=[Reference(reference=url) for url in members or []] or None,
+        note=effective.annotations(f.note),
+    )
     return MappedResource(path, item.id, urn_uuid(item.id), resource, line)
+
+
+def _parity(
+    item: Enriched[PregnancyFactItem],
+    path: str,
+    line: NarrativeLine,
+    effective: Effective,
+    ctx: MappingContext,
+) -> MappedResource:
+    """The parity Observation of a ``deliveries`` item. Its id is derived from the item id (stable
+    across re-assemblies); no narrative line of its own (the outcome's line covers the fact)."""
+    resource_id = uuid5(NAMESPACE_URL, f"urn:uuid:{item.id}#parity")
+    resource = Observation(
+        id=str(resource_id),
+        text=line_narrative(line),
+        status="final",
+        code=fixed_concept(LOINC_PARITY),
+        subject=ctx.patient,
+        effective_date_time=effective.value,
+        primitive_extensions=_absent(effective),
+        value_integer=item.extracted.count,
+        note=effective.annotations(item.extracted.note),
+    )
+    return MappedResource(path, item.id, urn_uuid(resource_id), resource, None)

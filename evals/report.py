@@ -6,6 +6,7 @@ from __future__ import annotations
 from typing import Any
 
 from evals.metrics import (
+    DOCUMENT_DATE,
     EFFECTIVE_PATIENT_SECTIONS,
     EXTRA_SECTIONS,
     ITEM_SECTIONS,
@@ -57,7 +58,7 @@ def render_markdown(metadata: dict[str, Any], summary: RunSummary) -> str:
     ]
     for name in (*ITEM_SECTIONS, "allergy_statements"):
         lines.append(_section_row(name, summary.sections[name]))
-    for name in EXTRA_SECTIONS:
+    for name in (*EXTRA_SECTIONS, DOCUMENT_DATE):
         if name in summary.sections:
             lines.append(_section_row(name, summary.sections[name]))
     lines.append(_section_row("patient (all)", summary.patient))
@@ -75,8 +76,8 @@ def render_markdown(metadata: dict[str, Any], summary: RunSummary) -> str:
         f"Recall before grounding: {raw}. Match methods: {summary.match_methods or 'none'}.",
         "",
         "The optional sections (vital signs, social history, immunizations, pregnancy, patient "
-        "contacts) are scored only for cases whose gold annotates them (`meta.json` "
-        "`extra_sections`).",
+        "contacts) and the document date are scored only for cases whose gold annotates them "
+        "(`meta.json` `extra_sections`).",
         "",
         "Effective patient values = stated or derived (D-10) vs the true value in "
         f"`expected_patient`. Derived-value accuracy: {derived or 'n/a'}.",
@@ -109,7 +110,8 @@ def render_markdown(metadata: dict[str, Any], summary: RunSummary) -> str:
             )
     validation = (
         f"**{summary.validation_passed}/{summary.n_cases - summary.n_skipped} "
-        f"({_pct(summary.validation_pass_rate)})** pass (0 errors and no unmatched entries)"
+        f"({_pct(summary.validation_pass_rate)})** pass "
+        "(0 errors and no blocking unmatched entries)"
         if summary.validation_ran
         else "not run"
     )

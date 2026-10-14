@@ -150,7 +150,12 @@ def assemble(
         enriched.patient, resource_id=ids("patient"), derived=enriched.patient_derived
     )
     device = map_pipeline_device(pipeline, schema_version=enriched.schema_version)
-    ctx = MappingContext(patient=reference(patient.full_url), new_id=ids)
+    document_date = enriched.document_date.value if enriched.document_date else None
+    ctx = MappingContext(
+        patient=reference(patient.full_url),
+        new_id=ids,
+        document_date=document_date if document_date and len(document_date) == 10 else None,
+    )
     # IPS order: the required sections (Problem List, Allergies, Medication Summary), then the
     # optional ones as they have content: Immunizations, History of Past Illness, History of
     # Pregnancy, Social History, Vital Signs (D-14: none of these is emitted when empty).

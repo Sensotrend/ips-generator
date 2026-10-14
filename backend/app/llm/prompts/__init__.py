@@ -25,7 +25,7 @@ __all__ = [
 ]
 
 PROMPTS_DIR = Path(__file__).parent
-EXTRACT_PROMPT_VERSION = "v6"
+EXTRACT_PROMPT_VERSION = "v7"
 """Current extraction prompt; bump together with ``SCHEMA_VERSION`` when the schema changes."""
 TERMINOLOGY_PROMPT_VERSION = "v1"
 """Current terminology-coding prompt (pipeline step 5, `app.pipeline.terminology`)."""

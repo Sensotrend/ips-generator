@@ -376,6 +376,7 @@ export const sv: Messages = {
   'detail.pregnancyFact': 'uppgift',
   'enum.height': 'längd',
   'enum.weight': 'vikt',
+  'enum.pre_pregnancy_weight': 'vikt före graviditeten',
   'enum.body_mass_index': 'BMI',
   'enum.blood_pressure': 'blodtryck',
   'enum.heart_rate': 'puls',

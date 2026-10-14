@@ -13,6 +13,8 @@ Definitions
   ``patient_birth_date``, ``patient_gender``: a single value, TP when equal, FP + FN when
   different, FP / FN when only one side has it). ``patient`` sums the four. These score the
   LLM layer: gold keeps ``birth_date: null`` when only a HETU is present.
+* **Document date** (``document_date``, D-15): a single value like the birth date, scored only
+  for ``extra_sections`` cases.
 * **Effective patient values** (D-10; ``patient_birth_date_effective``,
   ``patient_gender_effective``): the value the Patient resource carries (derived from a Finnish
   personal identity code if there is one, else stated) vs the case's true value in
@@ -30,9 +32,10 @@ Definitions
   rate where one date is a prefix of the other (``2024`` vs ``2024-03``); printed codes compared
   case- and space-insensitively; strength without spaces and with ``,`` = ``.``; dosage text and
   body site by presence only.
-* **Validator pass**: Matchbox reports 0 errors **and** no unmatched Bundle entry. Pass rate is
-  over all cases that were run (failed extractions and assemblies count as not passing): the
-  Phase 1 "done when" metric (>= 90%).
+* **Validator pass**: Matchbox reports 0 errors **and** no blocking unmatched Bundle entry
+  (``app.pipeline.validate.blocking_unmatched_entries``: D-15 non-IPS Observations pass). Pass
+  rate is over all cases that were run (failed extractions and assemblies count as not
+  passing): the Phase 1 "done when" metric (>= 90%).
 
 Scores are computed on the grounded extraction (what the pipeline would assemble); the counts of
 the raw (pre-grounding) extraction are kept as ``raw_counts`` to separate grounding losses from
@@ -107,6 +110,9 @@ EXTRA_SECTIONS: Final = (
 )
 """Optional sections (schema 1.2.0): scored only for cases whose ``meta.json`` has
 ``extra_sections: true``, i.e. whose gold annotates all of them."""
+DOCUMENT_DATE: Final = "document_date"
+"""Schema 1.3.0 (D-15): a single value, scored like ``patient_birth_date``, for the same cases as
+``EXTRA_SECTIONS`` (only their gold annotates it)."""
 PATIENT_SECTIONS: Final = (
     "patient_names",
     "patient_identifiers",
@@ -122,6 +128,7 @@ SCORED_SECTIONS: Final = (
     *ITEM_SECTIONS,
     "allergy_statements",
     *EXTRA_SECTIONS,
+    DOCUMENT_DATE,
     *PATIENT_SECTIONS,
     *EFFECTIVE_PATIENT_SECTIONS,
 )
@@ -653,6 +660,12 @@ def score_case(
             gold_texts,
             _field_tallies(section, result.matches, pred_items, gold_items),
         )
+
+    sections[DOCUMENT_DATE] = (
+        _single_value(pred.document_date if pred else None, gold.document_date)
+        if score_extra
+        else SectionScore()
+    )
 
     pred_names = list(pred.patient.names) if pred else []
     pred_ids = list(pred.patient.identifiers) if pred else []

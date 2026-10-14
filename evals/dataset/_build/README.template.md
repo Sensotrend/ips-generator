@@ -185,6 +185,15 @@ for such cases; other cases have empty lists there and are not scored on them. R
   also written as a diagnosis line is still a problem.
 - Contacts: the person's name, relationship as written and telephone number.
 
+Schema 1.3.0 (prompt `extract_v7`, PLAN.md D-15) adds two things to the same 11 cases:
+
+- `document_date`: the labelled date of the document as a whole ("Koontipäivä", "Käyntipäivä",
+  "Lähetepäivä", "Remissdatum", "Date"), quoted with its label; `null` when the document gives
+  none (fi15). It is scored like the birth date. It is never copied into another fact's date.
+- A weight given as before the current pregnancy ("paino ennen raskautta", "vikt före
+  graviditeten", "pre-pregnancy weight") has kind `pre_pregnancy_weight` and no note; a current
+  weight next to it ("nyt 70 kg") stays `weight`.
+
 ## Feature matrix
 
 Section columns: `items` = items_found, `none` = none_known, `-` = no_information.

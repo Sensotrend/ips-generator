@@ -339,6 +339,25 @@ def test_apply_optional_fact_set_to_none() -> None:
     assert result.dropped == ("patient.birth_date",)
 
 
+def test_ungrounded_document_date_is_dropped_not_a_section() -> None:
+    data = raw()
+    data["document_date"] = {
+        "source_quote": "Koontipäivä: 12.10.2026",
+        "page": 1,
+        "locator": "line 1",
+        "value": "2026-10-12",
+        "confidence": "high",
+    }
+    extraction = IpsExtraction.model_validate(data)
+    report = ground(extraction, SOURCE)
+    assert report.get("document_date") is not None
+    result = apply_grounding(extraction, report)
+    assert result.extraction.document_date is None
+    assert result.dropped == ("document_date",)
+    assert ReviewFlag(path="document_date", reason=ReviewReason.DROPPED_NOT_FOUND) in result.flags
+    assert not any(f.reason is ReviewReason.SECTION_UNVERIFIED for f in result.flags)
+
+
 def test_apply_relocated_corrects_location() -> None:
     extraction = with_quote("medications", 1, "Ramipril 5 mg tabl 1 x 1 aamulla", locator="line 3")
     result = apply_grounding(extraction, ground(extraction, SOURCE))

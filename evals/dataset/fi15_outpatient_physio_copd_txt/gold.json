@@ -359,5 +359,6 @@
     }
   ],
   "immunizations": [],
-  "pregnancy": []
+  "pregnancy": [],
+  "document_date": null
 }

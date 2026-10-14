@@ -377,6 +377,7 @@ export const en = {
   'detail.pregnancyFact': 'fact',
   'enum.height': 'height',
   'enum.weight': 'weight',
+  'enum.pre_pregnancy_weight': 'weight before pregnancy',
   'enum.body_mass_index': 'body mass index',
   'enum.blood_pressure': 'blood pressure',
   'enum.heart_rate': 'heart rate',

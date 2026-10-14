@@ -19,10 +19,17 @@ problems" code: the document did not state that) and a warning.
 Variants: ``none_known`` -> one Condition coded 160245001 "No current problems or disability";
 ``no_information`` -> ``emptyReason`` ``unavailable``.
 
-Item mapping: ``code`` = condition text + lookup codings; clinical/verification status only when
-stated (no ``category``, so con-3 does not apply); ``severity`` = the stated level as text plus
-lookup codings; ``bodySite`` text + codings; ``onsetDateTime`` / ``abatementDateTime`` = partial
-dates; ``note``.
+Item mapping: ``code`` = condition text + lookup codings (ICD-10 / SNOMED CT from the
+terminology step only; a printed code such as "M54.5" becomes a coding only when that step
+confirms it, which for FI/SV text needs ``TERMINOLOGY_MODE=llm``, D-9); ``category``
+``problem-list-item`` on Problem List entries (not on past illness); verification status only
+when stated; ``severity`` = the stated level as text plus lookup codings; ``bodySite`` text +
+codings; ``onsetDateTime`` / ``abatementDateTime`` = partial dates; ``note``.
+
+Clinical status: as stated. A Problem List entry without a stated status is encoded ``active``
+with a warning (the reviewer confirms it), as for allergies: the Problem List is the list of
+current problems, and consumers filter on ``clinicalStatus``. (R4 invariant con-3 asks for a
+clinical status on a problem-list-item; Matchbox does not report it either way.)
 """
 
 from __future__ import annotations
@@ -43,6 +50,7 @@ from app.fhir.common import (
     urn_uuid,
 )
 from app.fhir.constants import (
+    CONDITION_CATEGORY_PROBLEM_LIST_ITEM,
     CONDITION_CLINICAL_STATUS,
     CONDITION_VERIFICATION_STATUS,
     NO_CURRENT_PROBLEMS,
@@ -179,6 +187,18 @@ def map_condition(
         )
     elif status is not ConditionClinicalStatus.NOT_STATED:
         details.append(("status", status.value))
+    past = status in PAST_STATUSES
+    if status is ConditionClinicalStatus.NOT_STATED:
+        status = ConditionClinicalStatus.ACTIVE
+        details.append(("status", "active (not stated; assumed for the Problem List)"))
+        notes.append(
+            MappingNote(
+                path=path,
+                code=NoteCode.CONDITION_STATUS_ASSUMED_ACTIVE,
+                message="Clinical status not stated; encoded as 'active' because the condition "
+                "is on the Problem List. Confirm it in review.",
+            )
+        )
     if abatement and status in _CURRENT_STATUSES:
         notes.append(
             MappingNote(
@@ -214,12 +234,9 @@ def map_condition(
         id=str(item.id),
         meta=Meta(profile=[PROFILE_CONDITION]),
         text=line_narrative(line),
-        clinical_status=(
-            None
-            if status is ConditionClinicalStatus.NOT_STATED
-            else fixed_concept(CONDITION_CLINICAL_STATUS[status.value])
-        ),
+        clinical_status=fixed_concept(CONDITION_CLINICAL_STATUS[status.value]),
         verification_status=verification,
+        category=None if past else [fixed_concept(CONDITION_CATEGORY_PROBLEM_LIST_ITEM)],
         severity=severity,
         code=concept(c.condition_text, item.codings_for("condition_text")),
         body_site=[body_site] if body_site else None,
@@ -229,4 +246,4 @@ def map_condition(
         note=[Annotation(text=c.note)] if c.note else None,
     )
     entry = MappedResource(path, item.id, urn_uuid(item.id), resource, line)
-    return entry, status in PAST_STATUSES, notes
+    return entry, past, notes

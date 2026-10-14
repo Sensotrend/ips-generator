@@ -374,6 +374,7 @@ export const fi: Messages = {
   'detail.pregnancyFact': 'tieto',
   'enum.height': 'pituus',
   'enum.weight': 'paino',
+  'enum.pre_pregnancy_weight': 'paino ennen raskautta',
   'enum.body_mass_index': 'painoindeksi',
   'enum.blood_pressure': 'verenpaine',
   'enum.heart_rate': 'syke',

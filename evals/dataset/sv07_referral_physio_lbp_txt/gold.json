@@ -387,5 +387,12 @@
       "confidence": "high"
     }
   ],
-  "pregnancy": []
+  "pregnancy": [],
+  "document_date": {
+    "source_quote": "Remissdatum: 05.10.2026",
+    "page": 1,
+    "locator": "line 10",
+    "value": "2026-10-05",
+    "confidence": "high"
+  }
 }

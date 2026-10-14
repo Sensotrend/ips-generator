@@ -40,7 +40,7 @@ from app.pipeline.extractors import Extractor, ReplayMissError
 from app.pipeline.ground import ReviewFlag, apply_grounding, ground
 from app.pipeline.ingest import IngestError, ingest
 from app.pipeline.terminology import code_enriched
-from app.pipeline.validate import MatchboxError, ValidationResult
+from app.pipeline.validate import MatchboxError, ValidationResult, blocking_unmatched_entries
 from app.schemas.intermediate import EnrichedIps
 from app.schemas.source import IngestedDocument
 from app.terminology.client import TerminologyClient
@@ -176,19 +176,24 @@ class ValidationSummary(BaseModel):
     errors: int
     warnings: int
     unmatched_entries: list[int]
+    allowed_unmatched_entries: list[int] = []
+    """Unmatched entries the gate accepts (non-IPS Observations, PLAN.md D-15)."""
     passed: bool
-    """No errors and no unmatched Bundle entries (see ``app.pipeline.validate``)."""
+    """No errors and no blocking unmatched Bundle entries (see ``app.pipeline.validate``)."""
     issues: list[IssueSummary]
 
 
-def summarise_validation(result: ValidationResult) -> ValidationSummary:
+def summarise_validation(result: ValidationResult, bundle: Bundle) -> ValidationSummary:
+    """``bundle`` is the Bundle that was validated (to tell allowed unmatched entries apart)."""
     unmatched = result.unmatched_bundle_entries
+    blocking = blocking_unmatched_entries(result, bundle)
     return ValidationSummary(
         profile=result.profile,
         errors=len(result.errors),
         warnings=len(result.warnings),
         unmatched_entries=unmatched,
-        passed=not result.errors and not unmatched,
+        allowed_unmatched_entries=[i for i in unmatched if i not in blocking],
+        passed=not result.errors and not blocking,
         issues=[
             IssueSummary(severity=i.severity, message_id=i.message_id, path=i.path)
             for i in result.issues
@@ -340,7 +345,7 @@ def run_pipeline(
     else:
         _emit(on_event, StepName.VALIDATE, StepStatus.STARTED)
         try:
-            validation = summarise_validation(validator(assembly.bundle))
+            validation = summarise_validation(validator(assembly.bundle), assembly.bundle)
         except MatchboxError:
             validation_error = "validator_unavailable"
             _emit(on_event, StepName.VALIDATE, StepStatus.FAILED, reason=validation_error)

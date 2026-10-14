@@ -38,6 +38,7 @@ from gold import (
     cond,
     contact,
     daily,
+    document_date,
     dosage,
     extraction,
     found,
@@ -1960,8 +1961,10 @@ def _annotate(
     immunizations: list[dict[str, Any]] | None = None,
     pregnancy: list[dict[str, Any]] | None = None,
     contacts: list[dict[str, Any]] | None = None,
+    doc_date: dict[str, Any] | None = None,
 ) -> Case:
     gold = dict(case.gold)
+    gold["document_date"] = doc_date
     gold["vital_signs"] = vital_signs
     gold["social_history"] = social_history
     gold["immunizations"] = immunizations or []
@@ -1981,6 +1984,7 @@ def _bp_line(quote: str, date: str, *, systolic: str, diastolic: str, pulse: str
 _FI13_BLOCK = "Verenpaine 138/84 mmHg, pulssi 72/min, painoindeksi 29,7 (06.10.2026)"
 FI13 = _annotate(
     FI13,
+    doc_date=document_date("Lähetepäivä: 06.10.2026", "2026-10-06"),
     vital_signs=[
         vital("Pituus 178 cm", "height", "178", unit="cm"),
         vital("paino 94 kg", "weight", "94", unit="kg"),
@@ -1996,6 +2000,7 @@ FI13 = _annotate(
 _FI14_BLOCK = "Verenpaine 122/78 mmHg, pulssi 68/min (02.10.2026)"
 FI14 = _annotate(
     FI14,
+    doc_date=document_date("Käyntipäivä: 02.10.2026", "2026-10-02"),
     vital_signs=[
         vital("Pituus 164 cm", "height", "164", unit="cm"),
         vital("paino 71 kg", "weight", "71", unit="kg"),
@@ -2035,6 +2040,7 @@ FI15 = _annotate(
 _SV07_BLOCK = "Blodtryck 126/80 mmHg, puls 70/min, BMI 29,0 (05.10.2026)"
 SV07 = _annotate(
     SV07,
+    doc_date=document_date("Remissdatum: 05.10.2026", "2026-10-05"),
     vital_signs=[
         vital("Längd 168 cm", "height", "168", unit="cm"),
         vital("vikt 82 kg", "weight", "82", unit="kg"),
@@ -2052,6 +2058,7 @@ SV07 = _annotate(
 _EN07_BLOCK = "BP 124/78 mmHg, pulse 66/min, BMI 23.6 (07.10.2026)"
 EN07 = _annotate(
     EN07,
+    doc_date=document_date("Date: 07.10.2026", "2026-10-07"),
     vital_signs=[
         vital("Height 183 cm", "height", "183", unit="cm"),
         vital("weight 79 kg", "weight", "79", unit="kg"),
@@ -2068,9 +2075,10 @@ EN07 = _annotate(
 _FI16_BLOCK = "Verenpaine 118/72 mmHg, pulssi 76/min (08.10.2026)"
 FI16 = _annotate(
     FI16,
+    doc_date=document_date("Lähetepäivä: 08.10.2026", "2026-10-08"),
     vital_signs=[
         vital("Pituus 166 cm", "height", "166", unit="cm"),
-        vital("paino ennen raskautta 64 kg", "weight", "64", unit="kg", note="ennen raskautta"),
+        vital("paino ennen raskautta 64 kg", "pre_pregnancy_weight", "64", unit="kg"),
         *_bp_line(_FI16_BLOCK, "2026-10-08", systolic="118", diastolic="72", pulse="76"),
     ],
     social_history=[],
@@ -2104,9 +2112,10 @@ FI16 = _annotate(
 _FI17_BLOCK = "Verenpaine 128/82 mmHg, pulssi 82/min (08.10.2026)"
 FI17 = _annotate(
     FI17,
+    doc_date=document_date("Käyntipäivä: 08.10.2026", "2026-10-08"),
     vital_signs=[
         vital("Pituus 171 cm", "height", "171", unit="cm"),
-        vital("paino ennen raskautta 78 kg", "weight", "78", unit="kg", note="ennen raskautta"),
+        vital("paino ennen raskautta 78 kg", "pre_pregnancy_weight", "78", unit="kg"),
         *_bp_line(_FI17_BLOCK, "2026-10-08", systolic="128", diastolic="82", pulse="82"),
     ],
     social_history=[social("Ei tupakoi", "tobacco", "Ei tupakoi", tobacco_status="non_smoker")],
@@ -2139,9 +2148,10 @@ FI17 = _annotate(
 _FI18_BLOCK = "Verenpaine 110/68 mmHg, pulssi 80/min (08.10.2026)"
 FI18 = _annotate(
     FI18,
+    doc_date=document_date("Käyntipäivä: 08.10.2026", "2026-10-08"),
     vital_signs=[
         vital("Pituus 169 cm", "height", "169", unit="cm"),
-        vital("paino ennen raskautta 59 kg", "weight", "59", unit="kg", note="ennen raskautta"),
+        vital("paino ennen raskautta 59 kg", "pre_pregnancy_weight", "59", unit="kg"),
         *_bp_line(_FI18_BLOCK, "2026-10-08", systolic="110", diastolic="68", pulse="80"),
     ],
     social_history=[
@@ -2176,9 +2186,10 @@ FI18 = _annotate(
 _SV08_BLOCK = "Blodtryck 112/70 mmHg, puls 74/min (08.10.2026)"
 SV08 = _annotate(
     SV08,
+    doc_date=document_date("Remissdatum: 08.10.2026", "2026-10-08"),
     vital_signs=[
         vital("Längd 172 cm", "height", "172", unit="cm"),
-        vital("vikt före graviditeten 66 kg", "weight", "66", unit="kg", note="före graviditeten"),
+        vital("vikt före graviditeten 66 kg", "pre_pregnancy_weight", "66", unit="kg"),
         *_bp_line(_SV08_BLOCK, "2026-10-08", systolic="112", diastolic="70", pulse="74"),
     ],
     social_history=[social("Röker inte", "tobacco", "Röker inte", tobacco_status="non_smoker")],
@@ -2211,9 +2222,10 @@ SV08 = _annotate(
 _EN08_BLOCK = "BP 112/68 mmHg, pulse 70/min (08.10.2026)"
 EN08 = _annotate(
     EN08,
+    doc_date=document_date("Date: 08.10.2026", "2026-10-08"),
     vital_signs=[
         vital("Height 169 cm", "height", "169", unit="cm"),
-        vital("pre-pregnancy weight 66 kg", "weight", "66", unit="kg", note="pre-pregnancy"),
+        vital("pre-pregnancy weight 66 kg", "pre_pregnancy_weight", "66", unit="kg"),
         *_bp_line(_EN08_BLOCK, "2026-10-08", systolic="112", diastolic="68", pulse="70"),
     ],
     social_history=[
@@ -2250,9 +2262,10 @@ _FI19_BLOCK = (
 )
 FI19 = _annotate(
     FI19,
+    doc_date=document_date("Koontipäivä: 12.10.2026", "2026-10-12"),
     vital_signs=[
         vital("Pituus 168 cm", "height", "168", unit="cm"),
-        vital("paino ennen raskautta 62 kg", "weight", "62", unit="kg", note="ennen raskautta"),
+        vital("paino ennen raskautta 62 kg", "pre_pregnancy_weight", "62", unit="kg"),
         vital("nyt 70 kg", "weight", "70", unit="kg"),
         *_bp_line(_FI19_BLOCK, "2026-10-12", systolic="114", diastolic="70", pulse="84"),
         vital(_FI19_BLOCK, "body_temperature", "36.8", unit="°C", effective="2026-10-12"),

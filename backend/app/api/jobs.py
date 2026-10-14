@@ -445,7 +445,7 @@ def approve(
         validation = None
         if services.validator is not None:
             try:
-                validation = summarise_validation(services.validator(bundle))
+                validation = summarise_validation(services.validator(bundle), bundle)
             except MatchboxError as exc:
                 raise ApiError(
                     503, "validator_unavailable", "The FHIR validator is not reachable."

@@ -338,15 +338,22 @@ def test_schema_objects_are_closed_and_fully_required() -> None:
 
 
 def test_schema_union_budget() -> None:
-    """Union-typed properties are capped at 16 per request: 3 sections + birth_date + gender
-    (the discriminated sections are emitted as ``anyOf``, never ``oneOf``)."""
+    """Union-typed properties are capped at 16 per request: 3 sections + birth_date + gender +
+    document_date (the discriminated sections are emitted as ``anyOf``, never ``oneOf``)."""
     unions = [
         name
         for sub in _schemas(extraction_json_schema())
         for name, prop in sub.get("properties", {}).items()
         if "anyOf" in prop
     ]
-    assert sorted(unions) == ["allergies", "birth_date", "gender", "medications", "problems"]
+    assert sorted(unions) == [
+        "allergies",
+        "birth_date",
+        "document_date",
+        "gender",
+        "medications",
+        "problems",
+    ]
 
 
 def test_schema_is_not_recursive() -> None:

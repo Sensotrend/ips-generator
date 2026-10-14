@@ -67,12 +67,48 @@ def test_diabetes_from_fixture() -> None:
     assert NoteCode.PRINTED_CODE_NOT_EMITTED in notes
 
 
-def test_not_stated_status_is_omitted_and_stays_current() -> None:
-    fhir, past, _ = _fhir(_items()[1])
-    assert "clinicalStatus" not in fhir
-    assert "verificationStatus" not in fhir
+def test_not_stated_status_is_assumed_active_on_the_problem_list() -> None:
+    fhir, past, notes = _fhir(_items()[1])
     assert not past
+    assert fhir["clinicalStatus"]["coding"] == [
+        {"system": CONDITION_CLINICAL, "code": "active", "display": "Active"}
+    ]
+    assert NoteCode.CONDITION_STATUS_ASSUMED_ACTIVE in notes
+    assert "assumed" in fhir["text"]["div"]
+    assert "verificationStatus" not in fhir
     assert fhir["code"] == {"text": "Verenpainetauti"}
+
+
+def test_problem_list_entries_have_the_problem_list_item_category() -> None:
+    expected = [
+        {
+            "coding": [
+                {
+                    "system": "http://terminology.hl7.org/CodeSystem/condition-category",
+                    "code": "problem-list-item",
+                    "display": "Problem List Item",
+                }
+            ]
+        }
+    ]
+    for item in _items():
+        fhir, past, _ = _fhir(item)
+        assert past or fhir["category"] == expected
+
+
+def test_past_illness_has_no_category_and_keeps_its_status() -> None:
+    item = _items()[1]
+    item.extracted.clinical_status = ConditionClinicalStatus.RESOLVED
+    fhir, past, notes = _fhir(item)
+    assert past
+    assert "category" not in fhir
+    assert fhir["clinicalStatus"]["coding"][0]["code"] == "resolved"
+    assert NoteCode.CONDITION_STATUS_ASSUMED_ACTIVE not in notes
+
+
+def test_stated_status_gives_no_assumption_note() -> None:
+    _, _, notes = _fhir(_items()[0])  # active, stated
+    assert NoteCode.CONDITION_STATUS_ASSUMED_ACTIVE not in notes
 
 
 def test_provisional_with_note() -> None:
@@ -99,8 +135,8 @@ def test_d8_routing_by_status(status: str, past: bool) -> None:
     fhir, routed_past, _ = _fhir(item)
     assert routed_past is past
     assert is_past(item.extracted) is past
-    if status != "not_stated":
-        assert fhir["clinicalStatus"]["coding"][0]["code"] == status
+    expected = "active" if status == "not_stated" else status
+    assert fhir["clinicalStatus"]["coding"][0]["code"] == expected
 
 
 @pytest.mark.parametrize(

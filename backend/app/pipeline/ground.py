@@ -414,6 +414,9 @@ def ground(extraction: IpsExtraction, doc: IngestedDocument) -> GroundingReport:
 
 _PATH_PART: Final = re.compile(r"([a-z_]+)((?:\[\d+\])*)")
 _NO_INFORMATION: Final = {"kind": "no_information"}
+_SECTION_FIELDS: Final = frozenset({"allergies", "medications", "problems"})
+"""Top-level fields that are sections; any other top-level fact (``document_date``) is a single
+optional fact and is set to ``None`` when it does not ground."""
 
 
 def _parse_path(path: str) -> list[str | int]:
@@ -447,9 +450,9 @@ def apply_grounding(extraction: IpsExtraction, report: GroundingReport) -> Groun
             flags.append(ReviewFlag(path=fact.path, reason=ReviewReason.DROPPED_NOT_FOUND))
             if isinstance(parts[-1], int):
                 removals.setdefault(tuple(parts[:-1]), set()).add(parts[-1])
-            elif len(parts) == 1:  # a section-level statement such as none_known
+            elif len(parts) == 1 and parts[0] in _SECTION_FIELDS:  # e.g. a none_known section
                 unverified_sections.add(str(parts[0]))
-            else:  # optional single fact, e.g. patient.birth_date
+            else:  # optional single fact, e.g. patient.birth_date, document_date
                 _resolve(data, parts[:-1])[parts[-1]] = None
             continue
         if fact.status is GroundingStatus.RELOCATED:

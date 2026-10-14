@@ -292,6 +292,23 @@ PLAN.md  CLAUDE.md  README.md
     them, with fi/sv/en strings and plain-language sentences. Not yet checked in a browser against a real job.
   - Evals: gold for the new sections in the 11 questionnaire cases (`meta.json` `extra_sections: true`); the harness scores
     the sections only for those cases. No live run yet (needs a key): record one for `extract_v6` in `evals/RESULTS.md`.
+  - **Follow-up (2026-10-14, schema 1.3.0, prompt `extract_v7`, D-15):** prompted by a questionnaire consumer that drops
+    undated Observations. (1) `IpsExtraction.document_date` (quoted, grounded; a dropped one is set to null, not a
+    section). Observations with no stated date get it as a **stand-in** `effectiveDateTime`, marked in the narrative,
+    `Observation.note` and a warning note `effective_is_document_date`. Applies to vital signs, every pregnancy fact
+    and tobacco; a stated year/month on a vital sign is never replaced (narrative-only as before). (2) Narrative-only
+    facts became Observations: pre-pregnancy weight (new kind `pre_pregnancy_weight`, LOINC 56077-1, category
+    vital-signs: matches the IPS vital-signs slice), last menstrual period 8665-2, gravidity 11996-6 and parity 11977-6
+    (beside the IPS births-total outcome; a second resource per `deliveries` item, id derived from the item id).
+    Alcohol stays narrative-only. (3) Problem List Conditions get category `problem-list-item`; an unstated clinical
+    status there is encoded `active` with a warning `condition_status_assumed_active` (as for allergies). ICD-10 codes
+    still come only from the terminology step: a printed code is coded with `TERMINOLOGY_MODE=llm` (D-9); the Compose
+    default `deterministic` leaves FI/SV conditions text-only.
+  - Matchbox findings (2026-10-14): `effectivePeriod` is rejected by the IPS pregnancy and tobacco profiles (dateTime
+    only) and by `vs-1`, so a stand-in date can only be `effectiveDateTime`; R4 con-3 (clinicalStatus on a
+    problem-list-item) is not reported at all. Gold self-test 37/37 pass; live `extract_v7` run still to record.
+  - Not yet: `document_date` is not a reviewable fact in the review UI (the stand-in dates are visible only in the
+    resource narrative and notes); the review view does not show the new warning notes specially.
 - [ ] Multi-document merge into one IPS (future enhancement per D-12: multi-document upload, and merging several IPS summaries; dedupe meds/problems across docs; D-11: a "none known" claim contradicted by another document is not asserted and is flagged) `[fable]`
 - [ ] Rendered human-readable IPS view (Composition narrative) `[sonnet]`
 - [ ] Prompt caching for system prompt + schema; Batch API path for bulk backfills `[sonnet]`
@@ -332,6 +349,7 @@ PLAN.md  CLAUDE.md  README.md
 | D-13 | The PWA uses the **LUVN look and feel** (palette, Verdana type, 0.5rem radii, gray header, 4px focus rings) for a possible LUVN-run front end, defined as CSS custom properties in `frontend/src/index.css`. No LUVN logo, icons or photos. | Decided 2026-10-13 |
 
 | D-14 | The optional sections **Vital Signs, Social History, Immunizations, History of Pregnancy** (and `Patient.contact`) use **provisional hard-coded codes** instead of terminology lookups, as named constants in `app/fhir/constants.py`: LOINC for the observation codes (checked with tx.fhir.org), SNOMED CT for smoking and pregnancy status values, ATC for a short vaccine table (MMR, varicella, influenza, COVID-19 mRNA, tetanus alone; combination vaccines are never coded as a component). The LLM still never outputs codes: it fills closed enums and numbers, and the mappers pick the code. Replace the tables by lookups later. | Decided 2026-10-14 |
+| D-15 | **Stand-in dates and non-IPS Observations.** (a) An Observation whose date the document does not state gets the document's own stated date (`document_date`, day-precise) as `effectiveDateTime`, marked in the narrative, `Observation.note` ("the effective date is the date of the document") and a warning mapping note; without a document date it stays as before (data-absent-reason, vital signs narrative-only). FHIR offers no standard "approximate date" marker, and `effectivePeriod` fails the IPS profiles, so consumers that need a measured date must read the note. (b) Pregnancy facts with no IPS profile (LMP 8665-2, gravidity 11996-6, parity 11977-6; D-14-style constants) are emitted as plain R4 Observations; the validation gate (`blocking_unmatched_entries`) accepts exactly these codes as unmatched Bundle entries, other unmatched entries still fail. (c) Problem List Conditions carry category `problem-list-item`, and an unstated status there is `active` with a review warning. | Decided 2026-10-14 |
 
 Still open, before the phase that needs them:
 

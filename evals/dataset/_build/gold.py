@@ -1,4 +1,4 @@
-"""Helpers for authoring gold extractions (``IpsExtraction``, schema 1.1.1) in case modules.
+"""Helpers for authoring gold extractions (``IpsExtraction``, schema 1.3.0) in case modules.
 
 Every helper returns a plain dict in the exact JSON shape the LLM produces (absent text is ``""``,
 absent enums are ``"not_stated"``), with ``page``/``locator`` left as placeholders. The builder
@@ -61,6 +61,13 @@ def ident(
 
 
 def birth(quote: str, value: str, confidence: str = "high", nth: int | None = None) -> Fact:
+    return {**_prov(quote, nth), "value": value, "confidence": confidence}
+
+
+def document_date(
+    quote: str, value: str, confidence: str = "high", nth: int | None = None
+) -> Fact:
+    """The date the document states for itself (``document_date``, schema 1.3.0)."""
     return {**_prov(quote, nth), "value": value, "confidence": confidence}
 
 

@@ -314,5 +314,12 @@
     }
   ],
   "immunizations": [],
-  "pregnancy": []
+  "pregnancy": [],
+  "document_date": {
+    "source_quote": "Käyntipäivä: 02.10.2026",
+    "page": 1,
+    "locator": "line 10",
+    "value": "2026-10-02",
+    "confidence": "high"
+  }
 }

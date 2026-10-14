@@ -13,6 +13,7 @@ from app.pipeline.validate import (
     MatchboxClient,
     MatchboxError,
     ValidationResult,
+    blocking_unmatched_entries,
     parse_operation_outcome,
 )
 
@@ -181,3 +182,61 @@ def test_base_url_from_settings(monkeypatch: pytest.MonkeyPatch) -> None:
         client.close()
     finally:
         get_settings.cache_clear()
+
+
+# ---- gate: unmatched entries (PLAN.md D-15) ----------------------------------------------
+
+
+def _bundle_with(*resources: dict[str, Any]) -> Bundle:
+    return Bundle.model_validate(
+        {
+            "resourceType": "Bundle",
+            "type": "document",
+            "entry": [
+                {"fullUrl": f"urn:uuid:00000000-0000-4000-8000-00000000000{i}", "resource": r}
+                for i, r in enumerate(resources)
+            ],
+        }
+    )
+
+
+def _observation(*codes: tuple[str, str]) -> dict[str, Any]:
+    return {
+        "resourceType": "Observation",
+        "status": "final",
+        "code": {"coding": [{"system": system, "code": code} for system, code in codes]},
+    }
+
+
+def _unmatched(*indexes: int) -> ValidationResult:
+    issues = [
+        {
+            "severity": "information",
+            "code": "informational",
+            "diagnostics": "This element does not match any known slice defined in the profile",
+            "expression": [f"Bundle.entry[{i}]"],
+        }
+        for i in indexes
+    ]
+    outcome = {"resourceType": "OperationOutcome", "issue": issues}
+    return parse_operation_outcome(outcome, profile="p")
+
+
+def test_gate_accepts_only_allow_listed_non_ips_observations() -> None:
+    loinc = "http://loinc.org"
+    bundle = _bundle_with(
+        {"resourceType": "Patient"},
+        _observation((loinc, "8665-2")),  # last menstrual period: allowed
+        _observation((loinc, "11996-6")),  # gravidity: allowed
+        _observation((loinc, "11977-6")),  # parity: allowed
+        _observation((loinc, "8302-2")),  # body height failing its profile: blocks
+        _observation((loinc, "11977-6"), (loinc, "8302-2")),  # mixed codings: blocks
+        _observation(("http://example.org", "11977-6")),  # wrong system: blocks
+    )
+    result = _unmatched(1, 2, 3, 4, 5, 6, 9)  # 9: index outside the Bundle
+    assert blocking_unmatched_entries(result, bundle) == [4, 5, 6, 9]
+
+
+def test_gate_blocks_unmatched_non_observations() -> None:
+    bundle = _bundle_with({"resourceType": "Patient"})
+    assert blocking_unmatched_entries(_unmatched(0), bundle) == [0]

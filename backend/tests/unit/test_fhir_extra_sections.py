@@ -8,7 +8,7 @@ from uuid import UUID
 
 import pytest
 
-from app.fhir.common import MappingContext, NoteCode
+from app.fhir.common import STAND_IN_DATE_NOTE, MappingContext, NoteCode
 from app.fhir.constants import (
     SECTION_IMMUNIZATIONS,
     SECTION_PREGNANCY,
@@ -46,6 +46,8 @@ PATIENT = Reference(reference="urn:uuid:00000000-0000-4000-8000-000000000001")
 CTX = MappingContext(
     patient=PATIENT, new_id=seeded_id_factory(UUID("00000000-0000-4000-8000-0000000000ff"))
 )
+CTX_DATED = MappingContext(patient=PATIENT, new_id=CTX.new_id, document_date="2026-10-12")
+"""A document that states its own date (PLAN.md D-15: stand-in effective date)."""
 NOW = dt.datetime(2026, 10, 14, tzinfo=dt.UTC)
 
 
@@ -86,6 +88,7 @@ def test_schema_version_and_required_properties() -> None:
     schema = extraction_json_schema()
     assert schema["required"] == [
         "document_language",
+        "document_date",
         "patient",
         "allergies",
         "medications",
@@ -183,6 +186,62 @@ def test_undated_or_partly_dated_vital_signs_are_narrative_only() -> None:
     assert codes.count(NoteCode.VITAL_SIGN_NOT_DATED) == 2
 
 
+def test_undated_vital_signs_take_the_document_date_as_a_stand_in() -> None:
+    enriched = _enriched(
+        vital_signs=[
+            _vital("height", "168", unit_text="cm", effective=""),
+            _vital("weight", "70", unit_text="kg", effective="", note="nyt"),
+            _vital("heart_rate", "84", unit_text="/min", effective="2026-10-05"),
+        ]
+    )
+    result = map_vital_signs(enriched.vital_signs, CTX_DATED)
+    assert result is not None
+    height, weight, pulse = _fhir(result)
+    assert height["effectiveDateTime"] == weight["effectiveDateTime"] == "2026-10-12"
+    assert height["note"] == [{"text": STAND_IN_DATE_NOTE}]
+    assert weight["note"] == [{"text": "nyt"}, {"text": STAND_IN_DATE_NOTE}]
+    assert "not stated; document date 2026-10-12 used" in height["text"]["div"]
+    assert pulse["effectiveDateTime"] == "2026-10-05"  # a stated date is kept
+    assert "note" not in pulse
+    notes = [(n.path, n.code, n.severity) for n in result.notes]
+    assert notes == [
+        ("vital_signs[0]", NoteCode.EFFECTIVE_IS_DOCUMENT_DATE, "warning"),
+        ("vital_signs[1]", NoteCode.EFFECTIVE_IS_DOCUMENT_DATE, "warning"),
+    ]
+
+
+def test_a_partly_dated_vital_sign_does_not_take_the_document_date() -> None:
+    enriched = _enriched(vital_signs=[_vital("weight", "70", unit_text="kg", effective="2026-10")])
+    result = map_vital_signs(enriched.vital_signs, CTX_DATED)
+    assert result is not None
+    assert result.entries == []  # the stated month would contradict a stand-in day
+    assert result.section.text is not None
+    assert "2026-10" in result.section.text.div
+    assert [n.code for n in result.notes] == [NoteCode.VITAL_SIGN_NOT_DATED]
+
+
+def test_pre_pregnancy_weight_is_loinc_56077_1_with_category_vital_signs() -> None:
+    enriched = _enriched(vital_signs=[_vital("pre_pregnancy_weight", "62", unit_text="kg")])
+    result = map_vital_signs(enriched.vital_signs, CTX)
+    assert result is not None
+    (weight,) = _fhir(result)
+    assert weight["code"]["coding"] == [
+        {
+            "system": "http://loinc.org",
+            "code": "56077-1",
+            "display": "Body weight --pre current pregnancy",
+        }
+    ]
+    assert weight["category"][0]["coding"][0]["code"] == "vital-signs"
+    assert weight["valueQuantity"] == {
+        "value": 62,
+        "unit": "kg",
+        "system": "http://unitsofmeasure.org",
+        "code": "kg",
+    }
+    assert "Body weight before pregnancy: 62 kg" in weight["text"]["div"]
+
+
 def test_only_undated_vital_signs_give_a_narrative_only_section() -> None:
     enriched = _enriched(vital_signs=[_vital("height", "168", unit_text="cm", effective="")])
     result = map_vital_signs(enriched.vital_signs, CTX)
@@ -245,6 +304,26 @@ def test_tobacco_is_an_observation_alcohol_stays_in_the_narrative() -> None:
     assert "Alcohol use" in result.section.text.div
     assert "Alkoholia ei käytä" in result.section.text.div
     assert [n.code for n in result.notes] == [NoteCode.NOT_REPRESENTABLE_IN_IPS]
+
+
+def test_undated_tobacco_takes_the_document_date_as_a_stand_in() -> None:
+    enriched = _enriched(
+        social_history=[
+            _social("tobacco", "Ei tupakoi", "non_smoker"),
+            _social("tobacco", "Tupakointi lopetettu 2019", "former", "2019"),
+        ]
+    )
+    result = map_social_history(enriched.social_history, CTX_DATED)
+    assert result is not None
+    undated, dated = _fhir(result)
+    assert undated["effectiveDateTime"] == "2026-10-12"
+    assert "_effectiveDateTime" not in undated
+    assert undated["note"] == [{"text": STAND_IN_DATE_NOTE}]
+    assert dated["effectiveDateTime"] == "2019"
+    assert "note" not in dated
+    assert [(n.path, n.code) for n in result.notes] == [
+        ("social_history[0]", NoteCode.EFFECTIVE_IS_DOCUMENT_DATE)
+    ]
 
 
 def test_only_alcohol_gives_a_narrative_only_section() -> None:
@@ -328,22 +407,24 @@ def _preg(kind: str, **extra: str) -> dict[str, Any]:
     return {**_prov(kind), "kind": kind, **base, **extra}
 
 
+_PREGNANCY_FACTS = [
+    ("status", {"status": "pregnant", "date": "2026-10-12"}),
+    ("expected_delivery_date", {"date": "2027-01-31"}),
+    ("last_menstrual_period", {"date": "2026-04-26"}),
+    ("pregnancies", {"count": "2"}),
+    ("deliveries", {"count": "1"}),
+]
+
+
 def test_pregnancy_follows_the_ips_profiles() -> None:
-    enriched = _enriched(
-        pregnancy=[
-            _preg("status", status="pregnant", date="2026-10-12"),
-            _preg("expected_delivery_date", date="2027-01-31"),
-            _preg("last_menstrual_period", date="2026-04-26"),
-            _preg("pregnancies", count="2"),
-            _preg("deliveries", count="1"),
-        ]
-    )
+    enriched = _enriched(pregnancy=[_preg(kind, **extra) for kind, extra in _PREGNANCY_FACTS])
     result = map_pregnancy(enriched.pregnancy, CTX)
     assert result is not None
     assert result.section.code is not None
     assert result.section.code.coding is not None
     assert result.section.code.coding[0].code == SECTION_PREGNANCY.code
-    status, edd, outcome = _fhir(result)  # status first, then the date and the outcome
+    # status first, then the facts in document order; deliveries give an outcome and a parity
+    status, edd, lmp, gravidity, outcome, parity = _fhir(result)
     assert status["meta"]["profile"][0].endswith("Observation-pregnancy-status-uv-ips")
     assert status["code"]["coding"][0]["code"] == "82810-3"
     assert status["valueCodeableConcept"]["coding"][0]["code"] == "77386006"
@@ -352,18 +433,80 @@ def test_pregnancy_follows_the_ips_profiles() -> None:
     assert edd["code"]["coding"][0]["code"] == "11778-8"
     assert edd["valueDateTime"] == "2027-01-31"
     assert edd["_effectiveDateTime"]["extension"][0]["valueCode"] == "unknown"
+    assert outcome["meta"]["profile"][0].endswith("Observation-pregnancy-outcome-uv-ips")
     assert outcome["code"]["coding"][0]["code"] == "11640-0"
     assert outcome["valueQuantity"] == {
         "value": 1,
         "system": "http://unitsofmeasure.org",
         "code": "1",
     }
-    # No IPS element for the number of pregnancies or the last menstrual period: narrative only.
+    # D-15: facts with no IPS profile are plain Observations with fixed LOINC codes.
+    assert lmp["code"]["coding"] == [
+        {
+            "system": "http://loinc.org",
+            "code": "8665-2",
+            "display": "Last menstrual period start date",
+        }
+    ]
+    assert lmp["valueDateTime"] == "2026-04-26"
+    assert "meta" not in lmp
+    assert gravidity["code"]["coding"][0]["code"] == "11996-6"
+    assert gravidity["valueInteger"] == 2
+    assert parity["code"]["coding"][0]["code"] == "11977-6"
+    assert parity["valueInteger"] == 1
+    for undated in (lmp, gravidity, parity):
+        assert undated["_effectiveDateTime"]["extension"][0]["valueCode"] == "unknown"
+    # one narrative line per fact (the parity shares the deliveries line)
     assert result.section.text is not None
     div = result.section.text.div
     assert "Number of pregnancies: 2" in div
     assert "Last menstrual period: 2026-04-26" in div
-    assert [n.code for n in result.notes] == [NoteCode.NOT_REPRESENTABLE_IN_IPS] * 2
+    assert div.count("Number of deliveries: 1") == 1
+    assert result.notes == []
+
+
+def test_parity_id_is_derived_from_the_item_and_stable() -> None:
+    enriched = _enriched(pregnancy=[_preg("deliveries", count="2")])
+    first = map_pregnancy(enriched.pregnancy, CTX)
+    again = map_pregnancy(enriched.pregnancy, CTX)
+    assert first is not None
+    assert again is not None
+    outcome, parity = first.entries
+    assert outcome.item_id == parity.item_id == enriched.pregnancy[0].id
+    assert outcome.full_url != parity.full_url
+    assert [e.full_url for e in first.entries] == [e.full_url for e in again.entries]
+    assert parity.narrative is None
+
+
+def test_undated_pregnancy_facts_take_the_document_date_as_a_stand_in() -> None:
+    enriched = _enriched(
+        pregnancy=[
+            _preg("status", status="pregnant"),  # no date stated for the status
+            *(_preg(kind, **extra) for kind, extra in _PREGNANCY_FACTS[1:]),
+        ]
+    )
+    result = map_pregnancy(enriched.pregnancy, CTX_DATED)
+    assert result is not None
+    resources = _fhir(result)
+    assert len(resources) == 6
+    for resource in resources:
+        assert resource["effectiveDateTime"] == "2026-10-12"
+        assert "_effectiveDateTime" not in resource
+        assert {"text": STAND_IN_DATE_NOTE} in resource["note"]
+    assert [n.code for n in result.notes] == [NoteCode.EFFECTIVE_IS_DOCUMENT_DATE] * 5
+    assert {n.severity for n in result.notes} == {"warning"}
+    assert result.section.text is not None
+    assert "not stated; document date 2026-10-12 used" in result.section.text.div
+
+
+def test_a_stated_status_date_wins_over_the_document_date() -> None:
+    enriched = _enriched(pregnancy=[_preg("status", status="pregnant", date="2026-09-29")])
+    result = map_pregnancy(enriched.pregnancy, CTX_DATED)
+    assert result is not None
+    (status,) = _fhir(result)
+    assert status["effectiveDateTime"] == "2026-09-29"
+    assert "note" not in status
+    assert result.notes == []
 
 
 def test_pregnancy_fact_without_its_value_is_not_emitted() -> None:
@@ -373,11 +516,60 @@ def test_pregnancy_fact_without_its_value_is_not_emitted() -> None:
     enriched = _enriched(pregnancy=[_preg("status"), _preg("deliveries", count="3")])
     result = map_pregnancy(enriched.pregnancy, CTX)
     assert result is not None
-    assert len(result.entries) == 1
+    assert len(result.entries) == 2  # births total + parity
     assert [n.code for n in result.notes] == [NoteCode.PREGNANCY_FACT_INCOMPLETE]
 
 
 # ---- assembly, contacts and the review path -----------------------------------------------
+
+
+def _with_document_date(enriched: EnrichedIps, value: str) -> EnrichedIps:
+    data = enriched.model_dump(mode="json")
+    data["document_date"] = {**_prov(f"Koontipäivä: {value}"), "value": value}
+    return EnrichedIps.model_validate(data)
+
+
+def _observation_dates(result: Any) -> list[str | None]:
+    return [
+        e.resource.to_fhir().get("effectiveDateTime")
+        for e in result.bundle.entry
+        if e.resource.resource_type == "Observation"
+    ]
+
+
+def test_assembly_uses_a_day_precise_document_date_as_the_stand_in() -> None:
+    enriched = _enriched(
+        vital_signs=[_vital("height", "168", unit_text="cm", effective="")],
+        pregnancy=[_preg("pregnancies", count="2")],
+    )
+    result = assemble(_with_document_date(enriched, "2026-10-12"), now=NOW)
+    assert _observation_dates(result) == ["2026-10-12", "2026-10-12"]
+    codes = [n.code for n in result.notes]
+    assert codes.count(NoteCode.EFFECTIVE_IS_DOCUMENT_DATE) == 2
+
+
+def test_assembly_ignores_a_partial_document_date() -> None:
+    enriched = _enriched(
+        vital_signs=[_vital("height", "168", unit_text="cm", effective="")],
+        pregnancy=[_preg("pregnancies", count="2")],
+    )
+    result = assemble(_with_document_date(enriched, "2026-10"), now=NOW)
+    assert _observation_dates(result) == [None]  # height narrative-only, gravidity unknown
+    assert NoteCode.EFFECTIVE_IS_DOCUMENT_DATE not in {n.code for n in result.notes}
+
+
+def test_extraction_json_without_document_date_is_still_valid() -> None:
+    extraction = IpsExtraction.model_validate(
+        {
+            "document_language": "fi",
+            "patient": {"names": [], "birth_date": None, "gender": None, "identifiers": []},
+            "allergies": {"kind": "no_information"},
+            "medications": {"kind": "no_information"},
+            "problems": {"kind": "no_information"},
+        }
+    )
+    assert extraction.document_date is None
+    assert EnrichedIps.from_extraction(extraction).document_date is None
 
 
 def test_assembled_bundle_has_the_sections_in_ips_order_and_the_contact() -> None:

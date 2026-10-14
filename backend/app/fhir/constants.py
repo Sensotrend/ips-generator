@@ -164,6 +164,11 @@ CATEGORY_SOCIAL_HISTORY: Final = FixedCode(OBSERVATION_CATEGORY, "social-history
 
 LOINC_BODY_HEIGHT: Final = FixedCode(LOINC, "8302-2", "Body height")
 LOINC_BODY_WEIGHT: Final = FixedCode(LOINC, "29463-7", "Body weight")
+LOINC_PRE_PREGNANCY_WEIGHT: Final = FixedCode(
+    LOINC, "56077-1", "Body weight --pre current pregnancy"
+)
+"""Not one of the FHIR vital-signs codes, but with category vital-signs it conforms to the core
+vitalsigns profile and matches the IPS Vital Signs section (checked in Matchbox 2026-10-14)."""
 LOINC_BMI: Final = FixedCode(LOINC, "39156-5", "Body mass index (BMI) [Ratio]")
 LOINC_BLOOD_PRESSURE: Final = FixedCode(
     LOINC, "85354-9", "Blood pressure panel with all children optional"
@@ -193,8 +198,20 @@ LOINC_PREGNANCY_STATUS: Final = FixedCode(LOINC, "82810-3", "Pregnancy status")
 LOINC_EXPECTED_DELIVERY_DATE: Final = FixedCode(LOINC, "11778-8", "Delivery date Estimated")
 LOINC_BIRTHS_TOTAL: Final = FixedCode(LOINC, "11640-0", "[#] Births total")
 """IPS pregnancy outcome summary (value set ``pregnancies-summary-uv-ips``): the number of
-deliveries. The IPS has no place for the number of pregnancies or the last menstrual period
-(``pregnancy`` items of those kinds stay in the section narrative)."""
+deliveries."""
+
+# Pregnancy facts with no IPS 2.0.1 profile (checked 2026-10-14 with tx.fhir.org, LOINC 2.82).
+# They are plain R4 Observations: valid (0 errors) but matching no Bundle-uv-ips slice, so the
+# validation gate accepts them as unmatched entries only through ``NON_IPS_OBSERVATION_CODES``.
+LOINC_LAST_MENSTRUAL_PERIOD: Final = FixedCode(LOINC, "8665-2", "Last menstrual period start date")
+LOINC_GRAVIDITY: Final = FixedCode(LOINC, "11996-6", "[#] Pregnancies")
+LOINC_PARITY: Final = FixedCode(LOINC, "11977-6", "[#] Parity")
+NON_IPS_OBSERVATION_CODES: Final = frozenset(
+    (c.system, c.code) for c in (LOINC_LAST_MENSTRUAL_PERIOD, LOINC_GRAVIDITY, LOINC_PARITY)
+)
+"""Observation codes the mappers emit although no IPS profile covers them (PLAN.md D-15). An
+unmatched Bundle entry passes the validation gate only if it is an Observation with one of these
+codes (it must still have no errors)."""
 PREGNANCY_STATUS_VALUES: Final = {
     "pregnant": FixedCode(SNOMED_CT, "77386006", "Pregnant"),
     "not_pregnant": FixedCode(SNOMED_CT, "60001007", "Not pregnant"),
@@ -233,6 +250,11 @@ ALLERGY_VERIFICATION_STATUS: Final = _status_codes(
 CONDITION_CLINICAL_STATUS: Final = _status_codes(
     CONDITION_CLINICAL, "active", "recurrence", "relapse", "inactive", "remission", "resolved"
 )
+CONDITION_CATEGORY_SYSTEM: Final = "http://terminology.hl7.org/CodeSystem/condition-category"
+CONDITION_CATEGORY_PROBLEM_LIST_ITEM: Final = FixedCode(
+    CONDITION_CATEGORY_SYSTEM, "problem-list-item", "Problem List Item"
+)
+"""FHIR core condition-category (extensible binding); set on every Problem List Condition."""
 CONDITION_VERIFICATION_STATUS: Final = _status_codes(
     CONDITION_VER_STATUS, "unconfirmed", "provisional", "differential", "confirmed", "refuted"
 )

@@ -14,7 +14,10 @@ profile X". An entry that fails its IPS profile does not match the slice, so its
 **not** reported; the only trace is an ``information`` issue "This element does not match any known
 slice" on ``Bundle.entry[n]``. :attr:`ValidationResult.unmatched_bundle_entries` exposes these so
 the pipeline can treat them as failures (entries that legitimately have no slice, such as
-``Provenance``, also appear there).
+``Provenance``, also appear there). :func:`blocking_unmatched_entries` is that gate: every
+unmatched entry fails it except an Observation whose code is in
+``app.fhir.constants.NON_IPS_OBSERVATION_CODES`` (pregnancy facts with no IPS profile, PLAN.md
+D-15). Such an entry is checked against base R4 only, and its errors are reported normally.
 
 PHI: issue messages can quote resource content. Never log them; this module logs counts only.
 """
@@ -32,8 +35,8 @@ import httpx
 from pydantic import BaseModel, ConfigDict, Field
 
 from app.config import get_settings
-from app.fhir.constants import PROFILE_BUNDLE_VERSIONED
-from app.fhir.models import Bundle
+from app.fhir.constants import NON_IPS_OBSERVATION_CODES, PROFILE_BUNDLE_VERSIONED
+from app.fhir.models import Bundle, Observation
 
 logger = logging.getLogger(__name__)
 
@@ -225,6 +228,23 @@ class MatchboxClient:
         result = parse_operation_outcome(outcome, profile=profile)
         logger.info("Matchbox validation: %s", result.counts())
         return result
+
+
+def blocking_unmatched_entries(result: ValidationResult, bundle: Bundle) -> list[int]:
+    """Unmatched entries of ``bundle`` (the Bundle that was validated) that fail the gate: all
+    but Observations coded with one of ``NON_IPS_OBSERVATION_CODES`` (PLAN.md D-15)."""
+    return [i for i in result.unmatched_bundle_entries if not _allowed_unmatched(bundle, i)]
+
+
+def _allowed_unmatched(bundle: Bundle, index: int) -> bool:
+    entries = bundle.entry or []
+    if index >= len(entries):
+        return False
+    resource = entries[index].resource
+    if not isinstance(resource, Observation):
+        return False
+    codings = resource.code.coding or []
+    return bool(codings) and all((c.system, c.code) in NON_IPS_OBSERVATION_CODES for c in codings)
 
 
 def validate_bundle(

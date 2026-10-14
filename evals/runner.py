@@ -44,7 +44,7 @@ from app.pipeline.assemble import AssemblyResult, assemble
 from app.pipeline.derive import derive_patient_facts
 from app.pipeline.extract import ExtractionError, TokenUsage, build_user_message, extract
 from app.pipeline.ground import apply_grounding, ground
-from app.pipeline.validate import MatchboxClient, MatchboxError
+from app.pipeline.validate import MatchboxClient, MatchboxError, blocking_unmatched_entries
 from app.schemas.intermediate import EnrichedIps, IpsExtraction, extraction_output_format
 from evals.cases import EvalCase
 from evals.judge import JudgeSession, LlmJudge
@@ -270,6 +270,7 @@ class LiveExtractor:
 def _validation_record(client: MatchboxClient, assembly: AssemblyResult) -> ValidationRecord:
     result = client.validate(assembly.bundle)
     unmatched = result.unmatched_bundle_entries
+    blocking = blocking_unmatched_entries(result, assembly.bundle)
     issues = [
         IssueRecord(
             severity=i.severity, message_id=i.message_id, path=i.path, message=i.message[:500]
@@ -281,7 +282,7 @@ def _validation_record(client: MatchboxClient, assembly: AssemblyResult) -> Vali
         errors=len(result.errors),
         warnings=len(result.warnings),
         unmatched_entries=unmatched,
-        passed=not result.errors and not unmatched,
+        passed=not result.errors and not blocking,
         issues=issues,
     )
 

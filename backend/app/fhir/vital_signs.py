@@ -7,13 +7,17 @@ cm; ``weight``: kg; ...). A unit that is not recognised is not guessed: the Obse
 carries ``valueString`` (number and unit as written) and a warning note is recorded. BMI, blood
 pressure and heart rate may come without a unit (their only unit is implied by the measurement).
 
-Blood pressure is the panel 85354-9 with a systolic and (if stated) a diastolic component.
+Blood pressure is the panel 85354-9 with a systolic and (if stated) a diastolic component. A
+pre-pregnancy weight is LOINC 56077-1 "Body weight --pre current pregnancy" (category vital-signs
+too; it conforms to the core vitalsigns profile).
+
 ``effective[x]`` is the stated measurement date. The FHIR vital-signs profiles require a date
-precise to the day (``vs-1``; even a data-absent-reason fails it in the validator), so a vital
-sign with no date, or only a year or month, is not an Observation: it is kept as a line of the
-section narrative and an info note records it. If no vital sign is dated, the section has only
-that narrative and ``emptyReason`` ``unavailable``. The section is emitted only when there is
-an item.
+precise to the day (``vs-1``; even a data-absent-reason or an ``effectivePeriod`` fails in the
+validator). With no stated date, the document date is the stand-in (PLAN.md D-15, marked in the
+narrative, ``note`` and a mapping note). A vital sign with only a stated year or month, or with no
+date and no day-precise document date, is not an Observation: it is kept as a line of the section
+narrative and an info note records it. If no vital sign is dated, the section has only that
+narrative and ``emptyReason`` ``unavailable``. The section is emitted only when there is an item.
 """
 
 from __future__ import annotations
@@ -27,6 +31,7 @@ from app.fhir.common import (
     MappingNote,
     NoteCode,
     SectionResult,
+    effective_date,
     fixed_coding,
     fixed_concept,
     section_with_extras,
@@ -43,13 +48,13 @@ from app.fhir.constants import (
     LOINC_HEART_RATE,
     LOINC_OXYGEN_SATURATION,
     LOINC_OXYGEN_SATURATION_PROFILE,
+    LOINC_PRE_PREGNANCY_WEIGHT,
     LOINC_SYSTOLIC,
     SECTION_VITAL_SIGNS,
     UCUM,
     FixedCode,
 )
 from app.fhir.models import (
-    Annotation,
     CodeableConcept,
     Observation,
     ObservationComponent,
@@ -83,6 +88,13 @@ _SPECS: dict[VitalSignKind, _Spec] = {
     ),
     VitalSignKind.WEIGHT: _Spec(
         "Body weight", LOINC_BODY_WEIGHT, "kg", "kg", frozenset({"kg", "kg."})
+    ),
+    VitalSignKind.PRE_PREGNANCY_WEIGHT: _Spec(
+        "Body weight before pregnancy",
+        LOINC_PRE_PREGNANCY_WEIGHT,
+        "kg",
+        "kg",
+        frozenset({"kg", "kg."}),
     ),
     VitalSignKind.BODY_MASS_INDEX: _Spec(
         "Body mass index", LOINC_BMI, "kg/m2", "kg/m2", frozenset({"", "kg/m2", "kg/m²", "kg/m^2"})
@@ -155,16 +167,11 @@ def map_vital_signs(
     return SectionResult(section, KEY, entries, notes)
 
 
-def _day_precise(date: str | None) -> bool:
-    """The FHIR vital-signs profiles (vs-1) need a date precise to the day."""
-    return date is not None and len(date) >= 10
-
-
 def map_vital_sign(
     item: Enriched[VitalSignItem], *, path: str, ctx: MappingContext
 ) -> tuple[MappedResource | None, NarrativeLine, list[MappingNote]]:
-    """The Observation (``None`` when the measurement has no day-precise date), the narrative line
-    and the mapping notes."""
+    """The Observation (``None`` when the measurement has no usable day-precise date, stated or
+    stand-in), the narrative line and the mapping notes."""
     v = item.extracted
     spec = _SPECS[v.kind]
     notes: list[MappingNote] = []
@@ -215,11 +222,14 @@ def map_vital_sign(
             )
         )
 
-    details: list[tuple[str, str]] = [("date", v.effective or "not stated")]
+    effective = effective_date(v.effective, ctx, day_precise=True)
+    details: list[tuple[str, str]] = [
+        effective.detail() if effective.value or not v.effective else ("date", v.effective)
+    ]
     if v.note:
         details.append(("note", v.note))
     line = NarrativeLine(f"{spec.title}: {text_value}", tuple(details))
-    if not _day_precise(v.effective):
+    if effective.value is None:
         notes.append(
             MappingNote(
                 path=path,
@@ -229,6 +239,7 @@ def map_vital_sign(
             )
         )
         return None, line, notes
+    notes += effective.notes(path)
 
     code = fixed_concept(spec.code)
     if v.kind is VitalSignKind.OXYGEN_SATURATION:
@@ -242,10 +253,10 @@ def map_vital_sign(
         category=[fixed_concept(CATEGORY_VITAL_SIGNS)],
         code=code,
         subject=ctx.patient,
-        effective_date_time=v.effective,
+        effective_date_time=effective.value,
         value_quantity=quantity,
         value_string=value_string,
         component=components,
-        note=[Annotation(text=v.note)] if v.note else None,
+        note=effective.annotations(v.note),
     )
     return MappedResource(path, item.id, urn_uuid(item.id), resource, line), line, notes

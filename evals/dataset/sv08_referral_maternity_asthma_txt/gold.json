@@ -363,12 +363,12 @@
       "source_quote": "vikt före graviditeten 66 kg",
       "page": 1,
       "locator": "line 14",
-      "kind": "weight",
+      "kind": "pre_pregnancy_weight",
       "value": "66",
       "diastolic": "",
       "unit_text": "kg",
       "effective": "",
-      "note": "före graviditeten",
+      "note": "",
       "confidence": "high"
     },
     {
@@ -479,5 +479,12 @@
       "note": "tidigare",
       "confidence": "high"
     }
-  ]
+  ],
+  "document_date": {
+    "source_quote": "Remissdatum: 08.10.2026",
+    "page": 1,
+    "locator": "line 10",
+    "value": "2026-10-08",
+    "confidence": "high"
+  }
 }

@@ -329,12 +329,12 @@
       "source_quote": "paino ennen raskautta 59 kg",
       "page": 1,
       "locator": "",
-      "kind": "weight",
+      "kind": "pre_pregnancy_weight",
       "value": "59",
       "diastolic": "",
       "unit_text": "kg",
       "effective": "",
-      "note": "ennen raskautta",
+      "note": "",
       "confidence": "high"
     },
     {
@@ -468,5 +468,12 @@
       "note": "",
       "confidence": "high"
     }
-  ]
+  ],
+  "document_date": {
+    "source_quote": "Käyntipäivä: 08.10.2026",
+    "page": 1,
+    "locator": "",
+    "value": "2026-10-08",
+    "confidence": "high"
+  }
 }

@@ -22,6 +22,7 @@ from app.fhir.constants import (
 )
 from app.fhir.models import (
     AllergyIntolerance,
+    Annotation,
     CodeableConcept,
     Coding,
     Composition,
@@ -83,6 +84,8 @@ class NoteCode(StrEnum):
     PREGNANCY_FACT_INCOMPLETE = "pregnancy_fact_incomplete"  # no status/date/count: not emitted
     NOT_REPRESENTABLE_IN_IPS = "not_representable_in_ips"  # kept in the section narrative only
     IMMUNIZATION_NOT_CODED = "immunization_not_coded"  # vaccine not in the D-14 table: text only
+    EFFECTIVE_IS_DOCUMENT_DATE = "effective_is_document_date"  # D-15: stand-in effective date
+    CONDITION_STATUS_ASSUMED_ACTIVE = "condition_status_assumed_active"  # Problem List, not stated
 
 
 @dataclass(frozen=True, slots=True)
@@ -117,6 +120,9 @@ class MappingContext:
 
     patient: Reference
     new_id: IdFactory
+    document_date: str | None = None
+    """The document's own date when it is precise to the day (YYYY-MM-DD), else ``None``: the
+    stand-in ``effective[x]`` of an Observation without a stated date (PLAN.md D-15)."""
 
 
 @dataclass(slots=True)
@@ -225,3 +231,63 @@ def printed_code_note(path: str, printed_code: str | None) -> list[MappingNote]:
             severity="info",
         )
     ]
+
+
+STAND_IN_DATE_NOTE = (
+    "The document does not state when this was recorded; the effective date is the date of the "
+    "document."
+)
+"""``Observation.note`` text that marks a stand-in effective date (D-15). FHIR has no standard
+element for "this date is approximate", so the marker is this note, the narrative and the
+``effective_is_document_date`` mapping note."""
+
+
+@dataclass(frozen=True, slots=True)
+class Effective:
+    """``effectiveDateTime`` of an Observation: a stated date, the stand-in document date, or
+    nothing (then the mapper uses a data-absent-reason or keeps the fact narrative-only)."""
+
+    value: str | None
+    stand_in: bool = False
+
+    def detail(self) -> tuple[str, str]:
+        """The narrative ``date`` detail."""
+        if self.value is None:
+            return ("date", "not stated")
+        if self.stand_in:
+            return ("date", f"not stated; document date {self.value} used")
+        return ("date", self.value)
+
+    def annotations(self, note: str | None) -> list[Annotation] | None:
+        """``Observation.note``: the item's note, plus the stand-in marker when it applies."""
+        texts = [t for t in (note, STAND_IN_DATE_NOTE if self.stand_in else None) if t]
+        return [Annotation(text=t) for t in texts] or None
+
+    def notes(self, path: str) -> list[MappingNote]:
+        if not self.stand_in:
+            return []
+        return [
+            MappingNote(
+                path=path,
+                code=NoteCode.EFFECTIVE_IS_DOCUMENT_DATE,
+                message="No date stated for this fact; the document date is used as its "
+                "effective date (D-15). Check it in review.",
+            )
+        ]
+
+
+def effective_date(
+    stated: str | None, ctx: MappingContext, *, day_precise: bool = False
+) -> Effective:
+    """The stated date if it is usable, else the document date as a stand-in (D-15).
+
+    ``day_precise``: the profile needs a full date (vital signs, vs-1). A stated year or month is
+    then not usable, and the document date is not used instead either: it would contradict the
+    stated date. The result is then empty (the fact stays narrative-only)."""
+    if stated is not None:
+        if not day_precise or len(stated) >= 10:
+            return Effective(stated)
+        return Effective(None)
+    if ctx.document_date is not None:
+        return Effective(ctx.document_date, stand_in=True)
+    return Effective(None)

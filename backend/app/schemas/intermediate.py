@@ -64,10 +64,10 @@ optional properties at 24 and union-typed properties at 16 per request). Hence:
 * absent scalar text/dates/numbers are the empty string ``""`` in the LLM JSON; validators turn
   ``""`` into ``None`` on the Python side (the schema still says ``string``);
 * "not stated" for closed value sets is an explicit enum member ``not_stated``;
-* ``anyOf`` is used only for the three sections and for optional ``birth_date`` / ``gender``
-  (5 unions; Phase 2 sections add one each). Pydantic renders the discriminated section unions
-  as ``oneOf``; ``extraction_json_schema()`` emits them as ``anyOf`` (the ``kind`` consts make the
-  branches disjoint anyway);
+* ``anyOf`` is used only for the three sections and for optional ``birth_date`` /
+  ``gender`` / ``document_date`` (6 unions; Phase 2 sections add one each). Pydantic renders the
+  discriminated section unions as ``oneOf``; ``extraction_json_schema()`` emits them as
+  ``anyOf`` (the ``kind`` consts make the branches disjoint anyway);
 * no ``minimum``/``maxLength``-style keywords; numeric/format rules are validated in Python. Enum
   values are matched case-insensitively because structured outputs do not guarantee their casing.
 
@@ -81,6 +81,16 @@ fact, and closed enums or numbers instead of codes: the mappers in ``app.fhir`` 
 the provisional hard-coded codes of D-14. In Python the lists default to ``[]`` (documents and
 gold files written for schema 1.1.x stay valid), but the JSON schema sent to the model lists every
 property as required.
+
+Document date and pre-pregnancy weight (schema 1.3.0, PLAN.md D-15)
+-------------------------------------------------------------------
+``IpsExtraction.document_date`` is the date the document itself states for when it was written,
+compiled or signed (or the date of the visit a visit note records), quoted like any fact. The
+mappers use it only as a **stand-in** ``effective[x]`` for an Observation whose own date is not
+stated, and say so in the narrative, ``Observation.note`` and a mapping note. It is never a
+measurement date in the extraction layer: ``VitalSignItem.effective`` still says "not the
+document date". ``VitalSignKind.PRE_PREGNANCY_WEIGHT`` is a weight the document gives as before
+the current pregnancy. Both default so that 1.2.x JSON stays valid.
 
 Adding a section (Phase 2): define an ``...Item`` model with the provenance fields and a
 ``codable_paths`` ClassVar, a ``...Section`` alias built like ``MedicationSection`` (tagged
@@ -109,7 +119,7 @@ from pydantic import (
     model_validator,
 )
 
-SCHEMA_VERSION = "1.2.0"
+SCHEMA_VERSION = "1.3.0"
 """Bump when the LLM-facing schema changes (together with the extraction prompt version)."""
 
 # --------------------------------------------------------------------------------------------
@@ -353,6 +363,7 @@ class AllergyScope(_ClosedSet):
 class VitalSignKind(_ClosedSet):
     HEIGHT = "height"
     WEIGHT = "weight"
+    PRE_PREGNANCY_WEIGHT = "pre_pregnancy_weight"
     BODY_MASS_INDEX = "body_mass_index"
     BLOOD_PRESSURE = "blood_pressure"
     HEART_RATE = "heart_rate"
@@ -536,6 +547,20 @@ class PatientContactExtraction(BaseModel):
         "not stated."
     )
     phone: OptionalText = Field(description='Telephone number as written; "" if not stated.')
+    confidence: Confidence = _confidence()
+
+
+class DocumentDate(BaseModel):
+    """The date the document states for itself (schema 1.3.0)."""
+
+    model_config = _LLM_CONFIG
+
+    source_quote: NonEmptyText = _source_quote()
+    page: PageNumber = _page()
+    locator: OptionalText = _locator()
+    value: RequiredPartialDate = Field(
+        description="The date as YYYY-MM-DD, or YYYY-MM / YYYY if only that much is stated."
+    )
     confidence: Confidence = _confidence()
 
 
@@ -729,7 +754,10 @@ class VitalSignItem(BaseModel):
     source_quote: NonEmptyText = _source_quote()
     page: PageNumber = _page()
     locator: OptionalText = _locator()
-    kind: VitalSignKind = Field(description="Which measurement this is.")
+    kind: VitalSignKind = Field(
+        description="Which measurement this is; pre_pregnancy_weight = a weight the document "
+        "gives as before the current pregnancy."
+    )
     value: RequiredDecimal = Field(
         description="The measured number as a plain number (e.g. 178, 94, 36.8); for blood "
         "pressure the systolic value."
@@ -942,6 +970,12 @@ class IpsExtraction(BaseModel):
 
     document_language: NonEmptyText = Field(
         description='Main language of the document as a BCP 47 tag: "fi", "sv", "en", ...'
+    )
+    document_date: DocumentDate | None = Field(
+        default=None,
+        description="Date the document states for itself: when it was written, compiled or "
+        'signed (e.g. "Koontipäivä 12.10.2026", "Datum", "Date of letter"), or for a note about '
+        "one visit the visit date. Not a date of a single entry inside it. null if not stated.",
     )
     patient: PatientExtraction
     allergies: AllergySection = Field(
@@ -1284,6 +1318,8 @@ class EnrichedIps(BaseModel):
 
     schema_version: str = SCHEMA_VERSION
     document_language: NonEmptyText
+    document_date: DocumentDate | None = None
+    """Stand-in date for Observations without their own (PLAN.md D-15)."""
     patient: PatientExtraction
     patient_derived: PatientDerivations = Field(default_factory=PatientDerivations)
     """Deterministically derived patient facts (``app.pipeline.derive``), kept apart from the
@@ -1304,6 +1340,7 @@ class EnrichedIps(BaseModel):
         return cls.model_validate(
             {
                 "document_language": extraction.document_language,
+                "document_date": extraction.document_date,
                 "patient": extraction.patient,
                 "patient_derived": patient_derived or PatientDerivations(),
                 "allergies": _wrap_items(extraction.allergies),

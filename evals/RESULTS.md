@@ -73,8 +73,9 @@ some text similarity). One-to-one assignment, greedy by score. Leftovers go to t
 - **Grounding**: status distribution of predicted facts, dropped facts, review flags; recall
   before grounding is reported too.
 - **Assembly** success and, with `--validate`, **validator pass rate**: Matchbox reports 0 errors
-  **and** no unmatched Bundle entry, over all cases run (failed extractions count as fails).
-  Phase 1 is done at >= 90%.
+  **and** no blocking unmatched Bundle entry (the D-15 non-IPS pregnancy Observations are allowed),
+  over all cases run (failed extractions count as fails). Phase 1 is done at >= 90%.
+- **Document date** (schema 1.3.0): a single value like the birth date, for `extra_sections` cases.
 - Breakdowns per language and per format; tokens, cost, latency, fallbacks, refusals, repair
   turns, errors.
 
@@ -82,4 +83,10 @@ Scores are computed on the grounded extraction (what the pipeline assembles).
 
 ## Runs
 
-_No recorded runs yet._
+_No recorded live runs yet._
+
+- 2026-10-14, schema 1.3.0 / `extract_v7` (document date, pre-pregnancy weight, D-15): gold
+  self-test with `--validate` only. 37/37 assembled, 37/37 pass Matchbox (0 errors, no blocking
+  unmatched entries), all extraction metrics 1.000, 533/533 quotes ground exactly,
+  `document_date` 10/10. **No live run** (paid, needs a key): run one for `extract_v7` and record
+  it here; it is the first live check of the `document_date` and `pre_pregnancy_weight` rules.
