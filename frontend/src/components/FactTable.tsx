@@ -152,6 +152,7 @@ export function FactTable({ facts, selected, readOnly, busy, onSelect, onActions
     ) : (
       <input
         aria-label={label}
+        placeholder={field.format && t(field.format)}
         value={getIn(editing.value, field.key)}
         onChange={(event) =>
           setEditing({

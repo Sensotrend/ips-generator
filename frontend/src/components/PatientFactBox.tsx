@@ -190,6 +190,7 @@ export function PatientFactBox({
                 </select>
               ) : (
                 <input
+                  placeholder={field.format && t(field.format)}
                   value={getIn(editing, field.key)}
                   onChange={(event) => setEditing(setIn(editing, field.key, event.target.value))}
                 />

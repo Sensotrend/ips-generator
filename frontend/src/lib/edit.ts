@@ -7,6 +7,8 @@ interface EditField {
   options?: string[]
   /** A list of words in the data (e.g. given names), shown and typed as one space-separated string. */
   words?: boolean
+  /** The expected input format, shown as the input's placeholder (the label stays short). */
+  format?: TKey
 }
 
 const STATUS = ['active', 'inactive', 'resolved', 'not_stated']
@@ -48,13 +50,13 @@ const EDIT_FIELDS: Partial<Record<FactKind, EditField[]>> = {
         'not_stated',
       ],
     },
-    { key: 'onset', label: 'field.onset' },
+    { key: 'onset', label: 'field.onset', format: 'format.partialDate' },
   ],
   vital_sign: [
     { key: 'value', label: 'field.value' },
     { key: 'diastolic', label: 'field.diastolic' },
     { key: 'unit_text', label: 'field.unit' },
-    { key: 'effective', label: 'field.date' },
+    { key: 'effective', label: 'field.date', format: 'format.partialDate' },
   ],
   social_history: [
     { key: 'use_text', label: 'field.wording' },
@@ -63,12 +65,12 @@ const EDIT_FIELDS: Partial<Record<FactKind, EditField[]>> = {
       label: 'field.smokingStatus',
       options: ['never', 'former', 'current', 'non_smoker', 'not_stated'],
     },
-    { key: 'date', label: 'field.date' },
+    { key: 'date', label: 'field.date', format: 'format.partialDate' },
   ],
   immunization: [
     { key: 'vaccine_text', label: 'field.vaccine' },
     { key: 'status', label: 'field.status', options: ['completed', 'not_done'] },
-    { key: 'occurrence', label: 'field.date' },
+    { key: 'occurrence', label: 'field.date', format: 'format.partialDate' },
     { key: 'note', label: 'field.note' },
   ],
   pregnancy_fact: [
@@ -77,7 +79,7 @@ const EDIT_FIELDS: Partial<Record<FactKind, EditField[]>> = {
       label: 'field.pregnancyStatus',
       options: ['pregnant', 'not_pregnant', 'not_stated'],
     },
-    { key: 'date', label: 'field.date' },
+    { key: 'date', label: 'field.date', format: 'format.partialDate' },
     { key: 'count', label: 'field.number' },
   ],
   patient_contact: [
@@ -93,7 +95,7 @@ const EDIT_FIELDS: Partial<Record<FactKind, EditField[]>> = {
     { key: 'value', label: 'field.identifier' },
     { key: 'type_text', label: 'field.label' },
   ],
-  patient_birth_date: [{ key: 'value', label: 'field.birthDate' }],
+  patient_birth_date: [{ key: 'value', label: 'field.birthDate', format: 'format.date' }],
   patient_gender: [
     { key: 'value', label: 'field.gender', options: ['male', 'female', 'other', 'unknown'] },
   ],
