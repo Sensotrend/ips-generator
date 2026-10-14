@@ -1,7 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { fireEvent, render, screen, within } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { draft, draftWithExtraSections, source } from '../test-fixtures'
+import { documentDateFact, draft, draftWithExtraSections, source } from '../test-fixtures'
 import { ReviewScreen } from './ReviewScreen'
 
 function stubApi(onPut = vi.fn(), base = draft()) {
@@ -88,5 +88,29 @@ describe('ReviewScreen', () => {
       version: 1,
       actions: [{ action: 'reject', path: 'vital_signs[0]' }],
     })
+  })
+
+  it('shows the document date in its own section and lets the reviewer edit it', async () => {
+    const onPut = vi.fn()
+    stubApi(onPut, draft({ document_date: documentDateFact() }))
+    renderReview()
+    const section = within(await screen.findByRole('region', { name: 'Document' }))
+    expect(section.getByText(/dated to this day in the summary/)).toBeInTheDocument()
+    expect(section.getByText('2026-10-12')).toBeInTheDocument()
+    fireEvent.click(section.getByRole('checkbox', { name: 'Select 2026-10-12' }))
+    fireEvent.click(section.getByRole('button', { name: 'Reject selected' }))
+    await vi.waitFor(() =>
+      expect(onPut).toHaveBeenCalledWith({
+        version: 1,
+        actions: [{ action: 'reject', path: 'document_date' }],
+      }),
+    )
+  })
+
+  it('has no document section when the document states no date', async () => {
+    stubApi()
+    renderReview()
+    expect(await screen.findByRole('heading', { name: 'Patient' })).toBeInTheDocument()
+    expect(screen.queryByRole('region', { name: 'Document' })).not.toBeInTheDocument()
   })
 })

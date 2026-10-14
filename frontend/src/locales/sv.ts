@@ -75,6 +75,9 @@ export const sv: Messages = {
   'review.backToFacts': '← Tillbaka till uppgifterna',
 
   'section.patient': 'Patient',
+  'section.document': 'Dokument',
+  'section.document.hint':
+    'Uppgifter som dokumentet anger utan eget datum dateras till den här dagen i sammanfattningen. Avvisa datumet om de ska lämnas odaterade.',
   'section.allergies': 'Allergier och intoleranser',
   'section.medications': 'Läkemedelssammanfattning',
   'section.problems': 'Problemlista',
@@ -125,6 +128,7 @@ export const sv: Messages = {
   // Row labels of the patient view tables, after the IPS profile elements.
   'row.name': 'Namn',
   'row.birthDate': 'Födelsedatum',
+  'row.documentDate': 'Dokumentets datum',
   'row.sex': 'Kön',
   'row.identifier': 'Identifierare',
   'row.allergy': 'Allergi eller intolerans',
@@ -165,6 +169,7 @@ export const sv: Messages = {
   'field.identifier': 'Identifierare',
   'field.label': 'Beteckning',
   'field.birthDate': 'Födelsedatum',
+  'field.documentDate': 'Dokumentets datum',
   'field.gender': 'Kön',
 
   'enum.active': 'aktiv',
@@ -305,6 +310,8 @@ export const sv: Messages = {
 
   'sentence.name': 'Ditt namn är {title}.',
   'sentence.birthDate': 'Ditt födelsedatum är {title}.',
+  'sentence.documentDate':
+    'Dokumentet är daterat {title}. Om en uppgift saknar eget datum används det här datumet i sammanfattningen.',
   'sentence.gender': 'Ditt kön är registrerat som {title}.',
   'sentence.identifier': 'Dokumentet anger följande identifierare för dig: {title}.',
   'sentence.derived':

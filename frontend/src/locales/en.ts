@@ -77,6 +77,9 @@ export const en = {
   'review.backToFacts': '← Back to facts',
 
   'section.patient': 'Patient',
+  'section.document': 'Document',
+  'section.document.hint':
+    'Facts the document gives without a date of their own are dated to this day in the summary. Reject the date to leave them undated.',
   'section.allergies': 'Allergies and intolerances',
   'section.medications': 'Medication summary',
   'section.problems': 'Problem list',
@@ -127,6 +130,7 @@ export const en = {
   // Row labels of the patient view tables, after the IPS profile elements.
   'row.name': 'Name',
   'row.birthDate': 'Date of birth',
+  'row.documentDate': 'Document date',
   'row.sex': 'Sex',
   'row.identifier': 'Identifier',
   'row.allergy': 'Allergy or intolerance',
@@ -167,6 +171,7 @@ export const en = {
   'field.identifier': 'Identifier',
   'field.label': 'Label',
   'field.birthDate': 'Birth date',
+  'field.documentDate': 'Document date',
   'field.gender': 'Gender',
 
   'enum.active': 'active',
@@ -305,6 +310,8 @@ export const en = {
 
   'sentence.name': 'Your name is {title}.',
   'sentence.birthDate': 'Your date of birth is {title}.',
+  'sentence.documentDate':
+    'The document is dated {title}. Where it gives a fact without a date of its own, the summary uses this date.',
   'sentence.gender': 'Your sex is recorded as {title}.',
   'sentence.identifier': 'The document gives this identifier for you: {title}.',
   'sentence.derived':

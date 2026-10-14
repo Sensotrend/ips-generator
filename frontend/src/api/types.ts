@@ -79,6 +79,7 @@ export type FactKind =
   | 'patient_identifier'
   | 'patient_birth_date'
   | 'patient_gender'
+  | 'document_date'
   | 'allergy'
   | 'medication'
   | 'condition'
@@ -173,6 +174,8 @@ export interface Draft {
   document_language: string
   document: DocumentInfo
   patient: Patient
+  /** The date the document states for itself: the stand-in date of undated facts. */
+  document_date: Fact | null
   sections: Section[]
   notes: Note[]
   dropped_paths: string[]

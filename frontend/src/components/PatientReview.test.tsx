@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import type { Draft } from '../api/types'
-import { draft, draftWithExtraSections } from '../test-fixtures'
+import { documentDateFact, draft, draftWithExtraSections } from '../test-fixtures'
 import { PatientReview } from './PatientReview'
 
 function stubApi(onPut = vi.fn(), base: Draft = draft()) {
@@ -173,5 +173,13 @@ describe('PatientReview', () => {
     expect(
       screen.getByText('About your pregnancy the document says: number of deliveries: 1.'),
     ).toBeInTheDocument()
+  })
+
+  it('asks about the document date on the about-you page', async () => {
+    stubApi(vi.fn(), draft({ document_date: documentDateFact() }))
+    renderReview()
+    expect(await screen.findByRole('heading', { name: 'About you' })).toBeInTheDocument()
+    expect(screen.getByText(/The document is dated 2026-10-12\./)).toBeInTheDocument()
+    expect(screen.getByText('Document date')).toBeInTheDocument()
   })
 })

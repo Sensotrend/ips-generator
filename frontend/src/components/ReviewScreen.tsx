@@ -23,6 +23,7 @@ const KIND_HEADING: Record<FactKind, TKey> = {
   patient_identifier: 'row.identifier',
   patient_birth_date: 'row.birthDate',
   patient_gender: 'row.sex',
+  document_date: 'row.documentDate',
   allergy: 'row.allergy',
   medication: 'row.medication',
   condition: 'row.problem',
@@ -75,6 +76,15 @@ export function SectionsList(props: ListProps) {
   ]
   return (
     <div className="sections">
+      {draft.document_date && (
+        <section className="section" aria-labelledby="sec-document">
+          <header>
+            <h2 id="sec-document">{t('section.document')}</h2>
+          </header>
+          <p className="muted">{t('section.document.hint')}</p>
+          <FactList facts={[draft.document_date]} {...props} />
+        </section>
+      )}
       <section className="section" aria-labelledby="sec-patient">
         <header>
           <h2 id="sec-patient">{t('section.patient')}</h2>

@@ -73,6 +73,7 @@ export function draft(overrides: Partial<Draft> = {}): Draft {
       gender: null,
       flags: [],
     },
+    document_date: null,
     sections: [
       {
         key: 'allergies',
@@ -199,4 +200,17 @@ export function draftWithExtraSections(): Draft {
       ]),
     ],
   }
+}
+
+/** The document's own date as a reviewable fact (schema 1.3.0). */
+export function documentDateFact(value = '2026-10-12'): Fact {
+  return fact({
+    path: 'document_date',
+    item_id: null,
+    kind: 'document_date',
+    value: { source_quote: 'Koontipäivä: 12.10.2026', page: 1, locator: 'line 1', value },
+    source: { quote: 'Koontipäivä: 12.10.2026', page: 1, locator: 'line 1' },
+    needs_confirmation: false,
+    flags: [],
+  })
 }

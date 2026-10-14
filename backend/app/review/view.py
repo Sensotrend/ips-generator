@@ -285,6 +285,7 @@ def build_draft_view(
         ),
         document_language=state.current.document_language,
         patient=patient,
+        document_date=outs.get("document_date"),
         sections=sections,
         notes=[
             NoteOut(code=n.code.value, message=n.message, severity=n.severity)

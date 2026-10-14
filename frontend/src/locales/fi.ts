@@ -73,6 +73,9 @@ export const fi: Messages = {
   'review.backToFacts': '← Takaisin tietoihin',
 
   'section.patient': 'Potilas',
+  'section.document': 'Asiakirja',
+  'section.document.hint':
+    'Tiedot, joille asiakirjassa ei ole omaa päivämäärää, päivätään yhteenvedossa tälle päivälle. Hylkää päivämäärä, jos haluat jättää ne päiväämättä.',
   'section.allergies': 'Allergiat ja intoleranssit',
   'section.medications': 'Lääkitysyhteenveto',
   'section.problems': 'Ongelmalista',
@@ -123,6 +126,7 @@ export const fi: Messages = {
   // Row labels of the patient view tables, after the IPS profile elements.
   'row.name': 'Nimi',
   'row.birthDate': 'Syntymäaika',
+  'row.documentDate': 'Asiakirjan päivämäärä',
   'row.sex': 'Sukupuoli',
   'row.identifier': 'Tunniste',
   'row.allergy': 'Allergia tai intoleranssi',
@@ -163,6 +167,7 @@ export const fi: Messages = {
   'field.identifier': 'Tunniste',
   'field.label': 'Nimike',
   'field.birthDate': 'Syntymäaika',
+  'field.documentDate': 'Asiakirjan päivämäärä',
   'field.gender': 'Sukupuoli',
 
   'enum.active': 'aktiivinen',
@@ -303,6 +308,8 @@ export const fi: Messages = {
 
   'sentence.name': 'Nimesi on {title}.',
   'sentence.birthDate': 'Syntymäaikasi on {title}.',
+  'sentence.documentDate':
+    'Asiakirja on päivätty {title}. Jos asiakirjassa ei ole tiedolle omaa päivämäärää, yhteenvedossa käytetään tätä päivämäärää.',
   'sentence.gender': 'Sukupuoleksesi on merkitty {title}.',
   'sentence.identifier': 'Asiakirja antaa sinulle tämän tunnisteen: {title}.',
   'sentence.derived': 'Tieto on johdettu henkilötunnuksestasi, eikä sitä mainita asiakirjassa.',

@@ -35,6 +35,8 @@ export function factSentence(fact: Fact): string {
       return translate('sentence.gender', { title }) + derived
     case 'patient_identifier':
       return translate('sentence.identifier', { title })
+    case 'document_date':
+      return translate('sentence.documentDate', { title })
     case 'allergy': {
       const reactions = (v.reactions ?? [])
         .flatMap((r: { manifestations: string[] }) => r.manifestations)
@@ -157,7 +159,10 @@ export interface ReviewGroup {
   silent: boolean
 }
 
-/** Facts about the patient, then one group per IPS section, in IPS order. */
+/**
+ * Facts about the patient (and the document date, which dates the undated facts), then one
+ * group per IPS section, in IPS order.
+ */
 export function reviewGroups(draft: Draft): ReviewGroup[] {
   const patient = draft.patient
   const about: ReviewGroup = {
@@ -170,6 +175,7 @@ export function reviewGroups(draft: Draft): ReviewGroup[] {
       ...(patient.gender ? [patient.gender] : []),
       ...patient.identifiers,
       ...patient.contacts,
+      ...(draft.document_date ? [draft.document_date] : []),
     ],
     silent: false,
   }

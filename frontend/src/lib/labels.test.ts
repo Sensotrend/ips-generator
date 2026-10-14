@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { extraFact, fact } from '../test-fixtures'
+import { documentDateFact, extraFact, fact } from '../test-fixtures'
 import { factRows, factTables, factTitle } from './labels'
 
 describe('factRows', () => {
@@ -145,5 +145,16 @@ describe('the optional sections', () => {
       ['Relationship', 'puoliso'],
       ['Telephone', '040 000 0005'],
     ])
+  })
+
+  it('shows the document date and the active status a Problem List condition gets', () => {
+    expect(factTitle(documentDateFact())).toBe('2026-10-12')
+    expect(factRows(documentDateFact())).toEqual([['Document date', '2026-10-12']])
+    const condition = fact({
+      path: 'problems.items[0]',
+      kind: 'condition',
+      value: { condition_text: 'Astma', clinical_status: 'not_stated' },
+    })
+    expect(factRows(condition)).toContainEqual(['Clinical status', 'active'])
   })
 })

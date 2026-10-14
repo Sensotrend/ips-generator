@@ -175,7 +175,7 @@ def _derived(enriched: EnrichedIps, name: str) -> BaseModel | None:
 
 
 def iter_facts(enriched: EnrichedIps) -> Iterator[FactRef]:
-    """Every reviewable fact in document-model order (patient first)."""
+    """Every reviewable fact in document-model order (patient first, then the document date)."""
     patient = enriched.patient
     for i, name in enumerate(patient.names):
         yield FactRef(f"patient.names[{i}]", "patient_name", None, name)
@@ -198,6 +198,8 @@ def iter_facts(enriched: EnrichedIps) -> Iterator[FactRef]:
         yield FactRef(
             "patient.gender", "patient_gender", None, patient.gender, None, gender_derived
         )
+    if enriched.document_date is not None:
+        yield FactRef("document_date", "document_date", None, enriched.document_date)
 
     for key in SECTION_KEYS:
         section = getattr(enriched, key)
@@ -427,6 +429,8 @@ def effective_enriched(state: DraftState) -> Effective:
             patient[name] = None
             if isinstance(derived, dict) and name in derived:
                 derived[name] = None
+    if state.is_rejected("document_date"):
+        data["document_date"] = None  # no stand-in effective dates (D-15)
 
     for key in FLAT_SECTIONS:
         flat: list[Any] = []

@@ -140,6 +140,7 @@ FactKind = Literal[
     "patient_identifier",
     "patient_birth_date",
     "patient_gender",
+    "document_date",
     "allergy",
     "medication",
     "condition",
@@ -248,6 +249,9 @@ class DraftOut(BaseModel):
     document_language: str
     document: DocumentInfoOut
     patient: PatientOut
+    document_date: FactOut | None = None
+    """The date the document states for itself (schema 1.3.0): the stand-in effective date of
+    Observations without their own (PLAN.md D-15). Rejecting it removes the stand-in dates."""
     sections: list[SectionOut]
     notes: list[NoteOut]
     """Assembly notes of the current draft that belong to no single fact."""

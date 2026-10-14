@@ -96,6 +96,7 @@ const EDIT_FIELDS: Partial<Record<FactKind, EditField[]>> = {
     { key: 'type_text', label: 'field.label' },
   ],
   patient_birth_date: [{ key: 'value', label: 'field.birthDate', format: 'format.date' }],
+  document_date: [{ key: 'value', label: 'field.documentDate', format: 'format.date' }],
   patient_gender: [
     { key: 'value', label: 'field.gender', options: ['male', 'female', 'other', 'unknown'] },
   ],

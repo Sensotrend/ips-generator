@@ -66,6 +66,8 @@ export function factTitle(fact: Fact): string {
       return str(fact.derived?.value) || str(v.value)
     case 'patient_gender':
       return translateEnum(str(fact.derived?.value) || str(v.value))
+    case 'document_date':
+      return str(v.value)
     case 'no_known_allergy_statement':
     case 'section_none_known':
       return fact.source?.quote ?? translate('fact.noneKnown')
@@ -125,6 +127,9 @@ export function factRows(fact: Fact): [string, string][] {
     case 'patient_gender':
       add('row.sex', fact.derived?.value ?? v.value)
       break
+    case 'document_date':
+      add('row.documentDate', v.value, true)
+      break
     case 'allergy':
       add('row.allergy', v.substance_text, true)
       add('row.type', v.type)
@@ -159,7 +164,12 @@ export function factRows(fact: Fact): [string, string][] {
     case 'condition':
       add('row.problem', v.condition_text, true)
       add('row.bodySite', v.body_site_text, true)
-      add('row.clinicalStatus', v.clinical_status)
+      // A condition without a stated status is on the Problem List, where the mapper
+      // assumes "active" (D-15).
+      add(
+        'row.clinicalStatus',
+        str(v.clinical_status) === 'not_stated' ? 'active' : v.clinical_status,
+      )
       add('row.verificationStatus', v.verification_status)
       add('row.severity', v.severity)
       add('row.onset', v.onset, true)

@@ -307,8 +307,12 @@ PLAN.md  CLAUDE.md  README.md
   - Matchbox findings (2026-10-14): `effectivePeriod` is rejected by the IPS pregnancy and tobacco profiles (dateTime
     only) and by `vs-1`, so a stand-in date can only be `effectiveDateTime`; R4 con-3 (clinicalStatus on a
     problem-list-item) is not reported at all. Gold self-test 37/37 pass; live `extract_v7` run still to record.
-  - Not yet: `document_date` is not a reviewable fact in the review UI (the stand-in dates are visible only in the
-    resource narrative and notes); the review view does not show the new warning notes specially.
+  - **Review (2026-10-14):** `document_date` is a reviewable fact (path `document_date`, kind `document_date`,
+    `DraftOut.document_date`). Clinician view: a "Document" section above Patient with a hint on what the date does;
+    patient view: last box on the "About you" page, with a sentence saying undated facts take this date. Edit moves
+    the stand-in dates (a partial date gives none), reject removes them (the Bundle has no document date), reset
+    restores. A missing document date cannot be added (same gap as a missing birth date). The patient table now
+    shows the `active` status a Problem List condition without a stated status gets.
 - [ ] Multi-document merge into one IPS (future enhancement per D-12: multi-document upload, and merging several IPS summaries; dedupe meds/problems across docs; D-11: a "none known" claim contradicted by another document is not asserted and is flagged) `[fable]`
 - [ ] Rendered human-readable IPS view (Composition narrative) `[sonnet]`
 - [ ] Prompt caching for system prompt + schema; Batch API path for bulk backfills `[sonnet]`

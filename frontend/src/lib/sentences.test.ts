@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { draftWithExtraSections, extraFact, fact } from '../test-fixtures'
+import { documentDateFact, draft, draftWithExtraSections, extraFact, fact } from '../test-fixtures'
 import { factSentence, isCompleted, reviewGroups, sortByDate } from './sentences'
 
 const medication = (name: string, value: Record<string, string>) =>
@@ -100,5 +100,16 @@ describe('the optional sections', () => {
       'a',
       'c',
     ])
+  })
+
+  it('puts the document date last on the about-you page and explains what it dates', () => {
+    const groups = reviewGroups(draft({ document_date: documentDateFact() }))
+    const about = groups[0].facts
+    expect(about[about.length - 1].kind).toBe('document_date')
+    expect(factSentence(documentDateFact())).toBe(
+      'The document is dated 2026-10-12. Where it gives a fact without a date of its own, ' +
+        'the summary uses this date.',
+    )
+    expect(reviewGroups(draft())[0].facts.map((f) => f.kind)).not.toContain('document_date')
   })
 })
