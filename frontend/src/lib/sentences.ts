@@ -3,6 +3,7 @@ import { translate, translateEnum, type TKey } from './i18n'
 import { factTitle, sectionTitle } from './labels'
 
 const str = (value: unknown): string => (typeof value === 'string' ? value : '')
+const day = (value: unknown): string => (typeof value === 'string' ? value : '')
 const free = (value: unknown): string => {
   const text = str(value)
   return text === 'not_stated' ? '' : text
@@ -60,6 +61,31 @@ export function factSentence(fact: Fact): string {
         status: status(v.clinical_status),
       })
     }
+    case 'vital_sign': {
+      const date = day(v.effective)
+      return translate('sentence.vitalSign', {
+        title,
+        date: date ? translate('sentence.vitalSign.date', { date }) : '',
+      })
+    }
+    case 'social_history':
+      return translate(
+        v.kind === 'alcohol' ? 'sentence.social.alcohol' : 'sentence.social.tobacco',
+        { text: str(v.use_text) },
+      )
+    case 'immunization': {
+      const date = day(v.occurrence)
+      return translate('sentence.immunization', {
+        title: str(v.vaccine_text),
+        date: date ? translate('sentence.immunization.date', { date }) : '',
+        status:
+          v.status === 'not_done' ? translate('sentence.status', { status: known(v.status) }) : '',
+      })
+    }
+    case 'pregnancy_fact':
+      return translate('sentence.pregnancy', { title })
+    case 'patient_contact':
+      return translate('sentence.contact', { title })
     case 'no_known_allergy_statement':
     case 'section_none_known':
       return translate('sentence.noneKnown', { quote: fact.source?.quote ?? title })
@@ -92,7 +118,15 @@ export function isCompleted(fact: Fact): boolean {
 
 /** The date an item started (partial dates `YYYY`, `YYYY-MM` sort correctly as text). */
 const startDate = (fact: Fact): string =>
-  str(fact.kind === 'medication' ? fact.value.effective_start : fact.value.onset)
+  str(
+    fact.kind === 'medication'
+      ? fact.value.effective_start
+      : fact.kind === 'vital_sign'
+        ? fact.value.effective
+        : fact.kind === 'immunization'
+          ? fact.value.occurrence
+          : fact.value.onset,
+  )
 
 /**
  * Items with a date: current ones first, completed ones after; newest first within each; items
@@ -135,6 +169,7 @@ export function reviewGroups(draft: Draft): ReviewGroup[] {
       ...(patient.birth_date ? [patient.birth_date] : []),
       ...(patient.gender ? [patient.gender] : []),
       ...patient.identifiers,
+      ...patient.contacts,
     ],
     silent: false,
   }

@@ -143,6 +143,11 @@ FactKind = Literal[
     "allergy",
     "medication",
     "condition",
+    "vital_sign",
+    "social_history",
+    "immunization",
+    "pregnancy_fact",
+    "patient_contact",
     "no_known_allergy_statement",
     "section_none_known",
 ]
@@ -175,7 +180,16 @@ class FactOut(BaseModel):
     """Terminology codes for the item's text fields (from server lookups only)."""
 
 
-SectionKey = Literal["allergies", "medications", "problems", "past_illness"]
+SectionKey = Literal[
+    "allergies",
+    "medications",
+    "problems",
+    "past_illness",
+    "immunizations",
+    "pregnancy",
+    "social_history",
+    "vital_signs",
+]
 
 
 class SectionOut(BaseModel):
@@ -196,6 +210,7 @@ class SectionOut(BaseModel):
 class PatientOut(BaseModel):
     names: list[FactOut]
     identifiers: list[FactOut]
+    contacts: list[FactOut] = Field(default_factory=list)
     birth_date: FactOut | None
     gender: FactOut | None
     flags: list[FlagCode]

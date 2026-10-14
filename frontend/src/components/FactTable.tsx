@@ -29,6 +29,9 @@ const EXTRA_COLUMNS: Partial<Record<FactKind, { label: TKey; get: (v: FactValue)
   ],
   medication: [{ label: 'detail.reason', get: (v) => String(v.reason_text ?? '') }],
   condition: [{ label: 'detail.verification', get: (v) => enumText(v.verification_status) }],
+  vital_sign: [{ label: 'detail.measurement', get: (v) => enumText(v.kind) }],
+  social_history: [{ label: 'detail.topic', get: (v) => enumText(v.kind) }],
+  pregnancy_fact: [{ label: 'detail.pregnancyFact', get: (v) => enumText(v.kind) }],
   no_known_allergy_statement: [{ label: 'detail.scope', get: (v) => enumText(v.scope) }],
   section_none_known: [{ label: 'detail.scope', get: (v) => enumText(v.scope) }],
 }
@@ -289,7 +292,11 @@ export function FactTable({ facts, selected, readOnly, busy, onSelect, onActions
                             disabled={busy}
                             onClick={() => {
                               onActions([
-                                { action: 'edit', path: fact.path, value: finalizeEdit(fact, editing.value) },
+                                {
+                                  action: 'edit',
+                                  path: fact.path,
+                                  value: finalizeEdit(fact, editing.value),
+                                },
                               ])
                               setEditing(null)
                             }}

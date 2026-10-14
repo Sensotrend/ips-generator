@@ -65,7 +65,14 @@ export function draft(overrides: Partial<Draft> = {}): Draft {
       approved_at: null,
       attester_mode: null,
     },
-    patient: { names: [name], identifiers: [], birth_date: null, gender: null, flags: [] },
+    patient: {
+      names: [name],
+      identifiers: [],
+      contacts: [],
+      birth_date: null,
+      gender: null,
+      flags: [],
+    },
     sections: [
       {
         key: 'allergies',
@@ -100,5 +107,96 @@ export function draft(overrides: Partial<Draft> = {}): Draft {
     validation: null,
     validation_error: null,
     ...overrides,
+  }
+}
+
+/** A fact of one of the optional sections (vital signs, social history, immunizations, ...). */
+export function extraFact(
+  kind: Fact['kind'],
+  path: string,
+  value: Fact['value'],
+  quote: string,
+): Fact {
+  return fact({
+    path,
+    kind,
+    item_id: kind === 'patient_contact' ? null : '33333333-3333-3333-3333-333333333333',
+    value: { source_quote: quote, page: 1, locator: 'line 2', confidence: 'high', ...value },
+    source: { quote, page: 1, locator: 'line 2' },
+    needs_confirmation: false,
+    flags: [],
+  })
+}
+
+/** A draft with all the optional sections and a contact person, in IPS order. */
+export function draftWithExtraSections(): Draft {
+  const base = draft()
+  const section = (key: Draft['sections'][number]['key'], title: string, items: Fact[]) => ({
+    key,
+    title,
+    kind: 'items_found' as const,
+    effective_kind: 'items_found' as const,
+    statement: null,
+    items,
+    scoped_statements: [],
+    flags: [],
+  })
+  const contact = extraFact(
+    'patient_contact',
+    'patient.contacts[0]',
+    { name_text: 'Teemu Ahonen', relationship_text: 'puoliso', phone: '040 000 0005' },
+    'Teemu Ahonen (puoliso), puh. 040 000 0005',
+  )
+  return {
+    ...base,
+    patient: { ...base.patient, contacts: [contact] },
+    sections: [
+      ...base.sections,
+      section('immunizations', 'Immunizations', [
+        extraFact(
+          'immunization',
+          'immunizations[0]',
+          { vaccine_text: 'MPR-rokote', status: 'completed', occurrence: '1996', note: null },
+          'MPR-rokote 1996',
+        ),
+      ]),
+      section('pregnancy', 'History of pregnancy', [
+        extraFact(
+          'pregnancy_fact',
+          'pregnancy[0]',
+          { kind: 'expected_delivery_date', status: 'not_stated', date: '2027-01-31', count: null },
+          'lasketun ajan arvio 31.01.2027',
+        ),
+        extraFact(
+          'pregnancy_fact',
+          'pregnancy[1]',
+          { kind: 'deliveries', status: 'not_stated', date: null, count: 1 },
+          'synnytyksiä 1',
+        ),
+      ]),
+      section('social_history', 'Social history', [
+        extraFact(
+          'social_history',
+          'social_history[0]',
+          { kind: 'tobacco', tobacco_status: 'non_smoker', use_text: 'Ei tupakoi', date: null },
+          'Ei tupakoi',
+        ),
+      ]),
+      section('vital_signs', 'Vital signs', [
+        extraFact(
+          'vital_sign',
+          'vital_signs[0]',
+          {
+            kind: 'blood_pressure',
+            value: '138',
+            diastolic: '84',
+            unit_text: 'mmHg',
+            effective: '2026-10-06',
+            note: null,
+          },
+          'Verenpaine 138/84 mmHg',
+        ),
+      ]),
+    ],
   }
 }

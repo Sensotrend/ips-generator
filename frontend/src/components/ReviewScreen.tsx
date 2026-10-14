@@ -26,6 +26,11 @@ const KIND_HEADING: Record<FactKind, TKey> = {
   allergy: 'row.allergy',
   medication: 'row.medication',
   condition: 'row.problem',
+  vital_sign: 'row.measurement',
+  social_history: 'row.socialTopic',
+  immunization: 'row.vaccine',
+  pregnancy_fact: 'row.pregnancyFact',
+  patient_contact: 'row.contactName',
   no_known_allergy_statement: 'section.statements',
   section_none_known: 'section.statements',
 }
@@ -66,6 +71,7 @@ export function SectionsList(props: ListProps) {
     ...(patient.birth_date ? [patient.birth_date] : []),
     ...(patient.gender ? [patient.gender] : []),
     ...patient.identifiers,
+    ...patient.contacts,
   ]
   return (
     <div className="sections">

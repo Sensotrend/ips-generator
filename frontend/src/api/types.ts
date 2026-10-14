@@ -82,6 +82,11 @@ export type FactKind =
   | 'allergy'
   | 'medication'
   | 'condition'
+  | 'vital_sign'
+  | 'social_history'
+  | 'immunization'
+  | 'pregnancy_fact'
+  | 'patient_contact'
   | 'no_known_allergy_statement'
   | 'section_none_known'
 
@@ -106,7 +111,15 @@ export interface Fact {
 }
 
 export type SectionKind = 'items_found' | 'none_known' | 'no_information'
-export type SectionKey = 'allergies' | 'medications' | 'problems' | 'past_illness'
+export type SectionKey =
+  | 'allergies'
+  | 'medications'
+  | 'problems'
+  | 'past_illness'
+  | 'immunizations'
+  | 'pregnancy'
+  | 'social_history'
+  | 'vital_signs'
 
 export interface Section {
   key: SectionKey
@@ -122,6 +135,7 @@ export interface Section {
 export interface Patient {
   names: Fact[]
   identifiers: Fact[]
+  contacts: Fact[]
   birth_date: Fact | null
   gender: Fact | null
   flags: FlagCode[]

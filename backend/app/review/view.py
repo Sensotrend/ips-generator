@@ -12,8 +12,10 @@ from pydantic import BaseModel
 from app.fhir.device import PipelineInfo
 from app.pipeline.assemble import AssemblyNote, AssemblyResult, assemble
 from app.review.draft import (
+    FLAT_SECTIONS,
     SECTION_KEYS,
     DraftState,
+    Effective,
     FactRef,
     approval_blockers,
     effective_enriched,
@@ -44,6 +46,10 @@ _TITLES: dict[SectionKey, str] = {
     "medications": "Medication summary",
     "problems": "Problem list",
     "past_illness": "History of past illness",
+    "immunizations": "Immunizations",
+    "pregnancy": "History of pregnancy",
+    "social_history": "Social history",
+    "vital_signs": "Vital signs",
 }
 _FLAG_VALUES = {f.value for f in FlagCode}
 SectionKind = Literal["items_found", "none_known", "no_information"]
@@ -128,6 +134,28 @@ def _fact_out(state: DraftState, fact: FactRef, notes: list[tuple[str, AssemblyN
     )
 
 
+def _flat_section(
+    key: SectionKey,
+    facts: list[FactRef],
+    outs: dict[str, FactOut],
+    effective: Effective,
+) -> SectionOut | None:
+    items = [outs[f.path] for f in facts if f.section == key]
+    if not items:
+        return None
+    kept = bool(getattr(effective.enriched, key))
+    return SectionOut(
+        key=key,
+        title=_TITLES[key],
+        kind="items_found",
+        effective_kind="items_found" if kept else "no_information",
+        statement=None,
+        items=items,
+        scoped_statements=[],
+        flags=[],
+    )
+
+
 def build_draft_view(
     state: DraftState,
     *,
@@ -159,6 +187,7 @@ def build_draft_view(
     patient = PatientOut(
         names=[outs[f.path] for f in facts if f.kind == "patient_name"],
         identifiers=[outs[f.path] for f in facts if f.kind == "patient_identifier"],
+        contacts=[outs[f.path] for f in facts if f.kind == "patient_contact"],
         birth_date=outs.get("patient.birth_date"),
         gender=outs.get("patient.gender"),
         flags=[
@@ -228,8 +257,18 @@ def build_draft_view(
                 scoped_statements=[],
                 flags=[],
             )
+    # IPS order after the required sections: Immunizations, History of Past Illness, History of
+    # Pregnancy, Social History, Vital Signs (a flat section is listed only when it has items).
+    flat_sections = {key: _flat_section(key, facts, outs, effective) for key in FLAT_SECTIONS}
+    if (immunizations := flat_sections["immunizations"]) is not None:
+        sections.append(immunizations)
     if past_section is not None:
         sections.append(past_section)
+    sections.extend(
+        section
+        for key in ("pregnancy", "social_history", "vital_signs")
+        if (section := flat_sections[key]) is not None
+    )
 
     pipeline = PipelineInfo()
     return DraftOut(

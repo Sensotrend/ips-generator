@@ -50,6 +50,41 @@ const EDIT_FIELDS: Partial<Record<FactKind, EditField[]>> = {
     },
     { key: 'onset', label: 'field.onset' },
   ],
+  vital_sign: [
+    { key: 'value', label: 'field.value' },
+    { key: 'diastolic', label: 'field.diastolic' },
+    { key: 'unit_text', label: 'field.unit' },
+    { key: 'effective', label: 'field.date' },
+  ],
+  social_history: [
+    { key: 'use_text', label: 'field.wording' },
+    {
+      key: 'tobacco_status',
+      label: 'field.smokingStatus',
+      options: ['never', 'former', 'current', 'non_smoker', 'not_stated'],
+    },
+    { key: 'date', label: 'field.date' },
+  ],
+  immunization: [
+    { key: 'vaccine_text', label: 'field.vaccine' },
+    { key: 'status', label: 'field.status', options: ['completed', 'not_done'] },
+    { key: 'occurrence', label: 'field.date' },
+    { key: 'note', label: 'field.note' },
+  ],
+  pregnancy_fact: [
+    {
+      key: 'status',
+      label: 'field.pregnancyStatus',
+      options: ['pregnant', 'not_pregnant', 'not_stated'],
+    },
+    { key: 'date', label: 'field.date' },
+    { key: 'count', label: 'field.number' },
+  ],
+  patient_contact: [
+    { key: 'name_text', label: 'field.contactName' },
+    { key: 'relationship_text', label: 'field.relationship' },
+    { key: 'phone', label: 'field.phone' },
+  ],
   patient_name: [
     { key: 'given', label: 'field.givenName', words: true },
     { key: 'family', label: 'field.familyName' },
@@ -70,6 +105,7 @@ export function getIn(value: FactValue, path: string): string {
     node = node !== null && typeof node === 'object' ? (node as FactValue)[key] : undefined
   }
   if (Array.isArray(node)) return node.join(' ')
+  if (typeof node === 'number') return String(node)
   return typeof node === 'string' ? node : ''
 }
 

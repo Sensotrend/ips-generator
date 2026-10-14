@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { fact } from '../test-fixtures'
-import { factRows, factTables } from './labels'
+import { extraFact, fact } from '../test-fixtures'
+import { factRows, factTables, factTitle } from './labels'
 
 describe('factRows', () => {
   it('labels a medication after the IPS elements and includes the reason when stated', () => {
@@ -59,5 +59,91 @@ describe('factTables', () => {
     expect(table.rows.map((row) => row.cells[0])).toEqual(['Sulfa-antibiootit', 'Pähkinä'])
     // A fact without a value for a column gets a dash.
     expect(table.rows[1].cells[table.columns.indexOf('Reaction')]).toBe('–')
+  })
+})
+
+describe('the optional sections', () => {
+  const bp = extraFact(
+    'vital_sign',
+    'vital_signs[0]',
+    {
+      kind: 'blood_pressure',
+      value: '138',
+      diastolic: '84',
+      unit_text: 'mmHg',
+      effective: '2026-10-06',
+      note: null,
+    },
+    'Verenpaine 138/84 mmHg',
+  )
+
+  it('titles and tabulates a vital sign with its number, unit and date', () => {
+    expect(factTitle(bp)).toBe('blood pressure 138/84 mmHg')
+    expect(factRows(bp)).toEqual([
+      ['Measurement', 'blood pressure'],
+      ['Value', '138/84 mmHg'],
+      ['Date', '2026-10-06'],
+    ])
+  })
+
+  it('shows a pregnancy count (a number in the JSON) and a date', () => {
+    const deliveries = extraFact(
+      'pregnancy_fact',
+      'pregnancy[1]',
+      { kind: 'deliveries', status: 'not_stated', date: null, count: 1 },
+      'synnytyksiä 1',
+    )
+    const due = extraFact(
+      'pregnancy_fact',
+      'pregnancy[0]',
+      { kind: 'expected_delivery_date', status: 'not_stated', date: '2027-01-31', count: null },
+      'lasketun ajan arvio 31.01.2027',
+    )
+    expect(factTitle(deliveries)).toBe('number of deliveries: 1')
+    expect(factTitle(due)).toBe('expected delivery date: 2027-01-31')
+    const status = extraFact(
+      'pregnancy_fact',
+      'pregnancy[2]',
+      { kind: 'status', status: 'pregnant', date: null, count: null },
+      'Raskaus todettu',
+    )
+    expect(factRows(status)).toContainEqual(['Value', 'pregnant'])
+  })
+
+  it('describes tobacco, vaccines and a contact person', () => {
+    const tobacco = extraFact(
+      'social_history',
+      'social_history[0]',
+      { kind: 'tobacco', tobacco_status: 'former', use_text: 'Lopetettu 2019', date: '2019' },
+      'Lopetettu 2019',
+    )
+    expect(factRows(tobacco)).toEqual([
+      ['Topic', 'tobacco'],
+      ['Smoking status', 'former smoker'],
+      ['As written in the document', 'Lopetettu 2019'],
+      ['Date', '2019'],
+    ])
+    const vaccine = extraFact(
+      'immunization',
+      'immunizations[0]',
+      { vaccine_text: 'MPR-rokote', status: 'not_done', occurrence: null, note: null },
+      'MPR-rokote',
+    )
+    expect(factRows(vaccine)).toEqual([
+      ['Vaccine', 'MPR-rokote'],
+      ['Status', 'not given'],
+    ])
+    const contact = extraFact(
+      'patient_contact',
+      'patient.contacts[0]',
+      { name_text: 'Teemu Ahonen', relationship_text: 'puoliso', phone: '040 000 0005' },
+      'Teemu',
+    )
+    expect(factTitle(contact)).toBe('Teemu Ahonen (puoliso)')
+    expect(factRows(contact)).toEqual([
+      ['Contact person', 'Teemu Ahonen'],
+      ['Relationship', 'puoliso'],
+      ['Telephone', '040 000 0005'],
+    ])
   })
 })

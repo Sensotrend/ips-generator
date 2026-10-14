@@ -23,7 +23,18 @@ from app.fhir.vital_signs import map_vital_signs
 from app.pipeline.assemble import assemble, seeded_id_factory
 from app.pipeline.ground import GroundingStatus, apply_grounding, ground
 from app.pipeline.ingest import ingest
-from app.review.draft import effective_enriched, new_draft
+from app.review.draft import (
+    DraftState,
+    ReviewError,
+    apply_actions,
+    effective_enriched,
+    find_fact,
+    iter_facts,
+    map_back,
+    new_draft,
+)
+from app.review.view import build_draft_view
+from app.schemas.api import EditAction, JobStatus, RejectAction
 from app.schemas.intermediate import (
     EnrichedIps,
     IpsExtraction,
@@ -426,19 +437,127 @@ def test_bundle_without_the_new_content_is_unchanged() -> None:
     }
 
 
-def test_review_path_leaves_out_what_the_reviewer_cannot_see_yet() -> None:
-    enriched = _enriched(vital_signs=[_vital("height", "168", unit_text="cm")])
+def _draft_with_extras() -> tuple[DraftState, EnrichedIps]:
+    enriched = _enriched(
+        vital_signs=[
+            _vital("height", "168", unit_text="cm"),
+            _vital("weight", "70", unit_text="kg"),
+        ],
+        social_history=[_social("tobacco", "Ei tupakoi", "non_smoker")],
+        immunizations=[_vaccine("MPR-rokote", "1996")],
+        pregnancy=[_preg("deliveries", count="1")],
+    )
     data = enriched.model_dump(mode="json")
     data["patient"]["contacts"] = [
-        {**_prov("Teemu"), "name_text": "Teemu", "relationship_text": "", "phone": ""}
+        {
+            **_prov("Teemu Ahonen (puoliso), puh. 040 000 0005"),
+            "name_text": "Teemu Ahonen",
+            "relationship_text": "puoliso",
+            "phone": "040 000 0005",
+        }
     ]
     full = EnrichedIps.model_validate(data)
-    state = new_draft(full, flags=[])
-    effective = effective_enriched(state).enriched
-    assert effective.vital_signs == []
-    assert effective.patient.contacts == []
-    assert state.current.vital_signs
-    assert state.current.patient.contacts
+    return new_draft(full), full
+
+
+def test_new_sections_are_reviewable_facts_with_stable_paths() -> None:
+    state, _ = _draft_with_extras()
+    facts = {f.path: f for f in iter_facts(state.current)}
+    assert facts["vital_signs[1]"].kind == "vital_sign"
+    assert facts["social_history[0]"].kind == "social_history"
+    assert facts["immunizations[0]"].kind == "immunization"
+    assert facts["pregnancy[0]"].kind == "pregnancy_fact"
+    assert facts["patient.contacts[0]"].kind == "patient_contact"
+    assert facts["vital_signs[0]"].section == "vital_signs"
+    assert facts["vital_signs[0]"].item_id is not None
+    assert facts["patient.contacts[0]"].item_id is None
+
+
+def test_rejected_facts_leave_the_effective_draft_and_paths_map_back() -> None:
+    state, _ = _draft_with_extras()
+    state = apply_actions(
+        state,
+        [
+            RejectAction(action="reject", path="vital_signs[0]"),
+            RejectAction(action="reject", path="patient.contacts[0]"),
+        ],
+        actor="t",
+        now=NOW,
+    )
+    effective = effective_enriched(state)
+    assert [v.extracted.kind.value for v in effective.enriched.vital_signs] == ["weight"]
+    assert effective.enriched.patient.contacts == []
+    assert len(effective.enriched.immunizations) == 1
+    assert effective.path_map["vital_signs[0]"] == "vital_signs[1]"
+    assert map_back("vital_signs[0].something", effective.path_map) == "vital_signs[1].something"
+    result = assemble(effective.enriched, now=NOW)
+    sections = {e.section for e in result.entries}
+    assert {"vital_signs", "immunizations", "pregnancy", "social_history"} <= sections
+
+
+def test_a_section_with_all_facts_rejected_leaves_the_bundle() -> None:
+    state, _ = _draft_with_extras()
+    state = apply_actions(
+        state, [RejectAction(action="reject", path="immunizations[0]")], actor="t", now=NOW
+    )
+    result = assemble(effective_enriched(state).enriched, now=NOW)
+    assert "immunizations" not in {e.section for e in result.entries}
+
+
+def test_edit_validates_and_keeps_provenance() -> None:
+    state, _ = _draft_with_extras()
+    fact = find_fact(state.current, "vital_signs[0]")
+    assert fact.value is not None
+    value = fact.value.model_dump(mode="json")
+    edited = apply_actions(
+        state,
+        [EditAction(action="edit", path="vital_signs[0]", value={**value, "value": "169"})],
+        actor="t",
+        now=NOW,
+    )
+    assert find_fact(edited.current, "vital_signs[0]").value.value == Decimal("169")  # type: ignore[union-attr]
+    for bad in (
+        {**value, "value": "tall"},
+        {**value, "source_quote": "something else"},
+        {**value, "kind": "unicorn"},
+    ):
+        with pytest.raises(ReviewError):
+            apply_actions(
+                state,
+                [EditAction(action="edit", path="vital_signs[0]", value=bad)],
+                actor="t",
+                now=NOW,
+            )
+
+
+def test_view_lists_the_sections_in_ips_order_with_contacts() -> None:
+    state, _ = _draft_with_extras()
+    view = build_draft_view(state, job_id=UUID(int=1), version=1, status=JobStatus.REVIEW, now=NOW)
+    keys = [s.key for s in view.sections]
+    assert keys == [
+        "problems",
+        "allergies",
+        "medications",
+        "immunizations",
+        "pregnancy",
+        "social_history",
+        "vital_signs",
+    ]
+    vitals = next(s for s in view.sections if s.key == "vital_signs")
+    assert vitals.kind == "items_found"
+    assert vitals.effective_kind == "items_found"
+    assert [i.kind for i in vitals.items] == ["vital_sign", "vital_sign"]
+    assert vitals.items[0].source is not None
+    assert [c.kind for c in view.patient.contacts] == ["patient_contact"]
+
+
+def test_view_has_no_section_for_what_the_document_did_not_state() -> None:
+    state = new_draft(build())
+    view = build_draft_view(state, job_id=UUID(int=1), version=1, status=JobStatus.REVIEW, now=NOW)
+    assert {s.key for s in view.sections}.isdisjoint(
+        {"immunizations", "pregnancy", "social_history", "vital_signs"}
+    )
+    assert view.patient.contacts == []
 
 
 def test_non_smoker_has_its_own_value_and_never_means_never() -> None:

@@ -1,18 +1,18 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { fireEvent, render, screen, within } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { draft, source } from '../test-fixtures'
+import { draft, draftWithExtraSections, source } from '../test-fixtures'
 import { ReviewScreen } from './ReviewScreen'
 
-function stubApi(onPut = vi.fn()) {
+function stubApi(onPut = vi.fn(), base = draft()) {
   vi.stubGlobal(
     'fetch',
     vi.fn((url: string, init?: RequestInit) => {
       if (url.endsWith('/draft') && init?.method === 'PUT') {
         onPut(JSON.parse(String(init.body)))
-        return Promise.resolve(new Response(JSON.stringify(draft({ version: 2 }))))
+        return Promise.resolve(new Response(JSON.stringify({ ...base, version: 2 })))
       }
-      if (url.endsWith('/draft')) return Promise.resolve(new Response(JSON.stringify(draft())))
+      if (url.endsWith('/draft')) return Promise.resolve(new Response(JSON.stringify(base)))
       if (url.endsWith('/source')) return Promise.resolve(new Response(JSON.stringify(source)))
       return Promise.resolve(new Response('{}', { status: 404 }))
     }),
@@ -65,5 +65,28 @@ describe('ReviewScreen', () => {
         actions: [{ action: 'reject', path: 'allergies.items[0]' }],
       }),
     )
+  })
+
+  it('lists the optional sections and the contact person, and rejects one of their facts', async () => {
+    const onPut = vi.fn()
+    stubApi(onPut, draftWithExtraSections())
+    renderReview()
+    for (const name of ['Immunizations', 'History of pregnancy', 'Social history', 'Vital signs'])
+      expect(await screen.findByRole('heading', { name })).toBeInTheDocument()
+    expect(screen.getByText('Teemu Ahonen')).toBeInTheDocument()
+    expect(screen.getByText('138')).toBeInTheDocument()
+    expect(screen.getByText('mmHg')).toBeInTheDocument()
+    expect(screen.getByText('non-smoker')).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('checkbox', { name: /blood pressure 138\/84 mmHg/ }))
+    fireEvent.click(
+      within(screen.getByRole('region', { name: 'Vital signs' })).getByRole('button', {
+        name: 'Reject selected',
+      }),
+    )
+    await vi.waitFor(() => expect(onPut).toHaveBeenCalledTimes(1))
+    expect(onPut).toHaveBeenCalledWith({
+      version: 1,
+      actions: [{ action: 'reject', path: 'vital_signs[0]' }],
+    })
   })
 })

@@ -285,9 +285,11 @@ PLAN.md  CLAUDE.md  README.md
     alcohol use is a drinks-per-day quantity, so alcohol facts, the number of pregnancies and the last menstrual period
     (no IPS element) stay narrative-only; expected delivery date hangs off the pregnancy status (`hasMember`); deliveries
     map to the outcome "[#] Births total".
-  - **Not reviewable yet:** the review screens do not show these sections, so `review.draft.effective_enriched` leaves them
-    (and contacts) out of what is approved; `assemble` itself and the evals include them. Next: review UI (backend view,
-    fi/sv/en strings) and patient-role sentences.
+  - **Review (2026-10-14):** the new sections are reviewable facts (`vital_signs[0]`, `social_history[0]`,
+    `immunizations[0]`, `pregnancy[0]`, `patient.contacts[0]`): accept/reject/edit like the others; a rejected fact
+    leaves the Bundle (`review.draft.effective_enriched`). The review view lists them after the required sections in
+    IPS order, only when the document has facts for them. Frontend: clinician tables and the patient step view show
+    them, with fi/sv/en strings and plain-language sentences. Not yet checked in a browser against a real job.
   - Evals: gold for the new sections in the 11 questionnaire cases (`meta.json` `extra_sections: true`); the harness scores
     the sections only for those cases. No live run yet (needs a key): record one for `extract_v6` in `evals/RESULTS.md`.
 - [ ] Multi-document merge into one IPS (future enhancement per D-12: multi-document upload, and merging several IPS summaries; dedupe meds/problems across docs; D-11: a "none known" claim contradicted by another document is not asserted and is flagged) `[fable]`

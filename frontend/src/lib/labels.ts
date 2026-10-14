@@ -1,4 +1,4 @@
-import type { Fact, FlagCode, Section } from '../api/types'
+import type { Fact, FactValue, FlagCode, Section } from '../api/types'
 import { en } from '../locales/en'
 import { translate, translateEnum, type TKey } from './i18n'
 
@@ -21,6 +21,21 @@ export const WARNING_FLAGS = new Set<FlagCode>([
 ])
 
 const str = (value: unknown): string => (typeof value === 'string' ? value : '')
+/** Decimals arrive as strings and counts as numbers. */
+const num = (value: unknown): string =>
+  typeof value === 'string' || typeof value === 'number' ? String(value) : ''
+
+/** `138/84 mmHg`, `178 cm`: the number(s) and the unit as written. */
+function vitalValue(v: FactValue): string {
+  const value = num(v.value) + (num(v.diastolic) ? `/${num(v.diastolic)}` : '')
+  return [value, str(v.unit_text)].filter(Boolean).join(' ')
+}
+
+/** The value a pregnancy fact carries, whichever kind it is. */
+function pregnancyValue(v: FactValue): string {
+  if (str(v.status) && str(v.status) !== 'not_stated') return translateEnum(str(v.status))
+  return str(v.date) || num(v.count)
+}
 
 export function factTitle(fact: Fact): string {
   const v = fact.value
@@ -31,6 +46,18 @@ export function factTitle(fact: Fact): string {
       return [str(v.medication_text), str(v.strength_text)].filter(Boolean).join(' ')
     case 'condition':
       return [str(v.condition_text), str(v.body_site_text)].filter(Boolean).join(', ')
+    case 'vital_sign':
+      return `${translateEnum(str(v.kind))} ${vitalValue(v)}`.trim()
+    case 'social_history':
+      return `${translateEnum(str(v.kind))}: ${str(v.use_text)}`
+    case 'immunization':
+      return [str(v.vaccine_text), str(v.occurrence)].filter(Boolean).join(' ')
+    case 'pregnancy_fact':
+      return `${translateEnum(str(v.kind))}: ${pregnancyValue(v)}`
+    case 'patient_contact':
+      return [str(v.name_text), str(v.relationship_text) && `(${str(v.relationship_text)})`]
+        .filter(Boolean)
+        .join(' ')
     case 'patient_name':
       return str(v.text)
     case 'patient_identifier':
@@ -58,6 +85,34 @@ export function factRows(fact: Fact): [string, string][] {
       out.push([translate(label), free ? text : translateEnum(text)])
   }
   switch (fact.kind) {
+    case 'vital_sign':
+      add('row.measurement', v.kind)
+      add('row.value', vitalValue(v), true)
+      add('row.date', v.effective, true)
+      add('row.note', v.note, true)
+      break
+    case 'social_history':
+      add('row.socialTopic', v.kind)
+      add('row.smokingStatus', v.tobacco_status)
+      add('row.asWritten', v.use_text, true)
+      add('row.date', v.date, true)
+      break
+    case 'immunization':
+      add('row.vaccine', v.vaccine_text, true)
+      add('row.status', v.status)
+      add('row.date', v.occurrence, true)
+      add('row.note', v.note, true)
+      break
+    case 'pregnancy_fact':
+      add('row.pregnancyFact', v.kind)
+      add('row.value', pregnancyValue(v), true)
+      add('row.note', v.note, true)
+      break
+    case 'patient_contact':
+      add('row.contactName', v.name_text, true)
+      add('row.relationship', v.relationship_text, true)
+      add('row.phone', v.phone, true)
+      break
     case 'patient_name':
       add('row.name', v.text, true)
       break

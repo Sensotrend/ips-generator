@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import type { Draft } from '../api/types'
-import { draft } from '../test-fixtures'
+import { draft, draftWithExtraSections } from '../test-fixtures'
 import { PatientReview } from './PatientReview'
 
 function stubApi(onPut = vi.fn(), base: Draft = draft()) {
@@ -153,5 +153,25 @@ describe('PatientReview', () => {
     // A blocker links to the page that can resolve it.
     fireEvent.click(screen.getByRole('button', { name: 'Go to the page' }))
     expect(await screen.findByText(/Step 1 of 2/)).toBeInTheDocument()
+  })
+
+  it('walks through the optional sections with their explainers and sentences', async () => {
+    stubApi(vi.fn(), draftWithExtraSections())
+    renderReview()
+    expect(await screen.findByText(/Step 1 of 6/)).toBeInTheDocument()
+    expect(
+      screen.getByText('The document gives Teemu Ahonen (puoliso) as your contact person.'),
+    ).toBeInTheDocument()
+    for (let i = 0; i < 2; i++)
+      fireEvent.click(screen.getByRole('button', { name: /Next section/ }))
+    expect(await screen.findByText(/Vaccinations you have received/)).toBeInTheDocument()
+    expect(
+      screen.getByText('The document lists the vaccination MPR-rokote, given 1996.'),
+    ).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: /Next section/ }))
+    expect(screen.getByText(/Your current and earlier pregnancies/)).toBeInTheDocument()
+    expect(
+      screen.getByText('About your pregnancy the document says: number of deliveries: 1.'),
+    ).toBeInTheDocument()
   })
 })

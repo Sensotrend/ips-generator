@@ -53,8 +53,8 @@ from app.schemas.intermediate import (
 )
 
 __all__ = [
+    "FLAT_SECTIONS",
     "SECTION_KEYS",
-    "UNREVIEWED_SECTIONS",
     "DraftState",
     "Effective",
     "FactRef",
@@ -73,8 +73,9 @@ __all__ = [
 # IPS section order: Problem List, Allergies and Intolerances, Medication Summary (History of
 # Past Illness, a Problem List split-off, follows them).
 SECTION_KEYS: Final = ("problems", "allergies", "medications")
-UNREVIEWED_SECTIONS: Final = ("vital_signs", "social_history", "immunizations", "pregnancy")
-"""Optional sections (schema 1.2.0) that exist in ``EnrichedIps`` but are not reviewable yet."""
+FLAT_SECTIONS: Final = ("immunizations", "pregnancy", "social_history", "vital_signs")
+"""Optional sections (schema 1.2.0): plain lists of items, shown after the required ones in IPS
+order. Their fact paths are ``vital_signs[0]``, no ``items``."""
 _PROVENANCE_FIELDS: Final = ("source_quote", "page", "locator")
 _PATH_PART: Final = re.compile(r"^([a-z_]+)(?:\[(\d+)\])?$")
 
@@ -161,6 +162,10 @@ _ITEM_KIND: Final[dict[str, FactKind]] = {
     "allergies": "allergy",
     "medications": "medication",
     "problems": "condition",
+    "vital_signs": "vital_sign",
+    "social_history": "social_history",
+    "immunizations": "immunization",
+    "pregnancy": "pregnancy_fact",
 }
 
 
@@ -176,6 +181,8 @@ def iter_facts(enriched: EnrichedIps) -> Iterator[FactRef]:
         yield FactRef(f"patient.names[{i}]", "patient_name", None, name)
     for i, identifier in enumerate(patient.identifiers):
         yield FactRef(f"patient.identifiers[{i}]", "patient_identifier", None, identifier)
+    for i, contact in enumerate(patient.contacts):
+        yield FactRef(f"patient.contacts[{i}]", "patient_contact", None, contact)
     birth_derived = _derived(enriched, "birth_date")
     if patient.birth_date is not None or birth_derived is not None:
         yield FactRef(
@@ -212,6 +219,18 @@ def iter_facts(enriched: EnrichedIps) -> Iterator[FactRef]:
         for i, statement in enumerate(getattr(section, "none_known_statements", [])):
             yield FactRef(
                 f"{key}.none_known_statements[{i}]", "no_known_allergy_statement", key, statement
+            )
+
+    for key in FLAT_SECTIONS:
+        for i, flat_item in enumerate(getattr(enriched, key)):
+            enriched_flat = cast(Enriched[Any], flat_item)
+            yield FactRef(
+                f"{key}[{i}]",
+                _ITEM_KIND[key],
+                key,
+                enriched_flat.extracted,
+                enriched_flat.id,
+                codings=tuple(enriched_flat.codings),
             )
 
 
@@ -393,15 +412,9 @@ def effective_enriched(state: DraftState) -> Effective:
     """
     data = state.current.model_dump(mode="json")
     path_map: dict[str, str] = {}
-    # The review screens do not show the optional sections of schema 1.2.0 (vital signs, social
-    # history, immunizations, pregnancy, patient contacts) yet. Nothing the reviewer cannot see
-    # may reach an approved Bundle, so they are left out here; ``assemble`` itself maps them.
-    for name in UNREVIEWED_SECTIONS:
-        data[name] = []
-    data["patient"]["contacts"] = []
 
     patient = data["patient"]
-    for name in ("names", "identifiers"):
+    for name in ("names", "identifiers", "contacts"):
         kept: list[Any] = []
         for i, value in enumerate(patient[name]):
             if not state.is_rejected(f"patient.{name}[{i}]"):
@@ -414,6 +427,14 @@ def effective_enriched(state: DraftState) -> Effective:
             patient[name] = None
             if isinstance(derived, dict) and name in derived:
                 derived[name] = None
+
+    for key in FLAT_SECTIONS:
+        flat: list[Any] = []
+        for i, value in enumerate(data[key]):
+            if not state.is_rejected(f"{key}[{i}]"):
+                path_map[f"{key}[{len(flat)}]"] = f"{key}[{i}]"
+                flat.append(value)
+        data[key] = flat
 
     for key in SECTION_KEYS:
         section = data[key]
@@ -444,7 +465,8 @@ def effective_enriched(state: DraftState) -> Effective:
 
 
 _PREFIX_RE: Final = re.compile(
-    r"^((?:patient|allergies|medications|problems)\.[a-z_]+\[\d+\])(.*)$"
+    r"^((?:patient|allergies|medications|problems)\.[a-z_]+\[\d+\]"
+    r"|(?:immunizations|pregnancy|social_history|vital_signs)\[\d+\])(.*)$"
 )
 
 
