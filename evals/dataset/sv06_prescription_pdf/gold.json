@@ -26,7 +26,8 @@
         "issuer_text": "",
         "confidence": "high"
       }
-    ]
+    ],
+    "contacts": []
   },
   "allergies": {
     "kind": "none_known",
@@ -95,5 +96,9 @@
   },
   "problems": {
     "kind": "no_information"
-  }
+  },
+  "vital_signs": [],
+  "social_history": [],
+  "immunizations": [],
+  "pregnancy": []
 }

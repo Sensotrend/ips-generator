@@ -39,6 +39,17 @@
         "issuer_text": "",
         "confidence": "high"
       }
+    ],
+    "contacts": [
+      {
+        "source_quote": "Erik Exempel-Test (make), tel 040 000 0003",
+        "page": 1,
+        "locator": "line 16",
+        "name_text": "Erik Exempel-Test",
+        "relationship_text": "make",
+        "phone": "040 000 0003",
+        "confidence": "high"
+      }
     ]
   },
   "allergies": {
@@ -334,5 +345,139 @@
         "confidence": "high"
       }
     ]
-  }
+  },
+  "vital_signs": [
+    {
+      "source_quote": "Längd 172 cm",
+      "page": 1,
+      "locator": "line 14",
+      "kind": "height",
+      "value": "172",
+      "diastolic": "",
+      "unit_text": "cm",
+      "effective": "",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "vikt före graviditeten 66 kg",
+      "page": 1,
+      "locator": "line 14",
+      "kind": "weight",
+      "value": "66",
+      "diastolic": "",
+      "unit_text": "kg",
+      "effective": "",
+      "note": "före graviditeten",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "Blodtryck 112/70 mmHg, puls 74/min (08.10.2026)",
+      "page": 1,
+      "locator": "line 20",
+      "kind": "blood_pressure",
+      "value": "112",
+      "diastolic": "70",
+      "unit_text": "mmHg",
+      "effective": "2026-10-08",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "Blodtryck 112/70 mmHg, puls 74/min (08.10.2026)",
+      "page": 1,
+      "locator": "line 20",
+      "kind": "heart_rate",
+      "value": "74",
+      "diastolic": "",
+      "unit_text": "/min",
+      "effective": "2026-10-08",
+      "note": "",
+      "confidence": "high"
+    }
+  ],
+  "social_history": [
+    {
+      "source_quote": "Röker inte",
+      "page": 1,
+      "locator": "line 14",
+      "kind": "tobacco",
+      "tobacco_status": "non_smoker",
+      "use_text": "Röker inte",
+      "date": "",
+      "confidence": "high"
+    }
+  ],
+  "immunizations": [
+    {
+      "source_quote": "MPR-vaccin 1995 och 2000",
+      "page": 1,
+      "locator": "line 15",
+      "vaccine_text": "MPR-vaccin",
+      "printed_code": "",
+      "printed_code_system_text": "",
+      "status": "completed",
+      "occurrence": "1995",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "MPR-vaccin 1995 och 2000",
+      "page": 1,
+      "locator": "line 15",
+      "vaccine_text": "MPR-vaccin",
+      "printed_code": "",
+      "printed_code_system_text": "",
+      "status": "completed",
+      "occurrence": "2000",
+      "note": "",
+      "confidence": "high"
+    }
+  ],
+  "pregnancy": [
+    {
+      "source_quote": "Positivt graviditetstest 03.10.2026",
+      "page": 1,
+      "locator": "line 13",
+      "kind": "status",
+      "status": "pregnant",
+      "date": "2026-10-03",
+      "count": "",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "Första dagen av sista menstruationen 06.08.2026",
+      "page": 1,
+      "locator": "line 13",
+      "kind": "last_menstrual_period",
+      "status": "not_stated",
+      "date": "2026-08-06",
+      "count": "",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "beräknad förlossning 13.05.2027",
+      "page": 1,
+      "locator": "line 13",
+      "kind": "expected_delivery_date",
+      "status": "not_stated",
+      "date": "2027-05-13",
+      "count": "",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "Tidigare graviditeter: 0",
+      "page": 1,
+      "locator": "line 14",
+      "kind": "pregnancies",
+      "status": "not_stated",
+      "date": "",
+      "count": "0",
+      "note": "tidigare",
+      "confidence": "high"
+    }
+  ]
 }

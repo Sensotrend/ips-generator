@@ -68,17 +68,38 @@ def gender(quote: str, value: str, confidence: str = "high", nth: int | None = N
     return {**_prov(quote, nth), "value": value, "confidence": confidence}
 
 
+def contact(
+    quote: str,
+    name_text: str,
+    *,
+    relationship: str = "",
+    phone: str = "",
+    confidence: str = "high",
+    nth: int | None = None,
+) -> Fact:
+    """A contact person of the patient (``patient.contacts``)."""
+    return {
+        **_prov(quote, nth),
+        "name_text": name_text,
+        "relationship_text": relationship,
+        "phone": phone,
+        "confidence": confidence,
+    }
+
+
 def patient(
     names: list[Fact] | None = None,
     birth_date: Fact | None = None,
     gender: Fact | None = None,
     identifiers: list[Fact] | None = None,
+    contacts: list[Fact] | None = None,
 ) -> Fact:
     return {
         "names": names or [],
         "birth_date": birth_date,
         "gender": gender,
         "identifiers": identifiers or [],
+        "contacts": contacts or [],
     }
 
 
@@ -248,8 +269,110 @@ def none_known(quote: str, confidence: str = "high", nth: int | None = None) -> 
     return {"kind": "none_known", **_prov(quote, nth), "confidence": confidence}
 
 
+# ---- optional sections (schema 1.2.0) ------------------------------------------------------
+
+
+def vital(
+    quote: str,
+    kind: str,
+    value: str,
+    *,
+    unit: str = "",
+    diastolic: str = "",
+    effective: str = "",
+    note: str = "",
+    confidence: str = "high",
+    nth: int | None = None,
+) -> Fact:
+    return {
+        **_prov(quote, nth),
+        "kind": kind,
+        "value": value,
+        "diastolic": diastolic,
+        "unit_text": unit,
+        "effective": effective,
+        "note": note,
+        "confidence": confidence,
+    }
+
+
+def social(
+    quote: str,
+    kind: str,
+    use_text: str,
+    *,
+    tobacco_status: str = "not_stated",
+    date: str = "",
+    confidence: str = "high",
+    nth: int | None = None,
+) -> Fact:
+    return {
+        **_prov(quote, nth),
+        "kind": kind,
+        "tobacco_status": tobacco_status,
+        "use_text": use_text,
+        "date": date,
+        "confidence": confidence,
+    }
+
+
+def vaccine(
+    quote: str,
+    vaccine_text: str,
+    *,
+    occurrence: str = "",
+    status: str = "completed",
+    code: str = "",
+    code_system: str = "",
+    note: str = "",
+    confidence: str = "high",
+    nth: int | None = None,
+) -> Fact:
+    return {
+        **_prov(quote, nth),
+        "vaccine_text": vaccine_text,
+        "printed_code": code,
+        "printed_code_system_text": code_system,
+        "status": status,
+        "occurrence": occurrence,
+        "note": note,
+        "confidence": confidence,
+    }
+
+
+def pregnancy_fact(
+    quote: str,
+    kind: str,
+    *,
+    status: str = "not_stated",
+    date: str = "",
+    count: str = "",
+    note: str = "",
+    confidence: str = "high",
+    nth: int | None = None,
+) -> Fact:
+    return {
+        **_prov(quote, nth),
+        "kind": kind,
+        "status": status,
+        "date": date,
+        "count": count,
+        "note": note,
+        "confidence": confidence,
+    }
+
+
 def extraction(
-    language: str, pat: Fact, allergies: Fact, medications: Fact, problems: Fact
+    language: str,
+    pat: Fact,
+    allergies: Fact,
+    medications: Fact,
+    problems: Fact,
+    *,
+    vital_signs: list[Fact] | None = None,
+    social_history: list[Fact] | None = None,
+    immunizations: list[Fact] | None = None,
+    pregnancy: list[Fact] | None = None,
 ) -> Fact:
     return {
         "document_language": language,
@@ -257,6 +380,10 @@ def extraction(
         "allergies": allergies,
         "medications": medications,
         "problems": problems,
+        "vital_signs": vital_signs or [],
+        "social_history": social_history or [],
+        "immunizations": immunizations or [],
+        "pregnancy": pregnancy or [],
     }
 
 

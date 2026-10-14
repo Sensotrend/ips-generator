@@ -58,6 +58,11 @@ class EvalCase:
             return None
         return {key: value.get(key) for key in ("birth_date", "gender")}
 
+    @property
+    def extra_sections(self) -> bool:
+        """Does the gold annotate the optional sections (``meta.json`` ``extra_sections``)?"""
+        return bool(self.meta.get("extra_sections"))
+
     def load_gold(self) -> IpsExtraction:
         return IpsExtraction.model_validate_json(self.gold_path.read_bytes())
 

@@ -214,7 +214,7 @@ PLAN.md  CLAUDE.md  README.md
     must have been returned by a tool in that conversation (else rejected). Tested with a fake Claude only;
     needs one real smoke call. Estimated ≈ $0.10–0.15 per document.
 - [ ] `repair.py`: feed validator issues + offending intermediate item to Claude, patch intermediate JSON, re-map; max 2 loops, then flag `[opus]`
-- [ ] Add sections: Immunizations, Results, Procedures, Medical Devices `[sonnet]` (follow the Phase 1 mapper pattern)
+- [ ] Add sections: Results, Procedures, Medical Devices `[sonnet]` (follow the Phase 1 mapper pattern; Immunizations: see "Optional sections" in Phase 4)
 - [ ] Eval metric: code accuracy vs gold codes `[sonnet]`
 - [ ] Re-run evals with cheaper per-step models (§8.1 "try" column); keep only where metrics hold `[sonnet]`
 
@@ -273,6 +273,23 @@ PLAN.md  CLAUDE.md  README.md
   - Follow-up (2026-10-13): `dump` takes filters (`--with-labs`, `--active-meds`, `--has-long-term-dx`, `--min-score`, …) and
     writes `manifest.json` (files best first, counts and an IPS score, no row contents); see the README. Of 15,000
     patients, 8,401 have an active medication, 4,849 a long-term diagnosis and 3,364 lab results.
+- [x] Optional sections: Vital Signs, Social History, Immunizations, History of Pregnancy, patient contacts (schema 1.2.0, prompt `extract_v6`, D-14) `[opus]`
+  - 2026-10-14. `IpsExtraction` gets plain lists `vital_signs`, `social_history`, `immunizations`, `pregnancy` and
+    `patient.contacts` (empty = nothing stated; no "none known" form; defaults to `[]` in Python so 1.1.x JSON stays valid,
+    but every property is required in the schema sent to the model). Mappers: `app/fhir/{vital_signs,social_history,
+    immunizations,pregnancy}.py` + `Patient.contact`; `Observation` and `Immunization` models; sections appear in the
+    Bundle only when they have content, in IPS order after the required ones.
+  - Shaped by the IPS 2.0.1 profiles (checked in Matchbox, 37/37 gold bundles: 0 errors, no unmatched entries):
+    vital signs are the FHIR vital-signs profiles (need a **day-precise date**: undated or month-only ones stay in the
+    section narrative); every IPS Observation profile needs `effective[x]` (stated date, else data-absent-reason);
+    alcohol use is a drinks-per-day quantity, so alcohol facts, the number of pregnancies and the last menstrual period
+    (no IPS element) stay narrative-only; expected delivery date hangs off the pregnancy status (`hasMember`); deliveries
+    map to the outcome "[#] Births total".
+  - **Not reviewable yet:** the review screens do not show these sections, so `review.draft.effective_enriched` leaves them
+    (and contacts) out of what is approved; `assemble` itself and the evals include them. Next: review UI (backend view,
+    fi/sv/en strings) and patient-role sentences.
+  - Evals: gold for the new sections in the 11 questionnaire cases (`meta.json` `extra_sections: true`); the harness scores
+    the sections only for those cases. No live run yet (needs a key): record one for `extract_v6` in `evals/RESULTS.md`.
 - [ ] Multi-document merge into one IPS (future enhancement per D-12: multi-document upload, and merging several IPS summaries; dedupe meds/problems across docs; D-11: a "none known" claim contradicted by another document is not asserted and is flagged) `[fable]`
 - [ ] Rendered human-readable IPS view (Composition narrative) `[sonnet]`
 - [ ] Prompt caching for system prompt + schema; Batch API path for bulk backfills `[sonnet]`
@@ -311,6 +328,8 @@ PLAN.md  CLAUDE.md  README.md
 | D-11 | "Allergiat: ei tiedossa" (bare "not known") is `none_known` (scope all) with its source quote when no other document says anything about allergies. If another document suggests allergies (Phase 4 merge), the "none known" claim is not asserted: the section becomes `no_information` and is flagged for review. | Decided 2026-10-13 |
 | D-12 | **One document → one summary** stays the design for now (one job = one document = one IPS). Possible future enhancements, not scheduled: (a) uploading several documents and reviewing them together as one job (needs cross-document dedupe, conflict flagging and a same-patient check); (b) merging several existing IPS summaries into one. Both build on the Phase 4 merge task and D-11. | Decided 2026-10-13 |
 | D-13 | The PWA uses the **LUVN look and feel** (palette, Verdana type, 0.5rem radii, gray header, 4px focus rings) for a possible LUVN-run front end, defined as CSS custom properties in `frontend/src/index.css`. No LUVN logo, icons or photos. | Decided 2026-10-13 |
+
+| D-14 | The optional sections **Vital Signs, Social History, Immunizations, History of Pregnancy** (and `Patient.contact`) use **provisional hard-coded codes** instead of terminology lookups, as named constants in `app/fhir/constants.py`: LOINC for the observation codes (checked with tx.fhir.org), SNOMED CT for smoking and pregnancy status values, ATC for a short vaccine table (MMR, varicella, influenza, COVID-19 mRNA, tetanus alone; combination vaccines are never coded as a component). The LLM still never outputs codes: it fills closed enums and numbers, and the mappers pick the code. Replace the tables by lookups later. | Decided 2026-10-14 |
 
 Still open, before the phase that needs them:
 

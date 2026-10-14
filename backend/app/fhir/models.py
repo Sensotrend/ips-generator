@@ -727,6 +727,112 @@ class MedicationStatement(DomainResource):
     dosage: list[Dosage] | None = None
 
 
+class ObservationReferenceRange(BackboneElement):
+    low: Quantity | None = None
+    high: Quantity | None = None
+    type: CodeableConcept | None = None
+    applies_to: list[CodeableConcept] | None = None
+    age: Range | None = None
+    text: FhirString | None = None
+
+
+_OBSERVATION_VALUE = (
+    "value_quantity",
+    "value_codeable_concept",
+    "value_string",
+    "value_boolean",
+    "value_integer",
+    "value_range",
+    "value_ratio",
+    "value_time",
+    "value_date_time",
+    "value_period",
+)
+
+
+class ObservationComponent(BackboneElement):
+    _choice_groups = (("value", _OBSERVATION_VALUE, False),)
+
+    code: CodeableConcept
+    value_quantity: Quantity | None = None
+    value_codeable_concept: CodeableConcept | None = None
+    value_string: FhirString | None = None
+    value_boolean: StrictBool | None = None
+    value_integer: StrictInt | None = None
+    value_range: Range | None = None
+    value_ratio: Ratio | None = None
+    value_time: FhirTime | None = None
+    value_date_time: FhirDateTime | None = None
+    value_period: Period | None = None
+    data_absent_reason: CodeableConcept | None = None
+    interpretation: list[CodeableConcept] | None = None
+    reference_range: list[ObservationReferenceRange] | None = None
+
+
+class Observation(DomainResource):
+    _choice_groups = (
+        ("effective", ("effective_date_time", "effective_period", "effective_instant"), False),
+        ("value", _OBSERVATION_VALUE, False),
+    )
+
+    resource_type: Literal["Observation"] = Field(default="Observation", alias="resourceType")
+    identifier: list[Identifier] | None = None
+    based_on: list[Reference] | None = None
+    part_of: list[Reference] | None = None
+    status: Literal[
+        "registered", "preliminary", "final", "amended", "corrected", "cancelled",
+        "entered-in-error", "unknown",
+    ]  # fmt: skip
+    category: list[CodeableConcept] | None = None
+    code: CodeableConcept
+    subject: Reference | None = None
+    focus: list[Reference] | None = None
+    encounter: Reference | None = None
+    effective_date_time: FhirDateTime | None = None
+    effective_period: Period | None = None
+    effective_instant: FhirInstant | None = None
+    issued: FhirInstant | None = None
+    performer: list[Reference] | None = None
+    value_quantity: Quantity | None = None
+    value_codeable_concept: CodeableConcept | None = None
+    value_string: FhirString | None = None
+    value_boolean: StrictBool | None = None
+    value_integer: StrictInt | None = None
+    value_range: Range | None = None
+    value_ratio: Ratio | None = None
+    value_time: FhirTime | None = None
+    value_date_time: FhirDateTime | None = None
+    value_period: Period | None = None
+    data_absent_reason: CodeableConcept | None = None
+    interpretation: list[CodeableConcept] | None = None
+    note: list[Annotation] | None = None
+    body_site: CodeableConcept | None = None
+    method: CodeableConcept | None = None
+    specimen: Reference | None = None
+    device: Reference | None = None
+    reference_range: list[ObservationReferenceRange] | None = None
+    has_member: list[Reference] | None = None
+    derived_from: list[Reference] | None = None
+    component: list[ObservationComponent] | None = None
+
+
+class Immunization(DomainResource):
+    _choice_groups = (("occurrence", ("occurrence_date_time", "occurrence_string"), True),)
+
+    resource_type: Literal["Immunization"] = Field(default="Immunization", alias="resourceType")
+    identifier: list[Identifier] | None = None
+    status: Literal["completed", "entered-in-error", "not-done"]
+    status_reason: CodeableConcept | None = None
+    vaccine_code: CodeableConcept
+    patient: Reference
+    encounter: Reference | None = None
+    occurrence_date_time: FhirDateTime | None = None
+    occurrence_string: FhirString | None = None
+    recorded: FhirDateTime | None = None
+    primary_source: StrictBool | None = None
+    note: list[Annotation] | None = None
+
+
 class CompositionAttester(BackboneElement):
     mode: Literal["personal", "professional", "legal", "official"]
     time: FhirDateTime | None = None
@@ -819,8 +925,10 @@ MODELLED_RESOURCES: dict[str, type[Resource]] = {
         Composition,
         Condition,
         Device,
+        Immunization,
         Medication,
         MedicationStatement,
+        Observation,
         Organization,
         Patient,
         Practitioner,
@@ -845,8 +953,10 @@ AnyResource = Annotated[
     | Annotated[Composition, Tag("Composition")]
     | Annotated[Condition, Tag("Condition")]
     | Annotated[Device, Tag("Device")]
+    | Annotated[Immunization, Tag("Immunization")]
     | Annotated[Medication, Tag("Medication")]
     | Annotated[MedicationStatement, Tag("MedicationStatement")]
+    | Annotated[Observation, Tag("Observation")]
     | Annotated[Organization, Tag("Organization")]
     | Annotated[Patient, Tag("Patient")]
     | Annotated[Practitioner, Tag("Practitioner")]

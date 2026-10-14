@@ -28,7 +28,8 @@
       "value": "female",
       "confidence": "high"
     },
-    "identifiers": []
+    "identifiers": [],
+    "contacts": []
   },
   "allergies": {
     "kind": "none_known",
@@ -65,5 +66,9 @@
         "confidence": "high"
       }
     ]
-  }
+  },
+  "vital_signs": [],
+  "social_history": [],
+  "immunizations": [],
+  "pregnancy": []
 }

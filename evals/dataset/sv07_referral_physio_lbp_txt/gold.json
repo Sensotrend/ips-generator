@@ -39,7 +39,8 @@
         "issuer_text": "",
         "confidence": "high"
       }
-    ]
+    ],
+    "contacts": []
   },
   "allergies": {
     "kind": "items_found",
@@ -273,5 +274,118 @@
         "confidence": "high"
       }
     ]
-  }
+  },
+  "vital_signs": [
+    {
+      "source_quote": "Längd 168 cm",
+      "page": 1,
+      "locator": "line 16",
+      "kind": "height",
+      "value": "168",
+      "diastolic": "",
+      "unit_text": "cm",
+      "effective": "",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "vikt 82 kg",
+      "page": 1,
+      "locator": "line 16",
+      "kind": "weight",
+      "value": "82",
+      "diastolic": "",
+      "unit_text": "kg",
+      "effective": "",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "Blodtryck 126/80 mmHg, puls 70/min, BMI 29,0 (05.10.2026)",
+      "page": 1,
+      "locator": "line 21",
+      "kind": "blood_pressure",
+      "value": "126",
+      "diastolic": "80",
+      "unit_text": "mmHg",
+      "effective": "2026-10-05",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "Blodtryck 126/80 mmHg, puls 70/min, BMI 29,0 (05.10.2026)",
+      "page": 1,
+      "locator": "line 21",
+      "kind": "heart_rate",
+      "value": "70",
+      "diastolic": "",
+      "unit_text": "/min",
+      "effective": "2026-10-05",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "Blodtryck 126/80 mmHg, puls 70/min, BMI 29,0 (05.10.2026)",
+      "page": 1,
+      "locator": "line 21",
+      "kind": "body_mass_index",
+      "value": "29.0",
+      "diastolic": "",
+      "unit_text": "",
+      "effective": "2026-10-05",
+      "note": "",
+      "confidence": "high"
+    }
+  ],
+  "social_history": [
+    {
+      "source_quote": "Röker inte",
+      "page": 1,
+      "locator": "line 16",
+      "kind": "tobacco",
+      "tobacco_status": "non_smoker",
+      "use_text": "Röker inte",
+      "date": "",
+      "confidence": "high"
+    }
+  ],
+  "immunizations": [
+    {
+      "source_quote": "dTp-vaccin 2019",
+      "page": 1,
+      "locator": "line 17",
+      "vaccine_text": "dTp-vaccin",
+      "printed_code": "",
+      "printed_code_system_text": "",
+      "status": "completed",
+      "occurrence": "2019",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "influensavaccin 10/2025",
+      "page": 1,
+      "locator": "line 17",
+      "vaccine_text": "influensavaccin",
+      "printed_code": "",
+      "printed_code_system_text": "",
+      "status": "completed",
+      "occurrence": "2025-10",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "covid-19-vaccin 2024",
+      "page": 1,
+      "locator": "line 17",
+      "vaccine_text": "covid-19-vaccin",
+      "printed_code": "",
+      "printed_code_system_text": "",
+      "status": "completed",
+      "occurrence": "2024",
+      "note": "",
+      "confidence": "high"
+    }
+  ],
+  "pregnancy": []
 }

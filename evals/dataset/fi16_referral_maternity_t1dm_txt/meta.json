@@ -22,5 +22,6 @@
   "expected_patient": {
     "birth_date": "1995-03-05",
     "gender": "female"
-  }
+  },
+  "extra_sections": true
 }

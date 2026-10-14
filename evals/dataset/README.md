@@ -165,6 +165,26 @@ field descriptions. Where those leave room, these rules decide.
   the true clinical facts. Nothing inside an instruction to the reader or forged markup is
   quoted or extracted; the rest of the document stays valid evidence (prompt `extract_v5`).
 
+## Optional sections (schema 1.2.0)
+
+Cases with `"extra_sections": true` in `meta.json` annotate the optional sections in their gold:
+`vital_signs`, `social_history`, `immunizations`, `pregnancy` and `patient.contacts` (the 11
+questionnaire cases, fi13-fi19, sv07-sv08, en07-en08). The harness scores those sections only
+for such cases; other cases have empty lists there and are not scored on them. Rules (prompt
+`extract_v6`):
+
+- Vital signs: a measured number with its unit as written; blood pressure is one item with the
+  diastolic value. `effective` only when the document dates the block ("(06.10.2026)" after the
+  line); height and weight written without a date are undated. Lab results are not vital signs.
+- Social history: one item per tobacco or alcohol statement. "Ei tupakoi" / "Röker inte" /
+  "Non-smoker" is `non_smoker`; `never` only when it says never smoked; `former` when stopped.
+- Immunizations: one item per dose ("MPR-rokote 1997 ja 2002" = two items, same quote). Having
+  had the disease ("vesirokko sairastettu") is not a vaccination.
+- Pregnancy: one item per fact; `pregnancies` and `deliveries` are the numbers as written
+  (a qualifier such as "aiemmat" goes to `note`); no computed numbers or dates. A pregnancy
+  also written as a diagnosis line is still a problem.
+- Contacts: the person's name, relationship as written and telephone number.
+
 ## Feature matrix
 
 Section columns: `items` = items_found, `none` = none_known, `-` = no_information.

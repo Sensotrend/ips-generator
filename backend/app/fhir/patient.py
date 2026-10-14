@@ -38,10 +38,12 @@ from app.fhir.common import (
 from app.fhir.constants import HETU_IDENTIFIER_SYSTEM, PROFILE_PATIENT
 from app.fhir.models import (
     CodeableConcept,
+    ContactPoint,
     HumanName,
     Identifier,
     Meta,
     Patient,
+    PatientContact,
     PrimitiveElement,
     Reference,
 )
@@ -150,6 +152,19 @@ def map_patient(
         ("gender", gender_text or "not stated"),
     ]
     details += [(i.type_text or "identifier", i.value) for i in patient.identifiers]
+    contacts = [
+        PatientContact(
+            relationship=(
+                [CodeableConcept(text=c.relationship_text)] if c.relationship_text else None
+            ),
+            name=HumanName(text=c.name_text),
+            telecom=[ContactPoint(system="phone", value=c.phone)] if c.phone else None,
+        )
+        for c in patient.contacts
+    ]
+    for c in patient.contacts:
+        label = f"contact ({c.relationship_text})" if c.relationship_text else "contact"
+        details.append((label, c.name_text + (f", {c.phone}" if c.phone else "")))
     title = "; ".join(n.text for n in patient.names) or "Name unknown"
     line = NarrativeLine(title, tuple(details))
 
@@ -161,6 +176,7 @@ def map_patient(
         name=names,
         gender=gender,
         birth_date=birth_date,
+        contact=contacts or None,
         primitive_extensions=primitive_extensions or None,
     )
     return MappedResource(PATH, None, urn_uuid(resource_id), resource), notes

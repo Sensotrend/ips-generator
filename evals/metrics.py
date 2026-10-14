@@ -53,11 +53,16 @@ from app.schemas.intermediate import (
     AllergiesFound,
     AllergyItem,
     ConditionItem,
+    ImmunizationItem,
     IpsExtraction,
     ItemsFound,
     MedicationItem,
     NoKnownAllergyStatement,
+    PatientContactExtraction,
     PatientDerivations,
+    PregnancyFactItem,
+    SocialHistoryItem,
+    VitalSignItem,
 )
 from evals.matching import (
     Candidate,
@@ -73,6 +78,7 @@ __all__ = [
     "CRITICAL_STATE_ERRORS",
     "DERIVED_FIELDS",
     "EFFECTIVE_PATIENT_SECTIONS",
+    "EXTRA_SECTIONS",
     "ITEM_SECTIONS",
     "PATIENT_SECTIONS",
     "SCORED_SECTIONS",
@@ -92,6 +98,15 @@ __all__ = [
 ]
 
 ITEM_SECTIONS: Final = ("allergies", "medications", "problems")
+EXTRA_SECTIONS: Final = (
+    "vital_signs",
+    "social_history",
+    "immunizations",
+    "pregnancy",
+    "patient_contacts",
+)
+"""Optional sections (schema 1.2.0): scored only for cases whose ``meta.json`` has
+``extra_sections: true``, i.e. whose gold annotates all of them."""
 PATIENT_SECTIONS: Final = (
     "patient_names",
     "patient_identifiers",
@@ -106,6 +121,7 @@ DERIVED_FIELDS: Final = ("birth_date", "gender")
 SCORED_SECTIONS: Final = (
     *ITEM_SECTIONS,
     "allergy_statements",
+    *EXTRA_SECTIONS,
     *PATIENT_SECTIONS,
     *EFFECTIVE_PATIENT_SECTIONS,
 )
@@ -120,6 +136,11 @@ _KIND: Final[dict[str, TextKind]] = {
     "allergies": "allergy",
     "medications": "medication",
     "problems": "condition",
+    "vital_signs": "fact",
+    "social_history": "fact",
+    "immunizations": "fact",
+    "pregnancy": "fact",
+    "patient_contacts": "name",
 }
 
 
@@ -314,6 +335,14 @@ def _items(extraction: IpsExtraction | None, section: str) -> list[Any]:
     return list(value.items) if isinstance(value, ItemsFound) else []
 
 
+def _extra_items(extraction: IpsExtraction | None, section: str) -> list[Any]:
+    if extraction is None:
+        return []
+    if section == "patient_contacts":
+        return list(extraction.patient.contacts)
+    return list(getattr(extraction, section))
+
+
 def _statements(extraction: IpsExtraction | None) -> list[NoKnownAllergyStatement]:
     if extraction is None or not isinstance(extraction.allergies, AllergiesFound):
         return []
@@ -327,7 +356,23 @@ def _primary_text(item: Any) -> str:
         return item.medication_text
     if isinstance(item, ConditionItem):
         return item.condition_text
+    if isinstance(item, VitalSignItem):
+        diastolic = f" {_plain(item.diastolic)}" if item.diastolic is not None else ""
+        return f"{item.kind.value} {_plain(item.value)}{diastolic}"
+    if isinstance(item, SocialHistoryItem):
+        return f"{item.kind.value} {item.tobacco_status.value}"
+    if isinstance(item, ImmunizationItem):
+        return f"{item.vaccine_text} {item.occurrence or ''}".strip()
+    if isinstance(item, PregnancyFactItem):
+        value = item.date or (str(item.count) if item.count is not None else item.status.value)
+        return f"{item.kind.value} {value}"
+    if isinstance(item, PatientContactExtraction):
+        return item.name_text
     raise TypeError(type(item).__name__)
+
+
+def _plain(value: Any) -> str:
+    return format(value.normalize(), "f")
 
 
 def _candidates(
@@ -441,6 +486,13 @@ def _strength(a: str | None, b: str | None) -> tuple[bool, bool]:
     return _enum(norm(a), norm(b))
 
 
+def _digits(a: str | None, b: str | None) -> tuple[bool, bool]:
+    def norm(v: str | None) -> str:
+        return "".join(c for c in (v or "") if c.isdigit())
+
+    return _enum(norm(a), norm(b))
+
+
 def _present(a: Any, b: Any) -> tuple[bool, bool]:
     return _enum(bool(a), bool(b))
 
@@ -476,6 +528,33 @@ _FIELDS: Final[dict[str, dict[str, FieldCheck]]] = {
         "body_site_present": lambda p, g: _present(p.body_site_text, g.body_site_text),
     },
     "allergy_statements": {"scope": lambda p, g: _enum(p.scope, g.scope)},
+    "vital_signs": {
+        "kind": lambda p, g: _enum(p.kind, g.kind),
+        "value": lambda p, g: _enum(p.value, g.value),
+        "diastolic": lambda p, g: _enum(p.diastolic, g.diastolic),
+        "unit": lambda p, g: _strength(p.unit_text, g.unit_text),
+        "effective": lambda p, g: _date(p.effective, g.effective),
+    },
+    "social_history": {
+        "kind": lambda p, g: _enum(p.kind, g.kind),
+        "tobacco_status": lambda p, g: _enum(p.tobacco_status, g.tobacco_status),
+        "date": lambda p, g: _date(p.date, g.date),
+    },
+    "immunizations": {
+        "status": lambda p, g: _enum(p.status, g.status),
+        "occurrence": lambda p, g: _date(p.occurrence, g.occurrence),
+        "printed_code": lambda p, g: _code(p.printed_code, g.printed_code),
+    },
+    "pregnancy": {
+        "kind": lambda p, g: _enum(p.kind, g.kind),
+        "status": lambda p, g: _enum(p.status, g.status),
+        "date": lambda p, g: _date(p.date, g.date),
+        "count": lambda p, g: _enum(p.count, g.count),
+    },
+    "patient_contacts": {
+        "relationship_present": lambda p, g: _present(p.relationship_text, g.relationship_text),
+        "phone": lambda p, g: _digits(p.phone, g.phone),
+    },
 }
 
 
@@ -517,11 +596,13 @@ def score_case(
     judge: LeftoverJudge | None = None,
     derived: PatientDerivations | None = None,
     expected_patient: dict[str, str | None] | None = None,
+    score_extra: bool = False,
 ) -> CaseScore:
     """Score ``pred`` (``None`` = extraction failed) against ``gold`` for one document.
 
     ``derived`` are the D-10 derivations made from ``pred``; ``expected_patient`` the case's
-    true birth date / gender (``None``: effective-value sections stay empty)."""
+    true birth date / gender (``None``: effective-value sections stay empty); ``score_extra``
+    scores the optional sections (the case's gold annotates them), else they stay empty."""
     sections: dict[str, SectionScore] = {}
     for section in ITEM_SECTIONS:
         pred_items, gold_items = _items(pred, section), _items(gold, section)
@@ -553,6 +634,25 @@ def score_case(
         gold_q,
         _field_tallies("allergy_statements", result.matches, pred_st, gold_st),
     )
+
+    for section in EXTRA_SECTIONS:
+        if not score_extra:
+            sections[section] = SectionScore()
+            continue
+        pred_items, gold_items = _extra_items(pred, section), _extra_items(gold, section)
+        pred_texts = [_primary_text(i) for i in pred_items]
+        gold_texts = [_primary_text(i) for i in gold_items]
+        kind = _KIND[section]
+        result = match_candidates(
+            _candidates(pred_texts, pred_items, kind, index),
+            _candidates(gold_texts, gold_items, kind, index),
+        )
+        sections[section] = _section_score(
+            result,
+            pred_texts,
+            gold_texts,
+            _field_tallies(section, result.matches, pred_items, gold_items),
+        )
 
     pred_names = list(pred.patient.names) if pred else []
     pred_ids = list(pred.patient.identifiers) if pred else []
@@ -600,10 +700,10 @@ def score_case(
 
 
 def item_counts(
-    pred: IpsExtraction, gold: IpsExtraction, index: DocumentIndex
+    pred: IpsExtraction, gold: IpsExtraction, index: DocumentIndex, *, score_extra: bool = False
 ) -> dict[str, Counts]:
     """Item counts only (no judge), e.g. for the raw pre-grounding extraction."""
-    score = score_case(pred, gold, index)
+    score = score_case(pred, gold, index, score_extra=score_extra)
     return {name: s.counts for name, s in score.sections.items()}
 
 

@@ -27,7 +27,8 @@
         "issuer_text": "",
         "confidence": "high"
       }
-    ]
+    ],
+    "contacts": []
   },
   "allergies": {
     "kind": "items_found",
@@ -240,5 +241,9 @@
   },
   "problems": {
     "kind": "no_information"
-  }
+  },
+  "vital_signs": [],
+  "social_history": [],
+  "immunizations": [],
+  "pregnancy": []
 }

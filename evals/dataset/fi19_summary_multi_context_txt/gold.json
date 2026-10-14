@@ -39,6 +39,17 @@
         "issuer_text": "",
         "confidence": "high"
       }
+    ],
+    "contacts": [
+      {
+        "source_quote": "Teemu Ahonen-Testi (puoliso), puh. 040 000 0005",
+        "page": 1,
+        "locator": "line 40",
+        "name_text": "Teemu Ahonen-Testi",
+        "relationship_text": "puoliso",
+        "phone": "040 000 0005",
+        "confidence": "high"
+      }
     ]
   },
   "allergies": {
@@ -394,5 +405,220 @@
         "confidence": "high"
       }
     ]
-  }
+  },
+  "vital_signs": [
+    {
+      "source_quote": "Pituus 168 cm",
+      "page": 1,
+      "locator": "line 21",
+      "kind": "height",
+      "value": "168",
+      "diastolic": "",
+      "unit_text": "cm",
+      "effective": "",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "paino ennen raskautta 62 kg",
+      "page": 1,
+      "locator": "line 21",
+      "kind": "weight",
+      "value": "62",
+      "diastolic": "",
+      "unit_text": "kg",
+      "effective": "",
+      "note": "ennen raskautta",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "nyt 70 kg",
+      "page": 1,
+      "locator": "line 21",
+      "kind": "weight",
+      "value": "70",
+      "diastolic": "",
+      "unit_text": "kg",
+      "effective": "",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "Verenpaine 114/70 mmHg, pulssi 84/min, lämpö 36,8 °C, SpO2 98 % huoneilmassa (12.10.2026)",
+      "page": 1,
+      "locator": "line 24",
+      "kind": "blood_pressure",
+      "value": "114",
+      "diastolic": "70",
+      "unit_text": "mmHg",
+      "effective": "2026-10-12",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "Verenpaine 114/70 mmHg, pulssi 84/min, lämpö 36,8 °C, SpO2 98 % huoneilmassa (12.10.2026)",
+      "page": 1,
+      "locator": "line 24",
+      "kind": "heart_rate",
+      "value": "84",
+      "diastolic": "",
+      "unit_text": "/min",
+      "effective": "2026-10-12",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "Verenpaine 114/70 mmHg, pulssi 84/min, lämpö 36,8 °C, SpO2 98 % huoneilmassa (12.10.2026)",
+      "page": 1,
+      "locator": "line 24",
+      "kind": "body_temperature",
+      "value": "36.8",
+      "diastolic": "",
+      "unit_text": "°C",
+      "effective": "2026-10-12",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "Verenpaine 114/70 mmHg, pulssi 84/min, lämpö 36,8 °C, SpO2 98 % huoneilmassa (12.10.2026)",
+      "page": 1,
+      "locator": "line 24",
+      "kind": "oxygen_saturation",
+      "value": "98",
+      "diastolic": "",
+      "unit_text": "%",
+      "effective": "2026-10-12",
+      "note": "",
+      "confidence": "high"
+    }
+  ],
+  "social_history": [
+    {
+      "source_quote": "Ei tupakoi",
+      "page": 1,
+      "locator": "line 21",
+      "kind": "tobacco",
+      "tobacco_status": "non_smoker",
+      "use_text": "Ei tupakoi",
+      "date": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "Ei alkoholia",
+      "page": 1,
+      "locator": "line 21",
+      "kind": "alcohol",
+      "tobacco_status": "not_stated",
+      "use_text": "Ei alkoholia",
+      "date": "",
+      "confidence": "high"
+    }
+  ],
+  "immunizations": [
+    {
+      "source_quote": "MPR-rokote 1996 ja 2001",
+      "page": 1,
+      "locator": "line 28",
+      "vaccine_text": "MPR-rokote",
+      "printed_code": "",
+      "printed_code_system_text": "",
+      "status": "completed",
+      "occurrence": "1996",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "MPR-rokote 1996 ja 2001",
+      "page": 1,
+      "locator": "line 28",
+      "vaccine_text": "MPR-rokote",
+      "printed_code": "",
+      "printed_code_system_text": "",
+      "status": "completed",
+      "occurrence": "2001",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "influenssarokote 10/2026",
+      "page": 1,
+      "locator": "line 28",
+      "vaccine_text": "influenssarokote",
+      "printed_code": "",
+      "printed_code_system_text": "",
+      "status": "completed",
+      "occurrence": "2026-10",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "DTaP-rokote 2023",
+      "page": 1,
+      "locator": "line 28",
+      "vaccine_text": "DTaP-rokote",
+      "printed_code": "",
+      "printed_code_system_text": "",
+      "status": "completed",
+      "occurrence": "2023",
+      "note": "",
+      "confidence": "high"
+    }
+  ],
+  "pregnancy": [
+    {
+      "source_quote": "Raskausviikko 24+1 (12.10.2026)",
+      "page": 1,
+      "locator": "line 18",
+      "kind": "status",
+      "status": "pregnant",
+      "date": "2026-10-12",
+      "count": "",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "Viimeisten kuukautisten alkamispäivä 26.04.2026",
+      "page": 1,
+      "locator": "line 18",
+      "kind": "last_menstrual_period",
+      "status": "not_stated",
+      "date": "2026-04-26",
+      "count": "",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "lasketun ajan arvio 31.01.2027",
+      "page": 1,
+      "locator": "line 18",
+      "kind": "expected_delivery_date",
+      "status": "not_stated",
+      "date": "2027-01-31",
+      "count": "",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "Raskaus 2",
+      "page": 1,
+      "locator": "line 18",
+      "kind": "pregnancies",
+      "status": "not_stated",
+      "date": "",
+      "count": "2",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "synnytyksiä 1",
+      "page": 1,
+      "locator": "line 18",
+      "kind": "deliveries",
+      "status": "not_stated",
+      "date": "",
+      "count": "1",
+      "note": "",
+      "confidence": "high"
+    }
+  ]
 }

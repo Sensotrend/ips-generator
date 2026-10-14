@@ -33,6 +33,17 @@
         "issuer_text": "",
         "confidence": "high"
       }
+    ],
+    "contacts": [
+      {
+        "source_quote": "Mika Esimerkki-Testi (aviomies), puh. 040 000 0001",
+        "page": 1,
+        "locator": "line 15",
+        "name_text": "Mika Esimerkki-Testi",
+        "relationship_text": "aviomies",
+        "phone": "040 000 0001",
+        "confidence": "high"
+      }
     ]
   },
   "allergies": {
@@ -298,5 +309,162 @@
         "confidence": "high"
       }
     ]
-  }
+  },
+  "vital_signs": [
+    {
+      "source_quote": "Pituus 171 cm",
+      "page": 1,
+      "locator": "line 13",
+      "kind": "height",
+      "value": "171",
+      "diastolic": "",
+      "unit_text": "cm",
+      "effective": "",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "paino ennen raskautta 78 kg",
+      "page": 1,
+      "locator": "line 13",
+      "kind": "weight",
+      "value": "78",
+      "diastolic": "",
+      "unit_text": "kg",
+      "effective": "",
+      "note": "ennen raskautta",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "Verenpaine 128/82 mmHg, pulssi 82/min (08.10.2026)",
+      "page": 1,
+      "locator": "line 18",
+      "kind": "blood_pressure",
+      "value": "128",
+      "diastolic": "82",
+      "unit_text": "mmHg",
+      "effective": "2026-10-08",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "Verenpaine 128/82 mmHg, pulssi 82/min (08.10.2026)",
+      "page": 1,
+      "locator": "line 18",
+      "kind": "heart_rate",
+      "value": "82",
+      "diastolic": "",
+      "unit_text": "/min",
+      "effective": "2026-10-08",
+      "note": "",
+      "confidence": "high"
+    }
+  ],
+  "social_history": [
+    {
+      "source_quote": "Ei tupakoi",
+      "page": 1,
+      "locator": "line 13",
+      "kind": "tobacco",
+      "tobacco_status": "non_smoker",
+      "use_text": "Ei tupakoi",
+      "date": "",
+      "confidence": "high"
+    }
+  ],
+  "immunizations": [
+    {
+      "source_quote": "MPR-rokote kahdesti",
+      "page": 1,
+      "locator": "line 14",
+      "vaccine_text": "MPR-rokote",
+      "printed_code": "",
+      "printed_code_system_text": "",
+      "status": "completed",
+      "occurrence": "",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "MPR-rokote kahdesti",
+      "page": 1,
+      "locator": "line 14",
+      "vaccine_text": "MPR-rokote",
+      "printed_code": "",
+      "printed_code_system_text": "",
+      "status": "completed",
+      "occurrence": "",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "vesirokkorokote 2012",
+      "page": 1,
+      "locator": "line 14",
+      "vaccine_text": "vesirokkorokote",
+      "printed_code": "",
+      "printed_code_system_text": "",
+      "status": "completed",
+      "occurrence": "2012",
+      "note": "",
+      "confidence": "high"
+    }
+  ],
+  "pregnancy": [
+    {
+      "source_quote": "Raskaus 3",
+      "page": 1,
+      "locator": "line 12",
+      "kind": "pregnancies",
+      "status": "not_stated",
+      "date": "",
+      "count": "3",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "synnytyksiä 2",
+      "page": 1,
+      "locator": "line 12",
+      "kind": "deliveries",
+      "status": "not_stated",
+      "date": "",
+      "count": "2",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "Viimeisten kuukautisten alkamispäivä 02.09.2026",
+      "page": 1,
+      "locator": "line 12",
+      "kind": "last_menstrual_period",
+      "status": "not_stated",
+      "date": "2026-09-02",
+      "count": "",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "lasketun ajan arvio 09.06.2027",
+      "page": 1,
+      "locator": "line 12",
+      "kind": "expected_delivery_date",
+      "status": "not_stated",
+      "date": "2027-06-09",
+      "count": "",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "Raskaus todettu (rv 5+1)",
+      "page": 1,
+      "locator": "line 28",
+      "kind": "status",
+      "status": "pregnant",
+      "date": "",
+      "count": "",
+      "note": "",
+      "confidence": "high"
+    }
+  ]
 }

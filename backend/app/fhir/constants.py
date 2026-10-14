@@ -126,6 +126,10 @@ PROFILE_ORGANIZATION: Final = _profile("Organization-uv-ips")
 PROFILE_PRACTITIONER: Final = _profile("Practitioner-uv-ips")
 PROFILE_PRACTITIONER_ROLE: Final = _profile("PractitionerRole-uv-ips")
 PROFILE_IMMUNIZATION: Final = _profile("Immunization-uv-ips")
+PROFILE_PREGNANCY_STATUS: Final = _profile("Observation-pregnancy-status-uv-ips")
+PROFILE_PREGNANCY_EDD: Final = _profile("Observation-pregnancy-edd-uv-ips")
+PROFILE_PREGNANCY_OUTCOME: Final = _profile("Observation-pregnancy-outcome-uv-ips")
+PROFILE_TOBACCO_USE: Final = _profile("Observation-tobaccouse-uv-ips")
 PROFILE_PROCEDURE: Final = _profile("Procedure-uv-ips")
 
 PROFILE_BUNDLE_VERSIONED: Final = f"{PROFILE_BUNDLE}|{IPS_VERSION}"
@@ -143,6 +147,68 @@ NO_KNOWN_FOOD_ALLERGY: Final = FixedCode(SNOMED_CT, "429625007", "No known food 
 NO_KNOWN_ENVIRONMENTAL_ALLERGY: Final = FixedCode(
     SNOMED_CT, "428607008", "No known environmental allergy"
 )
+
+
+# --- Provisional hard-coded codes (PLAN.md D-14) ----------------------------------------------
+# The optional sections added with schema 1.2.0 (vital signs, social history, immunizations,
+# pregnancy) use these fixed codes instead of terminology-server lookups, for now. The LLM never
+# outputs them: it fills closed enums, and the mappers pick the code. Every code and display was
+# checked with tx.fhir.org ``CodeSystem/$lookup`` (2026-10-14; LOINC, SNOMED CT International, ATC).
+# SNOMED CT values are fixed by the HL7 IPS observation profiles / FHIR value sets for the same
+# concept. Replace the tables by lookups when the terminology step covers these sections.
+ATC: Final = "http://www.whocc.no/atc"
+UCUM: Final = "http://unitsofmeasure.org"
+OBSERVATION_CATEGORY: Final = "http://terminology.hl7.org/CodeSystem/observation-category"
+CATEGORY_VITAL_SIGNS: Final = FixedCode(OBSERVATION_CATEGORY, "vital-signs", "Vital Signs")
+CATEGORY_SOCIAL_HISTORY: Final = FixedCode(OBSERVATION_CATEGORY, "social-history", "Social History")
+
+LOINC_BODY_HEIGHT: Final = FixedCode(LOINC, "8302-2", "Body height")
+LOINC_BODY_WEIGHT: Final = FixedCode(LOINC, "29463-7", "Body weight")
+LOINC_BMI: Final = FixedCode(LOINC, "39156-5", "Body mass index (BMI) [Ratio]")
+LOINC_BLOOD_PRESSURE: Final = FixedCode(
+    LOINC, "85354-9", "Blood pressure panel with all children optional"
+)
+LOINC_SYSTOLIC: Final = FixedCode(LOINC, "8480-6", "Systolic blood pressure")
+LOINC_DIASTOLIC: Final = FixedCode(LOINC, "8462-4", "Diastolic blood pressure")
+LOINC_HEART_RATE: Final = FixedCode(LOINC, "8867-4", "Heart rate")
+LOINC_BODY_TEMPERATURE: Final = FixedCode(LOINC, "8310-5", "Body temperature")
+LOINC_OXYGEN_SATURATION: Final = FixedCode(
+    LOINC, "59408-5", "Oxygen saturation in Arterial blood by Pulse oximetry"
+)
+LOINC_OXYGEN_SATURATION_PROFILE: Final = FixedCode(
+    LOINC, "2708-6", "Oxygen saturation in Arterial blood"
+)
+"""The FHIR oxygensat profile requires this "magic" code next to the pulse-oximetry code."""
+
+LOINC_TOBACCO_SMOKING_STATUS: Final = FixedCode(LOINC, "72166-2", "Tobacco smoking status")
+LOINC_ALCOHOL_USE: Final = FixedCode(LOINC, "11331-6", "History of Alcohol use")
+SMOKING_STATUS_VALUES: Final = {
+    "never": FixedCode(SNOMED_CT, "266919005", "Never smoked tobacco"),
+    "former": FixedCode(SNOMED_CT, "8517006", "Ex-smoker"),
+    "current": FixedCode(SNOMED_CT, "77176002", "Smoker"),
+    "non_smoker": FixedCode(SNOMED_CT, "8392000", "Non-smoker"),
+}
+
+LOINC_PREGNANCY_STATUS: Final = FixedCode(LOINC, "82810-3", "Pregnancy status")
+LOINC_EXPECTED_DELIVERY_DATE: Final = FixedCode(LOINC, "11778-8", "Delivery date Estimated")
+LOINC_BIRTHS_TOTAL: Final = FixedCode(LOINC, "11640-0", "[#] Births total")
+"""IPS pregnancy outcome summary (value set ``pregnancies-summary-uv-ips``): the number of
+deliveries. The IPS has no place for the number of pregnancies or the last menstrual period
+(``pregnancy`` items of those kinds stay in the section narrative)."""
+PREGNANCY_STATUS_VALUES: Final = {
+    "pregnant": FixedCode(SNOMED_CT, "77386006", "Pregnant"),
+    "not_pregnant": FixedCode(SNOMED_CT, "60001007", "Not pregnant"),
+}
+
+# Vaccines (ATC, as the IPS vaccine value set allows): matched on the vaccine text by
+# ``app.fhir.immunizations``; anything else stays text only.
+VACCINE_MMR: Final = FixedCode(
+    ATC, "J07BD52", "measles, combinations with mumps and rubella, live attenuated"
+)
+VACCINE_VARICELLA: Final = FixedCode(ATC, "J07BK01", "varicella, live attenuated")
+VACCINE_INFLUENZA: Final = FixedCode(ATC, "J07BB", "Influenza vaccines")
+VACCINE_COVID19_MRNA: Final = FixedCode(ATC, "J07BN01", "covid-19, RNA-based vaccine")
+VACCINE_TETANUS: Final = FixedCode(ATC, "J07AM01", "tetanus toxoid")
 
 
 # --- FHIR R4 core status codes (required bindings) -----------------------------------------

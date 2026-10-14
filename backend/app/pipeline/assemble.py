@@ -1,7 +1,8 @@
 """Step 6: deterministic assembly of the IPS document Bundle from ``EnrichedIps``.
 
 Pure function, no I/O, no LLM, no logging (D1). The section mappers live in ``app.fhir``
-(``patient``, ``allergies``, ``medications``, ``problems``, ``device``, ``composition``); this
+(``patient``, ``allergies``, ``medications``, ``problems``, ``immunizations``, ``pregnancy``,
+``social_history``, ``vital_signs``, ``device``, ``composition``); this
 module wires them together:
 
 * Bundle ``type`` ``document``, ``identifier`` (``urn:ietf:rfc:3986`` + ``urn:uuid``),
@@ -45,10 +46,14 @@ from app.fhir.common import (
 from app.fhir.composition import build_composition
 from app.fhir.constants import PROFILE_BUNDLE, URI_IDENTIFIER_SYSTEM
 from app.fhir.device import PipelineInfo, map_pipeline_device
+from app.fhir.immunizations import map_immunizations
 from app.fhir.medications import map_medication_section
 from app.fhir.models import Bundle, BundleEntry, Identifier, Meta
 from app.fhir.patient import map_patient
+from app.fhir.pregnancy import map_pregnancy
 from app.fhir.problems import map_problem_sections
+from app.fhir.social_history import map_social_history
+from app.fhir.vital_signs import map_vital_signs
 from app.pipeline.ground import ReviewFlag, ReviewReason
 from app.schemas.intermediate import EnrichedIps
 
@@ -73,7 +78,8 @@ class AssemblyEntry(BaseModel):
     full_url: str
     resource_type: str
     section: str | None
-    """``allergies``, ``medications``, ``problems``, ``past_illness``; ``None`` for Patient."""
+    """``allergies``, ``medications``, ``problems``, ``past_illness``, ``immunizations``,
+    ``pregnancy``, ``social_history``, ``vital_signs``; ``None`` for Patient."""
     review_flags: tuple[ReviewReason, ...] = ()
 
 
@@ -145,13 +151,22 @@ def assemble(
     )
     device = map_pipeline_device(pipeline, schema_version=enriched.schema_version)
     ctx = MappingContext(patient=reference(patient.full_url), new_id=ids)
-    # IPS order: Problem List, Allergies, Medication Summary, then History of Past Illness.
+    # IPS order: the required sections (Problem List, Allergies, Medication Summary), then the
+    # optional ones as they have content: Immunizations, History of Past Illness, History of
+    # Pregnancy, Social History, Vital Signs (D-14: none of these is emitted when empty).
     problem_sections = map_problem_sections(enriched.problems, ctx)
+    optional = (
+        map_immunizations(enriched.immunizations, ctx),
+        *problem_sections[1:],
+        map_pregnancy(enriched.pregnancy, ctx),
+        map_social_history(enriched.social_history, ctx),
+        map_vital_signs(enriched.vital_signs, ctx),
+    )
     sections: list[SectionResult] = [
         problem_sections[0],
         map_allergy_section(enriched.allergies, ctx),
         map_medication_section(enriched.medications, ctx),
-        *problem_sections[1:],
+        *(r for r in optional if r is not None),
     ]
     for result in sections:
         notes += result.notes

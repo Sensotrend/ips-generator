@@ -27,12 +27,16 @@ problem; the pregnancy history and dates in the narrative are not.
 
 from __future__ import annotations
 
+from dataclasses import replace
+from typing import Any
+
 from case import Case
 from gold import (
     allergies_found,
     allergy,
     birth,
     cond,
+    contact,
     daily,
     dosage,
     extraction,
@@ -45,7 +49,11 @@ from gold import (
     nka_statement,
     no_known_allergies,
     patient,
+    pregnancy_fact,
     reaction,
+    social,
+    vaccine,
+    vital,
 )
 
 PHYSIO = "physio_questionnaire_candidate"
@@ -1932,5 +1940,356 @@ FI19 = Case(
         ),
     ),
 )
+
+
+# ---------------------------------------------------------------------------------------------
+# Optional sections (schema 1.2.0): vital signs, social history, immunizations, pregnancy,
+# patient contacts. Annotated for every case of this module (``extra_sections=True``).
+# A vital sign takes the date that stands after its block of measurements ("(06.10.2026)");
+# Height and weight with no date of their own are undated. "Ei tupakoi" / "Non-smoker" is
+# ``non_smoker`` (not ``never``). One immunization per dose ("MPR-rokote 1997 ja 2002" = two).
+# Pregnancy counts are the numbers as written; a qualifier such as "aiemmat" goes to the note.
+# ---------------------------------------------------------------------------------------------
+
+
+def _annotate(
+    case: Case,
+    *,
+    vital_signs: list[dict[str, Any]],
+    social_history: list[dict[str, Any]],
+    immunizations: list[dict[str, Any]] | None = None,
+    pregnancy: list[dict[str, Any]] | None = None,
+    contacts: list[dict[str, Any]] | None = None,
+) -> Case:
+    gold = dict(case.gold)
+    gold["vital_signs"] = vital_signs
+    gold["social_history"] = social_history
+    gold["immunizations"] = immunizations or []
+    gold["pregnancy"] = pregnancy or []
+    gold["patient"] = {**case.gold["patient"], "contacts": contacts or []}
+    return replace(case, gold=gold, extra_sections=True)
+
+
+def _bp_line(quote: str, date: str, *, systolic: str, diastolic: str, pulse: str, unit: str = "/min") -> list[dict[str, Any]]:
+    """Blood pressure and pulse that share one dated line."""
+    return [
+        vital(quote, "blood_pressure", systolic, diastolic=diastolic, unit="mmHg", effective=date),
+        vital(quote, "heart_rate", pulse, unit=unit, effective=date),
+    ]
+
+
+_FI13_BLOCK = "Verenpaine 138/84 mmHg, pulssi 72/min, painoindeksi 29,7 (06.10.2026)"
+FI13 = _annotate(
+    FI13,
+    vital_signs=[
+        vital("Pituus 178 cm", "height", "178", unit="cm"),
+        vital("paino 94 kg", "weight", "94", unit="kg"),
+        *_bp_line(_FI13_BLOCK, "2026-10-06", systolic="138", diastolic="84", pulse="72"),
+        vital(_FI13_BLOCK, "body_mass_index", "29.7", effective="2026-10-06"),
+    ],
+    social_history=[
+        social("Ei tupakoi", "tobacco", "Ei tupakoi", tobacco_status="non_smoker"),
+        social("Alkoholia käyttää vähän", "alcohol", "Alkoholia käyttää vähän"),
+    ],
+)
+
+_FI14_BLOCK = "Verenpaine 122/78 mmHg, pulssi 68/min (02.10.2026)"
+FI14 = _annotate(
+    FI14,
+    vital_signs=[
+        vital("Pituus 164 cm", "height", "164", unit="cm"),
+        vital("paino 71 kg", "weight", "71", unit="kg"),
+        *_bp_line(_FI14_BLOCK, "2026-10-02", systolic="122", diastolic="78", pulse="68"),
+    ],
+    social_history=[
+        social(
+            "Tupakoi noin 5 savuketta päivässä",
+            "tobacco",
+            "Tupakoi noin 5 savuketta päivässä",
+            tobacco_status="current",
+        ),
+    ],
+)
+
+_FI15_BLOCK = "Verenpaine 146/88 mmHg, pulssi 78/min, SpO2 93 % huoneilmassa (05.10.2026)"
+FI15 = _annotate(
+    FI15,
+    vital_signs=[
+        vital("Pituus 175 cm", "height", "175", unit="cm"),
+        vital("paino 88,5 kg", "weight", "88.5", unit="kg"),
+        *_bp_line(_FI15_BLOCK, "2026-10-05", systolic="146", diastolic="88", pulse="78"),
+        vital(_FI15_BLOCK, "oxygen_saturation", "93", unit="%", effective="2026-10-05"),
+    ],
+    social_history=[
+        social(
+            "Tupakointi lopetettu 2019, aiemmin noin 30 askivuotta",
+            "tobacco",
+            "Tupakointi lopetettu 2019, aiemmin noin 30 askivuotta",
+            tobacco_status="former",
+            date="2019",
+        ),
+        social("Alkoholia ei käytä", "alcohol", "Alkoholia ei käytä"),
+    ],
+)
+
+_SV07_BLOCK = "Blodtryck 126/80 mmHg, puls 70/min, BMI 29,0 (05.10.2026)"
+SV07 = _annotate(
+    SV07,
+    vital_signs=[
+        vital("Längd 168 cm", "height", "168", unit="cm"),
+        vital("vikt 82 kg", "weight", "82", unit="kg"),
+        *_bp_line(_SV07_BLOCK, "2026-10-05", systolic="126", diastolic="80", pulse="70"),
+        vital(_SV07_BLOCK, "body_mass_index", "29.0", effective="2026-10-05"),
+    ],
+    social_history=[social("Röker inte", "tobacco", "Röker inte", tobacco_status="non_smoker")],
+    immunizations=[
+        vaccine("dTp-vaccin 2019", "dTp-vaccin", occurrence="2019"),
+        vaccine("influensavaccin 10/2025", "influensavaccin", occurrence="2025-10"),
+        vaccine("covid-19-vaccin 2024", "covid-19-vaccin", occurrence="2024"),
+    ],
+)
+
+_EN07_BLOCK = "BP 124/78 mmHg, pulse 66/min, BMI 23.6 (07.10.2026)"
+EN07 = _annotate(
+    EN07,
+    vital_signs=[
+        vital("Height 183 cm", "height", "183", unit="cm"),
+        vital("weight 79 kg", "weight", "79", unit="kg"),
+        *_bp_line(_EN07_BLOCK, "2026-10-07", systolic="124", diastolic="78", pulse="66"),
+        vital(_EN07_BLOCK, "body_mass_index", "23.6", effective="2026-10-07"),
+    ],
+    social_history=[social("Non-smoker", "tobacco", "Non-smoker", tobacco_status="non_smoker")],
+    immunizations=[
+        vaccine("tetanus booster 2021", "tetanus booster", occurrence="2021"),
+        vaccine("influenza vaccine 10/2025", "influenza vaccine", occurrence="2025-10"),
+    ],
+)
+
+_FI16_BLOCK = "Verenpaine 118/72 mmHg, pulssi 76/min (08.10.2026)"
+FI16 = _annotate(
+    FI16,
+    vital_signs=[
+        vital("Pituus 166 cm", "height", "166", unit="cm"),
+        vital("paino ennen raskautta 64 kg", "weight", "64", unit="kg", note="ennen raskautta"),
+        *_bp_line(_FI16_BLOCK, "2026-10-08", systolic="118", diastolic="72", pulse="76"),
+    ],
+    social_history=[],
+    immunizations=[
+        vaccine("MPR-rokote 1997 ja 2002", "MPR-rokote", occurrence="1997"),
+        vaccine("MPR-rokote 1997 ja 2002", "MPR-rokote", occurrence="2002"),
+    ],
+    pregnancy=[
+        pregnancy_fact(
+            "Positiivinen raskaustesti 29.09.2026", "status", status="pregnant", date="2026-09-29"
+        ),
+        pregnancy_fact(
+            "Viimeisten kuukautisten alkamispäivä 11.08.2026",
+            "last_menstrual_period",
+            date="2026-08-11",
+        ),
+        pregnancy_fact("lasketun ajan arvio 18.05.2027", "expected_delivery_date", date="2027-05-18"),
+        pregnancy_fact("Aiemmat raskaudet: 1", "pregnancies", count="1", note="aiemmat"),
+        pregnancy_fact("synnytyksiä 1", "deliveries", count="1"),
+    ],
+    contacts=[
+        contact(
+            "Jukka Heinonen-Testi (puoliso), puh. 040 000 0000",
+            "Jukka Heinonen-Testi",
+            relationship="puoliso",
+            phone="040 000 0000",
+        )
+    ],
+)
+
+_FI17_BLOCK = "Verenpaine 128/82 mmHg, pulssi 82/min (08.10.2026)"
+FI17 = _annotate(
+    FI17,
+    vital_signs=[
+        vital("Pituus 171 cm", "height", "171", unit="cm"),
+        vital("paino ennen raskautta 78 kg", "weight", "78", unit="kg", note="ennen raskautta"),
+        *_bp_line(_FI17_BLOCK, "2026-10-08", systolic="128", diastolic="82", pulse="82"),
+    ],
+    social_history=[social("Ei tupakoi", "tobacco", "Ei tupakoi", tobacco_status="non_smoker")],
+    immunizations=[
+        vaccine("MPR-rokote kahdesti", "MPR-rokote"),
+        vaccine("MPR-rokote kahdesti", "MPR-rokote"),
+        vaccine("vesirokkorokote 2012", "vesirokkorokote", occurrence="2012"),
+    ],
+    pregnancy=[
+        pregnancy_fact("Raskaus 3", "pregnancies", count="3"),
+        pregnancy_fact("synnytyksiä 2", "deliveries", count="2"),
+        pregnancy_fact(
+            "Viimeisten kuukautisten alkamispäivä 02.09.2026",
+            "last_menstrual_period",
+            date="2026-09-02",
+        ),
+        pregnancy_fact("lasketun ajan arvio 09.06.2027", "expected_delivery_date", date="2027-06-09"),
+        pregnancy_fact("Raskaus todettu (rv 5+1)", "status", status="pregnant"),
+    ],
+    contacts=[
+        contact(
+            "Mika Esimerkki-Testi (aviomies), puh. 040 000 0001",
+            "Mika Esimerkki-Testi",
+            relationship="aviomies",
+            phone="040 000 0001",
+        )
+    ],
+)
+
+_FI18_BLOCK = "Verenpaine 110/68 mmHg, pulssi 80/min (08.10.2026)"
+FI18 = _annotate(
+    FI18,
+    vital_signs=[
+        vital("Pituus 169 cm", "height", "169", unit="cm"),
+        vital("paino ennen raskautta 59 kg", "weight", "59", unit="kg", note="ennen raskautta"),
+        *_bp_line(_FI18_BLOCK, "2026-10-08", systolic="110", diastolic="68", pulse="80"),
+    ],
+    social_history=[
+        social("Ei tupakoi", "tobacco", "Ei tupakoi", tobacco_status="non_smoker"),
+        social("Ei alkoholia", "alcohol", "Ei alkoholia"),
+    ],
+    immunizations=[
+        vaccine("MPR-rokote 2000 ja 2004", "MPR-rokote", occurrence="2000"),
+        vaccine("MPR-rokote 2000 ja 2004", "MPR-rokote", occurrence="2004"),
+        vaccine("influenssarokote 10/2026", "influenssarokote", occurrence="2026-10"),
+        vaccine("koronarokote 2023", "koronarokote", occurrence="2023"),
+    ],
+    pregnancy=[
+        pregnancy_fact(
+            "Viimeisten kuukautisten alkamispäivä 19.07.2026",
+            "last_menstrual_period",
+            date="2026-07-19",
+        ),
+        pregnancy_fact("laskettu aika 25.04.2027", "expected_delivery_date", date="2027-04-25"),
+        pregnancy_fact("Raskaus todettu (rv 11+4)", "status", status="pregnant"),
+    ],
+    contacts=[
+        contact(
+            "Aaro Nieminen-Testi (puoliso), puh. 040 000 0002",
+            "Aaro Nieminen-Testi",
+            relationship="puoliso",
+            phone="040 000 0002",
+        )
+    ],
+)
+
+_SV08_BLOCK = "Blodtryck 112/70 mmHg, puls 74/min (08.10.2026)"
+SV08 = _annotate(
+    SV08,
+    vital_signs=[
+        vital("Längd 172 cm", "height", "172", unit="cm"),
+        vital("vikt före graviditeten 66 kg", "weight", "66", unit="kg", note="före graviditeten"),
+        *_bp_line(_SV08_BLOCK, "2026-10-08", systolic="112", diastolic="70", pulse="74"),
+    ],
+    social_history=[social("Röker inte", "tobacco", "Röker inte", tobacco_status="non_smoker")],
+    immunizations=[
+        vaccine("MPR-vaccin 1995 och 2000", "MPR-vaccin", occurrence="1995"),
+        vaccine("MPR-vaccin 1995 och 2000", "MPR-vaccin", occurrence="2000"),
+    ],
+    pregnancy=[
+        pregnancy_fact(
+            "Positivt graviditetstest 03.10.2026", "status", status="pregnant", date="2026-10-03"
+        ),
+        pregnancy_fact(
+            "Första dagen av sista menstruationen 06.08.2026",
+            "last_menstrual_period",
+            date="2026-08-06",
+        ),
+        pregnancy_fact("beräknad förlossning 13.05.2027", "expected_delivery_date", date="2027-05-13"),
+        pregnancy_fact("Tidigare graviditeter: 0", "pregnancies", count="0", note="tidigare"),
+    ],
+    contacts=[
+        contact(
+            "Erik Exempel-Test (make), tel 040 000 0003",
+            "Erik Exempel-Test",
+            relationship="make",
+            phone="040 000 0003",
+        )
+    ],
+)
+
+_EN08_BLOCK = "BP 112/68 mmHg, pulse 70/min (08.10.2026)"
+EN08 = _annotate(
+    EN08,
+    vital_signs=[
+        vital("Height 169 cm", "height", "169", unit="cm"),
+        vital("pre-pregnancy weight 66 kg", "weight", "66", unit="kg", note="pre-pregnancy"),
+        *_bp_line(_EN08_BLOCK, "2026-10-08", systolic="112", diastolic="68", pulse="70"),
+    ],
+    social_history=[
+        social("Non-smoker", "tobacco", "Non-smoker", tobacco_status="non_smoker"),
+        social("no alcohol", "alcohol", "no alcohol"),
+    ],
+    immunizations=[
+        vaccine("MMR x 2", "MMR"),
+        vaccine("MMR x 2", "MMR"),
+        vaccine("influenza vaccine 10/2026", "influenza vaccine", occurrence="2026-10"),
+        vaccine("COVID-19 booster 2025", "COVID-19 booster", occurrence="2025"),
+    ],
+    pregnancy=[
+        pregnancy_fact(
+            "Last menstrual period 25.08.2026", "last_menstrual_period", date="2026-08-25"
+        ),
+        pregnancy_fact("estimated due date 01.06.2027", "expected_delivery_date", date="2027-06-01"),
+        pregnancy_fact("Second pregnancy", "pregnancies", count="2"),
+        pregnancy_fact("one previous delivery", "deliveries", count="1", note="previous"),
+        pregnancy_fact("Pregnancy confirmed (6+2 weeks)", "status", status="pregnant"),
+    ],
+    contacts=[
+        contact(
+            "Oliver Example-Test (partner), phone 040 000 0004",
+            "Oliver Example-Test",
+            relationship="partner",
+            phone="040 000 0004",
+        )
+    ],
+)
+
+_FI19_BLOCK = (
+    "Verenpaine 114/70 mmHg, pulssi 84/min, lämpö 36,8 °C, SpO2 98 % huoneilmassa (12.10.2026)"
+)
+FI19 = _annotate(
+    FI19,
+    vital_signs=[
+        vital("Pituus 168 cm", "height", "168", unit="cm"),
+        vital("paino ennen raskautta 62 kg", "weight", "62", unit="kg", note="ennen raskautta"),
+        vital("nyt 70 kg", "weight", "70", unit="kg"),
+        *_bp_line(_FI19_BLOCK, "2026-10-12", systolic="114", diastolic="70", pulse="84"),
+        vital(_FI19_BLOCK, "body_temperature", "36.8", unit="°C", effective="2026-10-12"),
+        vital(_FI19_BLOCK, "oxygen_saturation", "98", unit="%", effective="2026-10-12"),
+    ],
+    social_history=[
+        social("Ei tupakoi", "tobacco", "Ei tupakoi", tobacco_status="non_smoker"),
+        social("Ei alkoholia", "alcohol", "Ei alkoholia"),
+    ],
+    immunizations=[
+        vaccine("MPR-rokote 1996 ja 2001", "MPR-rokote", occurrence="1996"),
+        vaccine("MPR-rokote 1996 ja 2001", "MPR-rokote", occurrence="2001"),
+        vaccine("influenssarokote 10/2026", "influenssarokote", occurrence="2026-10"),
+        vaccine("DTaP-rokote 2023", "DTaP-rokote", occurrence="2023"),
+    ],
+    pregnancy=[
+        pregnancy_fact(
+            "Raskausviikko 24+1 (12.10.2026)", "status", status="pregnant", date="2026-10-12"
+        ),
+        pregnancy_fact(
+            "Viimeisten kuukautisten alkamispäivä 26.04.2026",
+            "last_menstrual_period",
+            date="2026-04-26",
+        ),
+        pregnancy_fact("lasketun ajan arvio 31.01.2027", "expected_delivery_date", date="2027-01-31"),
+        pregnancy_fact("Raskaus 2", "pregnancies", count="2"),
+        pregnancy_fact("synnytyksiä 1", "deliveries", count="1"),
+    ],
+    contacts=[
+        contact(
+            "Teemu Ahonen-Testi (puoliso), puh. 040 000 0005",
+            "Teemu Ahonen-Testi",
+            relationship="puoliso",
+            phone="040 000 0005",
+        )
+    ],
+)
+
 
 CASES = [FI13, FI14, FI15, SV07, EN07, FI16, FI17, FI18, SV08, EN08, FI19]

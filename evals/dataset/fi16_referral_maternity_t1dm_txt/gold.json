@@ -39,6 +39,17 @@
         "issuer_text": "",
         "confidence": "high"
       }
+    ],
+    "contacts": [
+      {
+        "source_quote": "Jukka Heinonen-Testi (puoliso), puh. 040 000 0000",
+        "page": 1,
+        "locator": "line 17",
+        "name_text": "Jukka Heinonen-Testi",
+        "relationship_text": "puoliso",
+        "phone": "040 000 0000",
+        "confidence": "high"
+      }
     ]
   },
   "allergies": {
@@ -342,5 +353,139 @@
         "confidence": "high"
       }
     ]
-  }
+  },
+  "vital_signs": [
+    {
+      "source_quote": "Pituus 166 cm",
+      "page": 1,
+      "locator": "line 15",
+      "kind": "height",
+      "value": "166",
+      "diastolic": "",
+      "unit_text": "cm",
+      "effective": "",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "paino ennen raskautta 64 kg",
+      "page": 1,
+      "locator": "line 15",
+      "kind": "weight",
+      "value": "64",
+      "diastolic": "",
+      "unit_text": "kg",
+      "effective": "",
+      "note": "ennen raskautta",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "Verenpaine 118/72 mmHg, pulssi 76/min (08.10.2026)",
+      "page": 1,
+      "locator": "line 20",
+      "kind": "blood_pressure",
+      "value": "118",
+      "diastolic": "72",
+      "unit_text": "mmHg",
+      "effective": "2026-10-08",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "Verenpaine 118/72 mmHg, pulssi 76/min (08.10.2026)",
+      "page": 1,
+      "locator": "line 20",
+      "kind": "heart_rate",
+      "value": "76",
+      "diastolic": "",
+      "unit_text": "/min",
+      "effective": "2026-10-08",
+      "note": "",
+      "confidence": "high"
+    }
+  ],
+  "social_history": [],
+  "immunizations": [
+    {
+      "source_quote": "MPR-rokote 1997 ja 2002",
+      "page": 1,
+      "locator": "line 16",
+      "vaccine_text": "MPR-rokote",
+      "printed_code": "",
+      "printed_code_system_text": "",
+      "status": "completed",
+      "occurrence": "1997",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "MPR-rokote 1997 ja 2002",
+      "page": 1,
+      "locator": "line 16",
+      "vaccine_text": "MPR-rokote",
+      "printed_code": "",
+      "printed_code_system_text": "",
+      "status": "completed",
+      "occurrence": "2002",
+      "note": "",
+      "confidence": "high"
+    }
+  ],
+  "pregnancy": [
+    {
+      "source_quote": "Positiivinen raskaustesti 29.09.2026",
+      "page": 1,
+      "locator": "line 13",
+      "kind": "status",
+      "status": "pregnant",
+      "date": "2026-09-29",
+      "count": "",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "Viimeisten kuukautisten alkamispäivä 11.08.2026",
+      "page": 1,
+      "locator": "line 13",
+      "kind": "last_menstrual_period",
+      "status": "not_stated",
+      "date": "2026-08-11",
+      "count": "",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "lasketun ajan arvio 18.05.2027",
+      "page": 1,
+      "locator": "line 13",
+      "kind": "expected_delivery_date",
+      "status": "not_stated",
+      "date": "2027-05-18",
+      "count": "",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "Aiemmat raskaudet: 1",
+      "page": 1,
+      "locator": "line 14",
+      "kind": "pregnancies",
+      "status": "not_stated",
+      "date": "",
+      "count": "1",
+      "note": "aiemmat",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "synnytyksiä 1",
+      "page": 1,
+      "locator": "line 14",
+      "kind": "deliveries",
+      "status": "not_stated",
+      "date": "",
+      "count": "1",
+      "note": "",
+      "confidence": "high"
+    }
+  ]
 }

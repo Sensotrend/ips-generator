@@ -33,7 +33,8 @@
         "issuer_text": "",
         "confidence": "high"
       }
-    ]
+    ],
+    "contacts": []
   },
   "allergies": {
     "kind": "none_known",
@@ -272,5 +273,91 @@
         "confidence": "high"
       }
     ]
-  }
+  },
+  "vital_signs": [
+    {
+      "source_quote": "Pituus 175 cm",
+      "page": 1,
+      "locator": "line 15",
+      "kind": "height",
+      "value": "175",
+      "diastolic": "",
+      "unit_text": "cm",
+      "effective": "",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "paino 88,5 kg",
+      "page": 1,
+      "locator": "line 15",
+      "kind": "weight",
+      "value": "88.5",
+      "diastolic": "",
+      "unit_text": "kg",
+      "effective": "",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "Verenpaine 146/88 mmHg, pulssi 78/min, SpO2 93 % huoneilmassa (05.10.2026)",
+      "page": 1,
+      "locator": "line 18",
+      "kind": "blood_pressure",
+      "value": "146",
+      "diastolic": "88",
+      "unit_text": "mmHg",
+      "effective": "2026-10-05",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "Verenpaine 146/88 mmHg, pulssi 78/min, SpO2 93 % huoneilmassa (05.10.2026)",
+      "page": 1,
+      "locator": "line 18",
+      "kind": "heart_rate",
+      "value": "78",
+      "diastolic": "",
+      "unit_text": "/min",
+      "effective": "2026-10-05",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "Verenpaine 146/88 mmHg, pulssi 78/min, SpO2 93 % huoneilmassa (05.10.2026)",
+      "page": 1,
+      "locator": "line 18",
+      "kind": "oxygen_saturation",
+      "value": "93",
+      "diastolic": "",
+      "unit_text": "%",
+      "effective": "2026-10-05",
+      "note": "",
+      "confidence": "high"
+    }
+  ],
+  "social_history": [
+    {
+      "source_quote": "Tupakointi lopetettu 2019, aiemmin noin 30 askivuotta",
+      "page": 1,
+      "locator": "line 15",
+      "kind": "tobacco",
+      "tobacco_status": "former",
+      "use_text": "Tupakointi lopetettu 2019, aiemmin noin 30 askivuotta",
+      "date": "2019",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "Alkoholia ei käytä",
+      "page": 1,
+      "locator": "line 15",
+      "kind": "alcohol",
+      "tobacco_status": "not_stated",
+      "use_text": "Alkoholia ei käytä",
+      "date": "",
+      "confidence": "high"
+    }
+  ],
+  "immunizations": [],
+  "pregnancy": []
 }

@@ -39,7 +39,8 @@
         "issuer_text": "",
         "confidence": "high"
       }
-    ]
+    ],
+    "contacts": []
   },
   "allergies": {
     "kind": "none_known",
@@ -226,5 +227,106 @@
         "confidence": "high"
       }
     ]
-  }
+  },
+  "vital_signs": [
+    {
+      "source_quote": "Height 183 cm",
+      "page": 1,
+      "locator": "line 16",
+      "kind": "height",
+      "value": "183",
+      "diastolic": "",
+      "unit_text": "cm",
+      "effective": "",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "weight 79 kg",
+      "page": 1,
+      "locator": "line 16",
+      "kind": "weight",
+      "value": "79",
+      "diastolic": "",
+      "unit_text": "kg",
+      "effective": "",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "BP 124/78 mmHg, pulse 66/min, BMI 23.6 (07.10.2026)",
+      "page": 1,
+      "locator": "line 20",
+      "kind": "blood_pressure",
+      "value": "124",
+      "diastolic": "78",
+      "unit_text": "mmHg",
+      "effective": "2026-10-07",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "BP 124/78 mmHg, pulse 66/min, BMI 23.6 (07.10.2026)",
+      "page": 1,
+      "locator": "line 20",
+      "kind": "heart_rate",
+      "value": "66",
+      "diastolic": "",
+      "unit_text": "/min",
+      "effective": "2026-10-07",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "BP 124/78 mmHg, pulse 66/min, BMI 23.6 (07.10.2026)",
+      "page": 1,
+      "locator": "line 20",
+      "kind": "body_mass_index",
+      "value": "23.6",
+      "diastolic": "",
+      "unit_text": "",
+      "effective": "2026-10-07",
+      "note": "",
+      "confidence": "high"
+    }
+  ],
+  "social_history": [
+    {
+      "source_quote": "Non-smoker",
+      "page": 1,
+      "locator": "line 16",
+      "kind": "tobacco",
+      "tobacco_status": "non_smoker",
+      "use_text": "Non-smoker",
+      "date": "",
+      "confidence": "high"
+    }
+  ],
+  "immunizations": [
+    {
+      "source_quote": "tetanus booster 2021",
+      "page": 1,
+      "locator": "line 17",
+      "vaccine_text": "tetanus booster",
+      "printed_code": "",
+      "printed_code_system_text": "",
+      "status": "completed",
+      "occurrence": "2021",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "influenza vaccine 10/2025",
+      "page": 1,
+      "locator": "line 17",
+      "vaccine_text": "influenza vaccine",
+      "printed_code": "",
+      "printed_code_system_text": "",
+      "status": "completed",
+      "occurrence": "2025-10",
+      "note": "",
+      "confidence": "high"
+    }
+  ],
+  "pregnancy": []
 }

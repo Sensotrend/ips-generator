@@ -22,7 +22,8 @@
       "confidence": "high"
     },
     "gender": null,
-    "identifiers": []
+    "identifiers": [],
+    "contacts": []
   },
   "allergies": {
     "kind": "items_found",
@@ -225,5 +226,9 @@
         "confidence": "high"
       }
     ]
-  }
+  },
+  "vital_signs": [],
+  "social_history": [],
+  "immunizations": [],
+  "pregnancy": []
 }

@@ -39,7 +39,8 @@
         "issuer_text": "",
         "confidence": "high"
       }
-    ]
+    ],
+    "contacts": []
   },
   "allergies": {
     "kind": "items_found",
@@ -249,5 +250,69 @@
         "confidence": "high"
       }
     ]
-  }
+  },
+  "vital_signs": [
+    {
+      "source_quote": "Pituus 164 cm",
+      "page": 1,
+      "locator": "line 16",
+      "kind": "height",
+      "value": "164",
+      "diastolic": "",
+      "unit_text": "cm",
+      "effective": "",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "paino 71 kg",
+      "page": 1,
+      "locator": "line 16",
+      "kind": "weight",
+      "value": "71",
+      "diastolic": "",
+      "unit_text": "kg",
+      "effective": "",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "Verenpaine 122/78 mmHg, pulssi 68/min (02.10.2026)",
+      "page": 1,
+      "locator": "line 19",
+      "kind": "blood_pressure",
+      "value": "122",
+      "diastolic": "78",
+      "unit_text": "mmHg",
+      "effective": "2026-10-02",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "Verenpaine 122/78 mmHg, pulssi 68/min (02.10.2026)",
+      "page": 1,
+      "locator": "line 19",
+      "kind": "heart_rate",
+      "value": "68",
+      "diastolic": "",
+      "unit_text": "/min",
+      "effective": "2026-10-02",
+      "note": "",
+      "confidence": "high"
+    }
+  ],
+  "social_history": [
+    {
+      "source_quote": "Tupakoi noin 5 savuketta päivässä",
+      "page": 1,
+      "locator": "line 16",
+      "kind": "tobacco",
+      "tobacco_status": "current",
+      "use_text": "Tupakoi noin 5 savuketta päivässä",
+      "date": "",
+      "confidence": "high"
+    }
+  ],
+  "immunizations": [],
+  "pregnancy": []
 }

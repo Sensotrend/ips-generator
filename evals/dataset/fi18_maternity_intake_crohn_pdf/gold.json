@@ -39,6 +39,17 @@
         "issuer_text": "",
         "confidence": "high"
       }
+    ],
+    "contacts": [
+      {
+        "source_quote": "Aaro Nieminen-Testi (puoliso), puh. 040 000 0002",
+        "page": 1,
+        "locator": "",
+        "name_text": "Aaro Nieminen-Testi",
+        "relationship_text": "puoliso",
+        "phone": "040 000 0002",
+        "confidence": "high"
+      }
     ]
   },
   "allergies": {
@@ -300,5 +311,162 @@
         "confidence": "high"
       }
     ]
-  }
+  },
+  "vital_signs": [
+    {
+      "source_quote": "Pituus 169 cm",
+      "page": 1,
+      "locator": "",
+      "kind": "height",
+      "value": "169",
+      "diastolic": "",
+      "unit_text": "cm",
+      "effective": "",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "paino ennen raskautta 59 kg",
+      "page": 1,
+      "locator": "",
+      "kind": "weight",
+      "value": "59",
+      "diastolic": "",
+      "unit_text": "kg",
+      "effective": "",
+      "note": "ennen raskautta",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "Verenpaine 110/68 mmHg, pulssi 80/min (08.10.2026)",
+      "page": 1,
+      "locator": "",
+      "kind": "blood_pressure",
+      "value": "110",
+      "diastolic": "68",
+      "unit_text": "mmHg",
+      "effective": "2026-10-08",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "Verenpaine 110/68 mmHg, pulssi 80/min (08.10.2026)",
+      "page": 1,
+      "locator": "",
+      "kind": "heart_rate",
+      "value": "80",
+      "diastolic": "",
+      "unit_text": "/min",
+      "effective": "2026-10-08",
+      "note": "",
+      "confidence": "high"
+    }
+  ],
+  "social_history": [
+    {
+      "source_quote": "Ei tupakoi",
+      "page": 1,
+      "locator": "",
+      "kind": "tobacco",
+      "tobacco_status": "non_smoker",
+      "use_text": "Ei tupakoi",
+      "date": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "Ei alkoholia",
+      "page": 1,
+      "locator": "",
+      "kind": "alcohol",
+      "tobacco_status": "not_stated",
+      "use_text": "Ei alkoholia",
+      "date": "",
+      "confidence": "high"
+    }
+  ],
+  "immunizations": [
+    {
+      "source_quote": "MPR-rokote 2000 ja 2004",
+      "page": 1,
+      "locator": "",
+      "vaccine_text": "MPR-rokote",
+      "printed_code": "",
+      "printed_code_system_text": "",
+      "status": "completed",
+      "occurrence": "2000",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "MPR-rokote 2000 ja 2004",
+      "page": 1,
+      "locator": "",
+      "vaccine_text": "MPR-rokote",
+      "printed_code": "",
+      "printed_code_system_text": "",
+      "status": "completed",
+      "occurrence": "2004",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "influenssarokote 10/2026",
+      "page": 1,
+      "locator": "",
+      "vaccine_text": "influenssarokote",
+      "printed_code": "",
+      "printed_code_system_text": "",
+      "status": "completed",
+      "occurrence": "2026-10",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "koronarokote 2023",
+      "page": 1,
+      "locator": "",
+      "vaccine_text": "koronarokote",
+      "printed_code": "",
+      "printed_code_system_text": "",
+      "status": "completed",
+      "occurrence": "2023",
+      "note": "",
+      "confidence": "high"
+    }
+  ],
+  "pregnancy": [
+    {
+      "source_quote": "Viimeisten kuukautisten alkamispäivä 19.07.2026",
+      "page": 1,
+      "locator": "",
+      "kind": "last_menstrual_period",
+      "status": "not_stated",
+      "date": "2026-07-19",
+      "count": "",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "laskettu aika 25.04.2027",
+      "page": 1,
+      "locator": "",
+      "kind": "expected_delivery_date",
+      "status": "not_stated",
+      "date": "2027-04-25",
+      "count": "",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "Raskaus todettu (rv 11+4)",
+      "page": 1,
+      "locator": "",
+      "kind": "status",
+      "status": "pregnant",
+      "date": "",
+      "count": "",
+      "note": "",
+      "confidence": "high"
+    }
+  ]
 }

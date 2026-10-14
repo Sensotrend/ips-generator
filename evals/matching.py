@@ -71,7 +71,7 @@ _LOCATE_FALLBACK_COVERAGE: Final = 0.6
 _LOCATE_FALLBACK_MIN_CHARS: Final = 8
 
 MatchMethod = Literal["text", "quote", "judge"]
-TextKind = Literal["allergy", "medication", "condition", "name", "identifier", "statement"]
+TextKind = Literal["allergy", "medication", "condition", "name", "identifier", "statement", "fact"]
 
 # ATC (C07AB07) and ICD-10 (E11.9, I10, J18.9) codes, matched before case-folding.
 _PRINTED_CODE_RE: Final = re.compile(r"\b(?:[A-Z]\d{2}[A-Z]{2}\d{2}|[A-Z]\d{2}(?:\.\d{1,4})?)\b")

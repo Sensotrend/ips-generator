@@ -29,7 +29,9 @@ from app.fhir.models import (
     Condition,
     Device,
     Extension,
+    Immunization,
     MedicationStatement,
+    Observation,
     Patient,
     PrimitiveElement,
     Reference,
@@ -42,7 +44,14 @@ IdFactory = Callable[[str], UUID]
 ``"patient"`` or ``"medications.none_known"``. Must be deterministic for reproducible Bundles."""
 
 MappedFhirResource = (
-    AllergyIntolerance | Composition | Condition | Device | MedicationStatement | Patient
+    AllergyIntolerance
+    | Composition
+    | Condition
+    | Device
+    | Immunization
+    | MedicationStatement
+    | Observation
+    | Patient
 )
 """Resource types the mappers produce."""
 
@@ -68,6 +77,12 @@ class NoteCode(StrEnum):
     MEDICATION_PERIOD_INVERTED = "medication_period_inverted"  # per-1
     DOSAGE_TIMING_INCOMPLETE = "dosage_timing_incomplete"
     SECTION_UNVERIFIED = "section_unverified"  # grounding turned the section to no_information
+    VITAL_SIGN_UNIT_UNRECOGNISED = "vital_sign_unit_unrecognised"  # D-14: kept as text, no Quantity
+    VITAL_SIGN_DIASTOLIC_MISSING = "vital_sign_diastolic_missing"
+    VITAL_SIGN_NOT_DATED = "vital_sign_not_dated"  # no day-precise date: narrative only
+    PREGNANCY_FACT_INCOMPLETE = "pregnancy_fact_incomplete"  # no status/date/count: not emitted
+    NOT_REPRESENTABLE_IN_IPS = "not_representable_in_ips"  # kept in the section narrative only
+    IMMUNIZATION_NOT_CODED = "immunization_not_coded"  # vaccine not in the D-14 table: text only
 
 
 @dataclass(frozen=True, slots=True)
@@ -109,7 +124,7 @@ class SectionResult:
     section: CompositionSection
     key: str
     """Section key used in mapping records: ``allergies``, ``medications``, ``problems``,
-    ``past_illness``."""
+    ``past_illness``, ``immunizations``, ``pregnancy``, ``social_history``, ``vital_signs``."""
     entries: list[MappedResource] = field(default_factory=list)
     notes: list[MappingNote] = field(default_factory=list)
 
@@ -181,6 +196,21 @@ def empty_section(
         text=text_narrative(narrative),
         empty_reason=fixed_concept(EMPTY_REASON_UNAVAILABLE, text=NO_INFORMATION_TEXT),
     )
+
+
+def section_with_extras(
+    code: FixedCode,
+    title: str,
+    entries: Sequence[MappedResource],
+    extra_lines: Sequence[NarrativeLine],
+) -> CompositionSection:
+    """A section of ``entries`` plus facts kept as narrative only (``extra_lines``). With no
+    entries the section has just that narrative and ``emptyReason`` ``unavailable`` (ips-comp-1)."""
+    if entries:
+        return entries_section(code, title, entries, extra_lines=extra_lines)
+    section = empty_section(code, title)
+    section.text = list_narrative(list(extra_lines))
+    return section
 
 
 def printed_code_note(path: str, printed_code: str | None) -> list[MappingNote]:

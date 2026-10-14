@@ -54,6 +54,7 @@ from app.schemas.intermediate import (
 
 __all__ = [
     "SECTION_KEYS",
+    "UNREVIEWED_SECTIONS",
     "DraftState",
     "Effective",
     "FactRef",
@@ -72,6 +73,8 @@ __all__ = [
 # IPS section order: Problem List, Allergies and Intolerances, Medication Summary (History of
 # Past Illness, a Problem List split-off, follows them).
 SECTION_KEYS: Final = ("problems", "allergies", "medications")
+UNREVIEWED_SECTIONS: Final = ("vital_signs", "social_history", "immunizations", "pregnancy")
+"""Optional sections (schema 1.2.0) that exist in ``EnrichedIps`` but are not reviewable yet."""
 _PROVENANCE_FIELDS: Final = ("source_quote", "page", "locator")
 _PATH_PART: Final = re.compile(r"^([a-z_]+)(?:\[(\d+)\])?$")
 
@@ -390,6 +393,12 @@ def effective_enriched(state: DraftState) -> Effective:
     """
     data = state.current.model_dump(mode="json")
     path_map: dict[str, str] = {}
+    # The review screens do not show the optional sections of schema 1.2.0 (vital signs, social
+    # history, immunizations, pregnancy, patient contacts) yet. Nothing the reviewer cannot see
+    # may reach an approved Bundle, so they are left out here; ``assemble`` itself maps them.
+    for name in UNREVIEWED_SECTIONS:
+        data[name] = []
+    data["patient"]["contacts"] = []
 
     patient = data["patient"]
     for name in ("names", "identifiers"):

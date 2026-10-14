@@ -19,3 +19,7 @@ class Case:
     document: Any
     """txt/csv: str; json: str or JSON value; pdf: list of pages, each a list of lines."""
     gold: dict[str, Any]
+    extra_sections: bool = False
+    """The gold annotates the optional sections (vital signs, social history, immunizations,
+    pregnancy, patient contacts); ``meta.json`` gets ``extra_sections: true`` and the harness
+    scores those sections for the case."""

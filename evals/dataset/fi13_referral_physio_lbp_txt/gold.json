@@ -39,7 +39,8 @@
         "issuer_text": "",
         "confidence": "high"
       }
-    ]
+    ],
+    "contacts": []
   },
   "allergies": {
     "kind": "none_known",
@@ -300,5 +301,91 @@
         "confidence": "high"
       }
     ]
-  }
+  },
+  "vital_signs": [
+    {
+      "source_quote": "Pituus 178 cm",
+      "page": 1,
+      "locator": "line 16",
+      "kind": "height",
+      "value": "178",
+      "diastolic": "",
+      "unit_text": "cm",
+      "effective": "",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "paino 94 kg",
+      "page": 1,
+      "locator": "line 16",
+      "kind": "weight",
+      "value": "94",
+      "diastolic": "",
+      "unit_text": "kg",
+      "effective": "",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "Verenpaine 138/84 mmHg, pulssi 72/min, painoindeksi 29,7 (06.10.2026)",
+      "page": 1,
+      "locator": "line 19",
+      "kind": "blood_pressure",
+      "value": "138",
+      "diastolic": "84",
+      "unit_text": "mmHg",
+      "effective": "2026-10-06",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "Verenpaine 138/84 mmHg, pulssi 72/min, painoindeksi 29,7 (06.10.2026)",
+      "page": 1,
+      "locator": "line 19",
+      "kind": "heart_rate",
+      "value": "72",
+      "diastolic": "",
+      "unit_text": "/min",
+      "effective": "2026-10-06",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "Verenpaine 138/84 mmHg, pulssi 72/min, painoindeksi 29,7 (06.10.2026)",
+      "page": 1,
+      "locator": "line 19",
+      "kind": "body_mass_index",
+      "value": "29.7",
+      "diastolic": "",
+      "unit_text": "",
+      "effective": "2026-10-06",
+      "note": "",
+      "confidence": "high"
+    }
+  ],
+  "social_history": [
+    {
+      "source_quote": "Ei tupakoi",
+      "page": 1,
+      "locator": "line 16",
+      "kind": "tobacco",
+      "tobacco_status": "non_smoker",
+      "use_text": "Ei tupakoi",
+      "date": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "Alkoholia käyttää vähän",
+      "page": 1,
+      "locator": "line 16",
+      "kind": "alcohol",
+      "tobacco_status": "not_stated",
+      "use_text": "Alkoholia käyttää vähän",
+      "date": "",
+      "confidence": "high"
+    }
+  ],
+  "immunizations": [],
+  "pregnancy": []
 }

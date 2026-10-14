@@ -39,6 +39,17 @@
         "issuer_text": "",
         "confidence": "high"
       }
+    ],
+    "contacts": [
+      {
+        "source_quote": "Oliver Example-Test (partner), phone 040 000 0004",
+        "page": 1,
+        "locator": "line 16",
+        "name_text": "Oliver Example-Test",
+        "relationship_text": "partner",
+        "phone": "040 000 0004",
+        "confidence": "high"
+      }
     ]
   },
   "allergies": {
@@ -292,5 +303,184 @@
         "confidence": "high"
       }
     ]
-  }
+  },
+  "vital_signs": [
+    {
+      "source_quote": "Height 169 cm",
+      "page": 1,
+      "locator": "line 14",
+      "kind": "height",
+      "value": "169",
+      "diastolic": "",
+      "unit_text": "cm",
+      "effective": "",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "pre-pregnancy weight 66 kg",
+      "page": 1,
+      "locator": "line 14",
+      "kind": "weight",
+      "value": "66",
+      "diastolic": "",
+      "unit_text": "kg",
+      "effective": "",
+      "note": "pre-pregnancy",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "BP 112/68 mmHg, pulse 70/min (08.10.2026)",
+      "page": 1,
+      "locator": "line 19",
+      "kind": "blood_pressure",
+      "value": "112",
+      "diastolic": "68",
+      "unit_text": "mmHg",
+      "effective": "2026-10-08",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "BP 112/68 mmHg, pulse 70/min (08.10.2026)",
+      "page": 1,
+      "locator": "line 19",
+      "kind": "heart_rate",
+      "value": "70",
+      "diastolic": "",
+      "unit_text": "/min",
+      "effective": "2026-10-08",
+      "note": "",
+      "confidence": "high"
+    }
+  ],
+  "social_history": [
+    {
+      "source_quote": "Non-smoker",
+      "page": 1,
+      "locator": "line 14",
+      "kind": "tobacco",
+      "tobacco_status": "non_smoker",
+      "use_text": "Non-smoker",
+      "date": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "no alcohol",
+      "page": 1,
+      "locator": "line 14",
+      "kind": "alcohol",
+      "tobacco_status": "not_stated",
+      "use_text": "no alcohol",
+      "date": "",
+      "confidence": "high"
+    }
+  ],
+  "immunizations": [
+    {
+      "source_quote": "MMR x 2",
+      "page": 1,
+      "locator": "line 15",
+      "vaccine_text": "MMR",
+      "printed_code": "",
+      "printed_code_system_text": "",
+      "status": "completed",
+      "occurrence": "",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "MMR x 2",
+      "page": 1,
+      "locator": "line 15",
+      "vaccine_text": "MMR",
+      "printed_code": "",
+      "printed_code_system_text": "",
+      "status": "completed",
+      "occurrence": "",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "influenza vaccine 10/2026",
+      "page": 1,
+      "locator": "line 15",
+      "vaccine_text": "influenza vaccine",
+      "printed_code": "",
+      "printed_code_system_text": "",
+      "status": "completed",
+      "occurrence": "2026-10",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "COVID-19 booster 2025",
+      "page": 1,
+      "locator": "line 15",
+      "vaccine_text": "COVID-19 booster",
+      "printed_code": "",
+      "printed_code_system_text": "",
+      "status": "completed",
+      "occurrence": "2025",
+      "note": "",
+      "confidence": "high"
+    }
+  ],
+  "pregnancy": [
+    {
+      "source_quote": "Last menstrual period 25.08.2026",
+      "page": 1,
+      "locator": "line 13",
+      "kind": "last_menstrual_period",
+      "status": "not_stated",
+      "date": "2026-08-25",
+      "count": "",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "estimated due date 01.06.2027",
+      "page": 1,
+      "locator": "line 13",
+      "kind": "expected_delivery_date",
+      "status": "not_stated",
+      "date": "2027-06-01",
+      "count": "",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "Second pregnancy",
+      "page": 1,
+      "locator": "line 13",
+      "kind": "pregnancies",
+      "status": "not_stated",
+      "date": "",
+      "count": "2",
+      "note": "",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "one previous delivery",
+      "page": 1,
+      "locator": "line 13",
+      "kind": "deliveries",
+      "status": "not_stated",
+      "date": "",
+      "count": "1",
+      "note": "previous",
+      "confidence": "high"
+    },
+    {
+      "source_quote": "Pregnancy confirmed (6+2 weeks)",
+      "page": 1,
+      "locator": "line 26",
+      "kind": "status",
+      "status": "pregnant",
+      "date": "",
+      "count": "",
+      "note": "",
+      "confidence": "high"
+    }
+  ]
 }

@@ -63,15 +63,22 @@ def test_modelled_resources_are_parsed_strictly(path: Path) -> None:
 
 
 def test_unmodelled_resources_fall_back_to_generic() -> None:
+    procedure = {
+        "resourceType": "Procedure",
+        "id": "p1",
+        "status": "completed",
+        "code": {"text": "Appendectomy"},
+        "subject": {"reference": "urn:uuid:1"},
+    }
     bundle = Bundle.model_validate(
-        _load(FIXTURES / "ips-examples/Bundle-IPS-examples-Bundle-01.json")
+        {"resourceType": "Bundle", "type": "document", "entry": [{"resource": procedure}]}
     )
     assert bundle.entry
-    generic = {
-        e.resource.resource_type for e in bundle.entry if isinstance(e.resource, GenericResource)
-    }
-    assert "Observation" in generic
-    assert not generic & MODELLED_RESOURCES.keys()
+    resource = bundle.entry[0].resource
+    assert isinstance(resource, GenericResource)
+    assert resource.resource_type == "Procedure"
+    assert "Procedure" not in MODELLED_RESOURCES
+    assert resource.to_fhir() == procedure
 
 
 def test_primitive_extension_round_trip() -> None:

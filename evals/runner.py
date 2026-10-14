@@ -328,7 +328,9 @@ def evaluate_case(
             update={
                 "status": "extraction_failed",
                 "error": meta.error or "NoExtraction",
-                "score": score_case(None, gold, index, expected_patient=expected),
+                "score": score_case(
+                    None, gold, index, expected_patient=expected, score_extra=case.extra_sections
+                ),
             }
         )
 
@@ -344,6 +346,7 @@ def evaluate_case(
         judge=judge,
         derived=derivation.derived,
         expected_patient=expected,
+        score_extra=case.extra_sections,
     )
     flags: dict[str, int] = {}
     for flag in all_flags:
@@ -351,7 +354,7 @@ def evaluate_case(
 
     updates: dict[str, Any] = {
         "score": score,
-        "raw_counts": item_counts(raw, gold, index),
+        "raw_counts": item_counts(raw, gold, index, score_extra=case.extra_sections),
         "grounding": {status.value: n for status, n in report.counts.items()},
         "dropped": len(grounded.dropped),
         "review_flags": flags,

@@ -71,6 +71,17 @@ optional properties at 24 and union-typed properties at 16 per request). Hence:
 * no ``minimum``/``maxLength``-style keywords; numeric/format rules are validated in Python. Enum
   values are matched case-insensitively because structured outputs do not guarantee their casing.
 
+Extra sections (schema 1.2.0, PLAN.md D-14)
+-------------------------------------------
+Optional IPS sections are plain lists on ``IpsExtraction``: ``vital_signs``, ``social_history``,
+``immunizations`` and ``pregnancy`` (and ``patient.contacts``). An empty list means "nothing
+stated": optional sections have no "none known" form (the IPS omits an optional section without
+content), so they need no tagged union. The items carry the same provenance fields as every other
+fact, and closed enums or numbers instead of codes: the mappers in ``app.fhir`` turn them into
+the provisional hard-coded codes of D-14. In Python the lists default to ``[]`` (documents and
+gold files written for schema 1.1.x stay valid), but the JSON schema sent to the model lists every
+property as required.
+
 Adding a section (Phase 2): define an ``...Item`` model with the provenance fields and a
 ``codable_paths`` ClassVar, a ``...Section`` alias built like ``MedicationSection`` (tagged
 ``ItemsFound[Item] | NoneKnown | NoInformation`` with ``_SECTION_KIND``), a field on
@@ -98,7 +109,7 @@ from pydantic import (
     model_validator,
 )
 
-SCHEMA_VERSION = "1.1.1"
+SCHEMA_VERSION = "1.2.0"
 """Bump when the LLM-facing schema changes (together with the extraction prompt version)."""
 
 # --------------------------------------------------------------------------------------------
@@ -200,6 +211,11 @@ OptionalDecimal = Annotated[
     BeforeValidator(_parse_decimal),
     BeforeValidator(_empty_to_none),  # runs first (validators apply right-to-left)
     _json_string(r"^(\d+([.,]\d+)?)?$"),
+]
+RequiredDecimal = Annotated[
+    Decimal,
+    BeforeValidator(_parse_decimal),
+    _json_string(r"^\d+([.,]\d+)?$"),
 ]
 OptionalInt = Annotated[
     int | None,
@@ -334,6 +350,48 @@ class AllergyScope(_ClosedSet):
     ENVIRONMENT = "environment"
 
 
+class VitalSignKind(_ClosedSet):
+    HEIGHT = "height"
+    WEIGHT = "weight"
+    BODY_MASS_INDEX = "body_mass_index"
+    BLOOD_PRESSURE = "blood_pressure"
+    HEART_RATE = "heart_rate"
+    BODY_TEMPERATURE = "body_temperature"
+    OXYGEN_SATURATION = "oxygen_saturation"
+
+
+class SocialHistoryKind(_ClosedSet):
+    TOBACCO = "tobacco"
+    ALCOHOL = "alcohol"
+
+
+class TobaccoStatus(_ClosedSet):
+    NEVER = "never"
+    FORMER = "former"
+    CURRENT = "current"
+    NON_SMOKER = "non_smoker"
+    NOT_STATED = "not_stated"
+
+
+class ImmunizationStatus(_ClosedSet):
+    COMPLETED = "completed"
+    NOT_DONE = "not_done"
+
+
+class PregnancyFactKind(_ClosedSet):
+    STATUS = "status"
+    EXPECTED_DELIVERY_DATE = "expected_delivery_date"
+    LAST_MENSTRUAL_PERIOD = "last_menstrual_period"
+    PREGNANCIES = "pregnancies"
+    DELIVERIES = "deliveries"
+
+
+class PregnancyStatus(_ClosedSet):
+    PREGNANT = "pregnant"
+    NOT_PREGNANT = "not_pregnant"
+    NOT_STATED = "not_stated"
+
+
 # --------------------------------------------------------------------------------------------
 # Provenance field definitions (shared so every fact describes them identically)
 # --------------------------------------------------------------------------------------------
@@ -462,6 +520,25 @@ class Gender(BaseModel):
     confidence: Confidence = _confidence()
 
 
+class PatientContactExtraction(BaseModel):
+    """A contact person of the patient (next of kin, partner, guardian, emergency contact)."""
+
+    model_config = _LLM_CONFIG
+
+    source_quote: NonEmptyText = _source_quote()
+    page: PageNumber = _page()
+    locator: OptionalText = _locator()
+    name_text: NonEmptyText = Field(
+        description="Name of the contact person as written, without the relationship."
+    )
+    relationship_text: OptionalText = Field(
+        description='Relationship to the patient as written (e.g. "puoliso", "partner"); "" if '
+        "not stated."
+    )
+    phone: OptionalText = Field(description='Telephone number as written; "" if not stated.')
+    confidence: Confidence = _confidence()
+
+
 class PatientExtraction(BaseModel):
     """The subject of the document. Extract only what is written; do not derive values."""
 
@@ -471,6 +548,11 @@ class PatientExtraction(BaseModel):
     birth_date: BirthDate | None = Field(description="null if no birth date is stated.")
     gender: Gender | None = Field(description="null if gender is not stated.")
     identifiers: list[PatientIdentifier] = Field(description="Patient identifiers; [] if none.")
+    contacts: list[PatientContactExtraction] = Field(
+        default_factory=list,
+        description="Contact persons of the patient (next of kin, partner, emergency contact); "
+        "[] if none.",
+    )
 
 
 # --------------------------------------------------------------------------------------------
@@ -634,6 +716,119 @@ class ConditionItem(BaseModel):
 
 
 # --------------------------------------------------------------------------------------------
+# LLM extraction layer: items of the optional sections (schema 1.2.0, PLAN.md D-14)
+# --------------------------------------------------------------------------------------------
+
+
+class VitalSignItem(BaseModel):
+    """One measured vital sign of the patient (height, weight, blood pressure, ...)."""
+
+    model_config = _LLM_CONFIG
+    codable_paths: ClassVar[frozenset[str]] = frozenset()
+
+    source_quote: NonEmptyText = _source_quote()
+    page: PageNumber = _page()
+    locator: OptionalText = _locator()
+    kind: VitalSignKind = Field(description="Which measurement this is.")
+    value: RequiredDecimal = Field(
+        description="The measured number as a plain number (e.g. 178, 94, 36.8); for blood "
+        "pressure the systolic value."
+    )
+    diastolic: OptionalDecimal = Field(
+        description='Diastolic value, only for blood_pressure; "" otherwise.'
+    )
+    unit_text: OptionalText = Field(
+        description='Unit as written (e.g. "cm", "kg", "mmHg", "/min", "°C", "%"); "" if none.'
+    )
+    effective: PartialDate = Field(
+        description='Date of the measurement if stated for it (YYYY, YYYY-MM or YYYY-MM-DD); "" '
+        "otherwise. Not the document date."
+    )
+    note: OptionalText = _note()
+    confidence: Confidence = _confidence()
+
+
+class SocialHistoryItem(BaseModel):
+    """One social-history fact: tobacco or alcohol use."""
+
+    model_config = _LLM_CONFIG
+    codable_paths: ClassVar[frozenset[str]] = frozenset()
+
+    source_quote: NonEmptyText = _source_quote()
+    page: PageNumber = _page()
+    locator: OptionalText = _locator()
+    kind: SocialHistoryKind = Field(description="tobacco or alcohol.")
+    tobacco_status: TobaccoStatus = Field(
+        description="For kind tobacco, only as the document says: never (never smoked), former "
+        '(stopped), current (smokes), non_smoker (a plain "does not smoke" / "non-smoker" '
+        "that does not say never or former); not_stated for alcohol or when unclear."
+    )
+    use_text: NonEmptyText = Field(
+        description='What the document says about the use, as written (e.g. "Ei tupakoi", '
+        '"noin 5 savuketta päivässä", "alkoholia vähän").'
+    )
+    date: PartialDate = Field(
+        description='A date the document gives for it, e.g. when smoking stopped; "" otherwise.'
+    )
+    confidence: Confidence = _confidence()
+
+
+class ImmunizationItem(BaseModel):
+    """One vaccination the patient has received (or is stated not to have received)."""
+
+    model_config = _LLM_CONFIG
+    codable_paths: ClassVar[frozenset[str]] = frozenset({"vaccine_text"})
+
+    source_quote: NonEmptyText = _source_quote()
+    page: PageNumber = _page()
+    locator: OptionalText = _locator()
+    vaccine_text: NonEmptyText = Field(
+        description='The vaccine or disease vaccinated against as written (e.g. "MPR-rokote", '
+        '"influenssarokote"), without dates or a printed code. Having had the disease itself '
+        "is not a vaccination."
+    )
+    printed_code: OptionalText = _printed_code()
+    printed_code_system_text: OptionalText = _printed_code_system_text()
+    status: ImmunizationStatus = Field(
+        description="completed for a vaccination listed as given or with a date; not_done only "
+        "if the document says it was not given."
+    )
+    occurrence: PartialDate = Field(
+        description='Date of the vaccination (YYYY, YYYY-MM or YYYY-MM-DD) if stated; "" otherwise.'
+    )
+    note: OptionalText = _note()
+    confidence: Confidence = _confidence()
+
+
+class PregnancyFactItem(BaseModel):
+    """One fact about the patient's pregnancy or pregnancy history."""
+
+    model_config = _LLM_CONFIG
+    codable_paths: ClassVar[frozenset[str]] = frozenset()
+
+    source_quote: NonEmptyText = _source_quote()
+    page: PageNumber = _page()
+    locator: OptionalText = _locator()
+    kind: PregnancyFactKind = Field(
+        description="status = pregnant now or not; expected_delivery_date; last_menstrual_period "
+        "(start date); pregnancies = number of pregnancies so far incl. the current one if "
+        "stated that way; deliveries = number of deliveries (parity)."
+    )
+    status: PregnancyStatus = Field(
+        description="For kind status: pregnant / not_pregnant; not_stated for the other kinds."
+    )
+    date: PartialDate = Field(
+        description="For expected_delivery_date and last_menstrual_period: the date. For status: "
+        'the date the status is stated for, if any. "" otherwise.'
+    )
+    count: OptionalInt = Field(
+        description='For pregnancies and deliveries: the number; "" otherwise.'
+    )
+    note: OptionalText = _note()
+    confidence: Confidence = _confidence()
+
+
+# --------------------------------------------------------------------------------------------
 # Section variants (D7)
 # --------------------------------------------------------------------------------------------
 
@@ -760,6 +955,25 @@ class IpsExtraction(BaseModel):
         "symptoms no diagnosis explains. Exclude family history, other people's conditions, "
         "procedures, findings without a written diagnosis and medication indications."
     )
+    vital_signs: list[VitalSignItem] = Field(
+        default_factory=list,
+        description="Measured vital signs: height, weight, BMI, blood pressure, pulse, "
+        "temperature, oxygen saturation. [] if none. Not lab results.",
+    )
+    social_history: list[SocialHistoryItem] = Field(
+        default_factory=list,
+        description="Tobacco and alcohol use of the patient. [] if none is stated.",
+    )
+    immunizations: list[ImmunizationItem] = Field(
+        default_factory=list,
+        description="Vaccinations. [] if none is stated. A disease the patient has had is not a "
+        "vaccination.",
+    )
+    pregnancy: list[PregnancyFactItem] = Field(
+        default_factory=list,
+        description="Current pregnancy status, expected delivery date, last menstrual period, "
+        "number of pregnancies and deliveries. [] if none is stated.",
+    )
 
 
 def extraction_json_schema() -> dict[str, Any]:
@@ -772,7 +986,9 @@ def extraction_json_schema() -> dict[str, Any]:
     descriptions next to ``$ref`` and moves ``pattern`` into the description, while the API
     grammar supports ``pattern``. Validate responses with ``IpsExtraction.model_validate_json``.
     """
-    schema: dict[str, Any] = _strip_titles(_any_of_unions(IpsExtraction.model_json_schema()))
+    schema: dict[str, Any] = _require_all(
+        _strip_titles(_any_of_unions(IpsExtraction.model_json_schema()))
+    )
     defs: dict[str, Any] = schema.pop("$defs", {})
     enum_defs = {name: d for name, d in defs.items() if d.get("type") != "object"}
     schema = _inline_refs(schema, enum_defs)
@@ -787,6 +1003,20 @@ def extraction_json_schema() -> dict[str, Any]:
 def extraction_output_format() -> dict[str, Any]:
     """Value for the Messages API ``output_config.format`` parameter."""
     return {"type": "json_schema", "schema": extraction_json_schema()}
+
+
+def _require_all(node: Any) -> Any:
+    """Every property of every object is required and has no ``default`` in the schema sent to the
+    model (structured outputs); fields with a Python default (the optional sections) are still
+    optional when validating."""
+    if isinstance(node, dict):
+        out = {k: _require_all(v) for k, v in node.items() if k != "default"}
+        if isinstance(out.get("properties"), dict):
+            out["required"] = list(out["properties"])
+        return out
+    if isinstance(node, list):
+        return [_require_all(v) for v in node]
+    return node
 
 
 def _strip_titles(node: Any) -> Any:
@@ -1061,6 +1291,10 @@ class EnrichedIps(BaseModel):
     allergies: EnrichedAllergySection
     medications: EnrichedMedicationSection
     problems: EnrichedProblemSection
+    vital_signs: list[Enriched[VitalSignItem]] = Field(default_factory=list)
+    social_history: list[Enriched[SocialHistoryItem]] = Field(default_factory=list)
+    immunizations: list[Enriched[ImmunizationItem]] = Field(default_factory=list)
+    pregnancy: list[Enriched[PregnancyFactItem]] = Field(default_factory=list)
 
     @classmethod
     def from_extraction(
@@ -1075,6 +1309,10 @@ class EnrichedIps(BaseModel):
                 "allergies": _wrap_items(extraction.allergies),
                 "medications": _wrap_items(extraction.medications),
                 "problems": _wrap_items(extraction.problems),
+                "vital_signs": [{"extracted": i} for i in extraction.vital_signs],
+                "social_history": [{"extracted": i} for i in extraction.social_history],
+                "immunizations": [{"extracted": i} for i in extraction.immunizations],
+                "pregnancy": [{"extracted": i} for i in extraction.pregnancy],
             }
         )
 

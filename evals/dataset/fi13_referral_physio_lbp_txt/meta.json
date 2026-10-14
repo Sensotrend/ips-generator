@@ -23,5 +23,6 @@
   "expected_patient": {
     "birth_date": "1968-02-12",
     "gender": "male"
-  }
+  },
+  "extra_sections": true
 }

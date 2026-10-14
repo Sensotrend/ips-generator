@@ -208,6 +208,15 @@ def check_item_order(case: Case, doc: IngestedDocument) -> None:
             ]
             if positions != sorted(positions):
                 raise AssertionError(f"{case.case_id}: {section}.{key} not in document order")
+    lists = {
+        name: case.gold.get(name, []) for name in ("vital_signs", "social_history", "immunizations")
+    }
+    lists["pregnancy"] = case.gold.get("pregnancy", [])
+    lists["patient.contacts"] = case.gold["patient"].get("contacts", [])
+    for name, facts in lists.items():
+        positions = [_position(doc, fact["source_quote"], fact.get("_nth")) for fact in facts]
+        if positions != sorted(positions):
+            raise AssertionError(f"{case.case_id}: {name} not in document order")
 
 
 def resolve(node: Any, doc: IngestedDocument, case_id: str) -> Any:
@@ -307,6 +316,7 @@ def build_case(case: Case) -> None:
             "features": list(case.features),
             "notes": case.notes,
             "expected_patient": expected_patient(case, gold),
+            **({"extra_sections": True} if case.extra_sections else {}),
         },
     )
 

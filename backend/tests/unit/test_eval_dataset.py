@@ -141,7 +141,8 @@ def _condition_items(gold: IpsExtraction) -> list[ConditionItem]:
 @pytest.mark.parametrize("case_id", CASE_IDS)
 def test_meta_is_well_formed(case_id: str) -> None:
     meta = _meta(case_id)
-    assert set(meta) == META_KEYS
+    assert set(meta) - {"extra_sections"} == META_KEYS
+    assert meta.get("extra_sections", True) is True
     assert meta["case_id"] == case_id
     assert meta["language"] in LANGUAGES
     assert meta["format"] in MEDIA_TYPES
@@ -318,3 +319,23 @@ def test_readme_lists_every_case() -> None:
     readme = (DATASET / "README.md").read_text("utf-8")
     missing = [c for c in CASE_IDS if f"`{c}`" not in readme]
     assert not missing
+
+
+def test_extra_sections_cases_annotate_the_optional_sections() -> None:
+    """``extra_sections: true`` cases carry facts for the optional sections, the others none."""
+    annotated = [c for c in CASE_IDS if _meta(c).get("extra_sections")]
+    assert len(annotated) >= 11
+    for case_id in CASE_IDS:
+        gold = _gold(case_id)
+        facts = [
+            *gold.vital_signs,
+            *gold.social_history,
+            *gold.immunizations,
+            *gold.pregnancy,
+            *gold.patient.contacts,
+        ]
+        if case_id in annotated:
+            assert gold.vital_signs, case_id
+            assert gold.social_history or case_id.startswith(("fi16", "fi14")), case_id
+        else:
+            assert not facts, case_id
