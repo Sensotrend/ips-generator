@@ -68,6 +68,7 @@ button {
   background: var(--card);
   color: var(--fg);
   border-radius: var(--radius);
+  margin-right: 1em;
   padding: 0.4rem 1rem;
   min-height: 2.5rem;
   cursor: pointer;
@@ -701,7 +702,7 @@ mark {
 }
 
 .role-patient main {
-  max-width: 40rem;
+  max-width: 60rem;
   font-size: 1.1rem;
 }
 
